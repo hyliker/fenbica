@@ -1,0 +1,228 @@
+{% extends "exam/base.html" %}
+{% load pagination_tag %}
+
+{% block extra-subnav %} 
+        <li><a class="active"> 总分名次</a></li>
+{% endblock %}
+
+{% block extra-head %}
+<style type="text/css">
+#sidebar {
+    float: right;
+    width: 250px;
+    height: 300px;
+    background-color: #eee;
+}
+#message {
+    background-color: #1259C7;
+    color: #fff;
+}
+#message p {
+}
+#main-content {
+    background: transparent url({{ MEDIA_URL}}img/mash/bg-gray.jpg) repeat-x;
+    min-height: 500px;
+}
+.nav-section {
+    padding: 10px;
+    clear: both;
+}
+.nav-section a {
+    font-size: 1.2em;
+    padding: 10px;
+}
+ul.navs {
+    list-style-type: none;
+}
+ul.navs li {
+    float: left;
+    padding: 5px 0;
+}
+#edit_form {
+    padding: 10px;
+}
+caption {
+    font-size: 1.5em;
+    padding: 10px;
+    background: transparent url(/static/img/mash/bg_footer.gif) repeat-x center center;
+}
+form p label {
+    display: block;
+    float: left;
+    width: 100px;
+    text-align: right;
+    margin-right: 5px;
+}
+form p {
+    margin-bottom: 10px;
+}
+form p input {
+    width: 300px;
+}
+form textarea {
+    width: 300px;
+}
+form p.submit {
+    margin-left: 105px;
+}
+#main-content ul li {
+    margin-top: 10px;
+    float: left;
+}
+#main-content {
+    font-size: 1.1em;
+}
+#exams-wrapper, #exam-courses-wrapper, #exam-classes-wrapper {
+    padding: 10px;
+    float: left;
+    clear: both;
+}
+ul.hlist {
+    margin-left: 2em;
+}
+.hlist li {
+    clear: both;
+    margin-right: 20px;
+}
+
+h5,h6 {
+    clear: both;
+}
+h6 {
+    margin-left: 2em;
+}
+table tr.even {
+    background-color: #eee;
+    background-color: #ECF4FF;
+    background-color: #FAFAFA;
+    background-color: #F2F3F3;
+}
+table {
+    border-collapse: collapse;
+    margin-top: 0px;
+    background-color: #fff;
+    width: 100%;
+}
+td, th {
+    padding: 5px 10px;
+    text-align: center;
+}
+td.unpass {
+    color:red;
+}
+/*
+td.excellent {
+    color:green;
+}
+td.fine {
+    color: blue;
+}
+*/
+thead {
+    background-color: #7CBA0F;
+    background-color: #cc8f00;
+    background-color: #ddd;
+    color: #fff;
+    color: #000;
+    background: transparent url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+    border-bottom: 2px solid #ddd;
+    /*
+    background: #fff url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+    color: #000;
+    border-top: 5px solid #7CBA0F;
+    */
+}
+tfoot {
+    background: transparent url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+}
+tfoot td {
+    height: 30px;
+    vertical-align: middle;
+    padding: 6px;
+}
+#upload {
+    padding: 10px;
+}
+tr.import_error {
+    color:red;
+    background-color: #eee;
+    background-color: #ffeeee !important;
+    padding: 5px;
+    padding: 5px;
+    padding-left: 25px !important;
+}
+caption select {
+    font-size: 1em;
+    padding: 5px;
+}
+</style>
+<script type="text/javascript">
+$(function () {
+    //cssHoverColor(".innerTable tbody tr","#9AC3F5");
+    cssHoverColor(".innerTable tbody tr","#FFFFCC");
+
+    $("#exam").change(function () {
+        location.href = "{% url analysis_class %}exam-" + $(this).val();
+    });
+
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<div id="message" class="clearfix">
+    <p></p>
+</div><!--/message-->
+<div id="main-content" class="clearfix">
+
+    <table class="innerTable cssHoverColor" id="checkbox-table">
+        <caption> 
+            {{ current_exam }} {{ title }}
+        </caption>
+        <thead>
+            <tr>
+                <th>序号</th>
+                <th>学号</th>
+            {% if not klass_pk %}<th>班别</th>{% endif %}
+                <th>姓名</th>
+                <th>性别</th>
+                {% for c in subjects %}
+                <th>{{ c.category }}</th>
+                {% endfor %}
+                <!--<th>平均分</th>-->
+                <th>总分</th>
+                <th>班次</th>
+                <th>级次</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for s in rankings %}
+        <tr class="{% cycle "even" "odd" %}">
+            <td>{{ pages.cur_page.start_index|add:forloop.counter0 }}</td>
+            <td>{{ s.student__uuid }}</td>
+            {% if not klass_pk %}<td>{{ s.klass }}</td>{% endif %}
+            <td><a href="{% url person s.student %}">{{ s.name }}</a></td>
+            <td>{{ s.gender }}</td>
+            {% for n in s.subject_list %}
+            <td class="{{ n }}">{{ n|default_if_none:"" }}</td>
+            {% endfor %}
+            <td>{{ s.score }}</td>
+            <td>{{ s.klass_ranking }}</td>
+            <td>{{ s.ranking }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="999">{# query_time #} 备注:排名按总分由高低排序{% now "jS F Y H:i:s" %}</td>
+            </tr>
+        </tfoot>
+    </table>
+
+{% paginate pages.page_prefix_link  pages.object_list pages.cur_page.number 20 6 pages.object_list %}
+<div id="search-page">
+    {% include 'base/pagination.html' %}
+</div>
+
+</div>
+{% endblock %}

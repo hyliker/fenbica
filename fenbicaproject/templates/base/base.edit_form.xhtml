@@ -1,0 +1,96 @@
+{% extends "base/base.html" %}
+{% block extra-head %}
+<style type="text/css">
+#sidebar {
+    float: right;
+    width: 250px;
+    height: 300px;
+    background-color: #eee;
+}
+#message {
+    background-color: #1259C7;
+    color: #fff;
+}
+#message p {
+    padding: 5px;
+}
+#main-content {
+    background: transparent url({{ MEDIA_URL}}img/mash/bg-gray.jpg) repeat-x;
+    min-height: 500px;
+}
+.nav-section {
+    padding: 10px;
+    clear: both;
+}
+.nav-section a {
+    font-size: 1.2em;
+    padding: 10px;
+}
+ul.navs {
+    list-style-type: none;
+}
+ul.navs li {
+    float: left;
+    padding: 5px 0;
+}
+#edit_form {
+    padding: 10px;
+}
+form p label {
+    display: block;
+    float: left;
+    width: 100px;
+    text-align: right;
+    margin-right: 5px;
+    line-height: 2em;
+}
+form p {
+    margin-bottom: 10px;
+}
+form p input {
+    width: 300px;
+}
+form textarea {
+    width: 300px;
+}
+form p.submit {
+    margin-left: 105px;
+}
+
+ul.errorlist {
+    color: red;
+    margin-left: 105px;
+    padding: 5px;
+}
+
+</style>
+
+{% endblock %}
+
+{% block navigation %}
+<ul class="menu">
+    <li><a href="/desktop/">个人桌面</a> &gt;</li>
+    <li><a href="#">教职工档案</a>&gt;</li>
+    <li><strong>编辑我的基本信息</strong></li>
+</ul>
+{% endblock navigation %}
+
+{% block content %}
+<div id="message" class="clearfix">
+    <p>编辑我的基本信息</p>
+</div><!--/message-->
+<div id="main-content" class="clearfix">
+    {% if form.errors %}
+    <p class="error"> 保存失败， 请更正表单中的错误，再保存</p>
+    {% endif %}
+    {% if form.success %}
+    <p class="success"> 保存成功</p>
+    {% endif %}
+
+    <form id="edit_form" method="post">
+    {% csrf_token %}
+    {{ form.as_p}}
+    <p class="submit"><input type="submit" value="保存" class="submit-button" style="padding: 5px 20px" /></p>
+    </form>
+</div>
+{% endblock %}

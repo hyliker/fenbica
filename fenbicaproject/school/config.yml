@@ -1,0 +1,24 @@
+---
+menu:
+    - name: 基本信息
+      link: /profile/view/
+    - name: 选课中心
+      link: /course/center
+    - name: 我的课程
+      link: /course/my
+    #- name: 课程成绩
+      #link: /course/score
+...
+             <li><a href="StudentExperience"><span>简历</span></a></li>
+             <li><a href="ahah_2.html"><span>来源</span></a></li>
+             <li><a href="ahah_2.html"><span>学籍异动</span></a></li>
+             <li><a href="ahah_2.html"><span>注册</span></a></li>
+             <li><a href="ahah_2.html"><span>军训</span></a></li>
+             <li><a href="ahah_3.html"><span>考试</span></a></li>
+             <li><a href="ahah_3.html"><span>学历学位</span></a></li>
+             <li><a href="ahah_3.html"><span>课程</span></a></li>
+             <li><a href="ahah_3.html"><span>家庭</span></a></li>
+             <li><a href="ahah_3.html"><span>奖励</span></a></li>
+             <li><a href="ahah_3.html"><span>处分</span></a></li>
+             <li><a href="ahah_3.html"><span>家庭</span></a></li>
+             <li><a href="ahah_3.html"><span>考勤</span></a></li>

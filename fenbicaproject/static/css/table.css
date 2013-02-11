@@ -1,0 +1,30 @@
+thead {
+    background: transparent url(/static/img/mash/bg_footer.gif) repeat-x;
+}
+thead th {
+    padding: 5px;
+    border-bottom: 1px solid #ddd;
+}
+th, td {
+    text-align: center;
+}
+table tr.odd{
+    background-color: #eee;
+    background-color: #ECF4FF;
+    background-color: #FAFAFA;
+    background-color: #F2F3F3;
+    background-color: #f8f8f8;
+}
+table {
+    border-collapse: collapse;
+    margin-top: 0px;
+    background-color: #fff;
+    width: 100%;
+}
+td, th {
+    padding: 5px 10px;
+    text-align: center;
+}
+.td-action {
+    width: 40px;
+}

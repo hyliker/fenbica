@@ -1,0 +1,162 @@
+{% extends "index/base.html" %}
+{% block extra-head %}
+<style type="text/css">
+#sidebar {
+    float: right;
+    width: 250px;
+    height: 300px;
+    background-color: #eee;
+}
+#message {
+    background-color: #1259C7;
+    color: #fff;
+}
+#message p {
+    padding: 5px;
+}
+#main-content {
+    background: transparent url({{ MEDIA_URL}}img/mash/bg-gray.jpg) repeat-x;
+    min-height: 500px;
+}
+.nav-section {
+    padding: 10px;
+    clear: both;
+}
+.nav-section a {
+    font-size: 1.2em;
+    padding: 10px;
+}
+ul.navs {
+    list-style-type: none;
+}
+ul.navs li {
+    float: left;
+    padding: 5px 0;
+}
+#edit_form {
+    padding: 10px;
+}
+form p label {
+    display: block;
+    float: left;
+    width: 100px;
+    text-align: right;
+    margin-right: 5px;
+}
+form p {
+    margin-bottom: 10px;
+}
+form p input {
+    width: 300px;
+}
+form textarea {
+    width: 300px;
+}
+form p.submit {
+    margin-left: 105px;
+}
+#sidebar {
+    float: none;
+    width: auto;
+    background-color: transparent;
+    border-right: 1px solid #ddd;
+    padding: 10px;
+    margin-right: 10px;
+    height: auto;
+    clear: both;
+}
+#main-content ul li {
+    margin-top: 10px;
+}
+#main-content {
+    font-size: 1.1em;
+}
+#exam_course {
+    padding: 10px;
+    border-right: 1px solid #ddd;
+    margin-right: 10px;
+    clear: both;
+}
+#exam_classes {
+    padding: 10px;
+    clear: both;
+}
+ul.exams li {
+    float: left;
+}
+select{
+    padding: 3px;
+}
+table {
+    width: 800px;
+}
+caption {
+    font-size: 2em;
+    font-weight: bold;
+}
+td, th {
+    border: 1px solid #ddd;
+    padding: 5px;
+}
+
+</style>
+
+{% endblock %}
+
+{% block navigation %}
+<ul class="menu">
+    <li><a href="/desktop/">个人桌面</a> &gt;</li>
+    <li><a href="#">考试成绩</a>&gt;</li>
+    <li><strong>成绩批量录入</strong></li>
+</ul>
+{% endblock navigation %}
+{% block content %}
+<div id="message" class="clearfix">
+    <p>提示：请选择要录入哪次考试，哪门考试科目，哪个班成绩后，点击开始录入</p>
+</div><!--/message-->
+<div id="main-content" class="clearfix">
+    <div id="exam-scope">
+        <form method="post">
+            {% csrf_token %}
+        <select name="exam" id="id_exam">
+            {% for e in exams %}
+            <option value="{{ e.pk }}">{{ e.learning_year }} {{ e.semester }} {{ e.name }}</option>
+            {% endfor %}
+        </select>
+        <select name="course" id="id_course">
+            {% for m in exam_courses %}
+            <option value="{{ m.pk }}"> {{ m.grade }} {{ m.name }}</option>
+            {% endfor %}
+        </select>
+        <select name="class" id="id_class">
+            {% for c in classes %}
+            <option value="{{ c.pk }}"> {{ c.grade }} {{ c.class_no }} 班</option>
+            {% endfor %}
+        </select>
+        <input type="hidden" name="step" value="first" />
+        <input type="submit" class="submit-button" value="开始录入">
+        </form>
+    </div><!--/exam-scope-->
+    <table border="0">
+        <caption> 2008 - 2009 年度 语文 期中考试 初一7班 成绩</caption>
+        <thead>
+            <tr>
+                <th> 学号</th>
+                <th> 姓名</th>
+                <th> 分数成绩</th>
+            </tr>
+        </thead>
+        <tbody>
+    {% for s in exam_students %}
+            <tr>
+                <td> {{ s.pk }} </td>
+                <td> {{ s.name }} </td>
+                <td><input /> </td>
+            </tr>
+    {% endfor %}
+        </tbody>
+    </table>
+    <input type="submit" class="submit-button" value="保存" />
+
+</div>
+{% endblock %}

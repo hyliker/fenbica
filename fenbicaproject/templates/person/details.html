@@ -1,0 +1,14 @@
+{% extends "person/base.html" %}
+{% load generic_object_details %}
+{% block main-content %}
+<div id="main-content">
+        {% block infoTitle %}
+        <h4 id="info-title">{{ person.name|default:person.username }} {{ person.get_identity_display|default:"" }} 基本信息 
+            <a href="javascript:print();">打印</a>
+            <a href="{% url edit_person person.pk %}">编辑</a>
+        </h4>
+        {% endblock %}
+
+    {% generic_object_details person %}
+</div>
+{% endblock main-content %}

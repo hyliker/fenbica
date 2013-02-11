@@ -1,0 +1,29 @@
+{% extends "school/view_basic_profile.html" %}
+
+{% block title %} {{ person.name }} 教职工教学工作量 {% endblock %}
+
+{% block infoTitle %}
+<h4 id="info-title">{{ person.name }} {{ person.get_identity_display }} 教学工作量 </h4>
+{% endblock %}
+
+{% block infoType_staff_teaching_workload %}
+<li><strong>教学工作量</strong></li>
+{% endblock %}
+
+{% block infoItems %}
+<dl class="hdl">
+{% if teaching_workload %}
+    {% for t in teaching_workload %}
+    <dt>教学类型</dt> <dd>{{ t.type.name }}</dd>
+    <dt>教学工作量</dt> <dd>{{ t.workload }} 小时/年</dd>
+    <dt>教学起始时间</dt> <dd>{{ t.dtstart|date:"Y年n月d日" }}</dd>
+    <dt>教学结束时间</dt> <dd>{{ t.dtend|date:"Y年n月d日" }}</dd>
+    <dt>教学内容</dt> <dd>{{ t.content }}</dd>
+    <dt>教学评语</dt> <dd>{{ t.comment }}</dd>
+    <hr/>
+    {% endfor %}
+{% else %}
+<h5>暂没有相关教学工作量信息</h5>
+{% endif %}
+</div>
+{% endblock %}

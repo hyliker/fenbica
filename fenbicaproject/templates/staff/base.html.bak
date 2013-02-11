@@ -1,0 +1,91 @@
+{% extends "base/base.html" %}
+
+{% block title %} {{ person.name }} 基本信息 {% endblock %}
+
+{% block extra-head %}
+<style type="text/css">
+{% include "school/view_basic_profile.css" %}
+</style>
+{% endblock %}
+
+
+{% block content %}
+    <div id="sidebar">
+        {% if person.photo %}
+        <img class="person-photo" src="{{ person.photo }}" />
+        {% else %}
+        <img class="person-photo" src="{{ MEDIA_URL }}img/mash/photo.png" />
+        {% endif %}
+
+        {% block infoType %}
+        <ul class="info_type">
+             <li><a href="{% url person person.pk %}">基本信息</a></li>
+             <li><a href="{% url staff_experience_list person.pk %}">简历</a></li>
+             <li><a href="{% url staff_diploma person.pk %}">学历学位</a></li>
+             <li><a href="{% url staff_spouse person.pk %}">配偶</a></li>
+             <li><a href="{% url staff_other_family person.pk %}">其他家人</a></li>
+             <li><a href="{% url staff_teaching_workload person.pk %}">教学工作量</a></li>
+             <li><a href="{% url staff_teaching person.pk %}">任课</a></li>
+        </ul>
+        {% endblock infoType %}
+
+    </div>
+    
+    {% block main-content %}
+    <div id="main-content">
+        {% block infoTitle %}
+        <h4 id="info-title">{{ person.name }} {{ person.get_identity_display }} 基本信息 
+            <a href="javascript:print();">打印</a>
+            <a href="{% url person.views.edit_person person.pk %}">编辑</a>
+        </h4>
+        {% endblock %}
+
+        {% with person as p %}
+        <div class="section">
+                {% block infoItems %}
+            <dl class="hdl">
+                <dt>姓名</dt> <dd>{{ p.name }}</dd>
+                <dt>姓名拼音</dt> <dd>{{ p.spell_name }}</dd>
+                <dt>曾用名</dt> <dd>{{ p.used_name }}</dd>
+                <dt>性别</dt> <dd>{{ p.gender.name }}</dd>
+                <dt>身份证号</dt> <dd>{{ p.id_no }}</dd>
+                <dt>出生日期</dt> <dd>{{ p.birthday|date:"Y年n月j日" }}</dd>
+                <dt>学校</dt> <dd>{{ p.student.school.name }}</dd>
+                <dt>职工编号</dt> <dd>{{ p.uuid  }}</dd>
+                <dt>编制类别</dt> <dd>{{ p.type }}</dd>
+                <dt>入校年月</dt> <dd>{{ p.dtenrollment }}</dd>
+                <dt>来校年月</dt> <dd>{{ p.dtcome }}</dd>
+                <dt>从教年月</dt> <dd>{{ p.dtteach }}</dd>
+                <dt>档案编号</dt> <dd>{{ p.profile_no }}</dd>
+                <dt>档案文本</dt> <dd>{{ p.profile_text }}</dd>
+                <dt>科室号</dt> <dd>{{ p.section_code }}</dd>
+                <dt>岗位职业</dt> <dd>{{ p.post_occupation_code }}</dd>
+                <dt>婚姻状况</dt> <dd>{{ p.marriage.name }}</dd>
+                <dt>血型</dt> <dd>{{ p.blood_type.name }}</dd>
+                <dt>文化程度</dt> <dd>{{ p.diploma.name }}</dd>
+                <dt>出生地</dt> <dd>{{ p.born_place.name }}</dd>
+                <dt>籍贯</dt> <dd>{{ p.native_place.name }}</dd>
+                <dt>民族</dt> <dd>{{ p.folk.name }}</dd>
+                <dt>宗教信仰</dt> <dd>{{ p.religion }}</dd>
+                <dt>港澳台侨</dt> <dd>{{ p.emigrant.name }}</dd>
+                <dt>健康状况</dt> <dd>{{ p.health.name }}</dd>
+                <dt>政治面貌</dt> <dd>{{ p.politics.name }}</dd>
+                <dt>现住址</dt> <dd>{{ p.residence_address }}</dd>
+                <dt>户口所在地</dt> <dd>{{ p.domicle_location }}</dd>
+                <dt>户口性质</dt> <dd>{{ p.domicle_type.name }}</dd>
+                <dt>流动人口状况</dt> <dd>{{ p.is_floating.name }}</dd>
+                <dt>国别</dt> <dd>{{ p.nationality.name }}</dd>
+                <dt>联系电话</dt> <dd>{{ p.telephone }}</dd>
+                <dt>通信地址</dt> <dd>{{ p.postal_address }}</dd>
+                <dt>邮政编码</dt> <dd>{{ p.postal_code }}</dd>
+                <dt>电子信箱</dt> <dd>{{ p.email }}</dd>
+                <dt>主页地址</dt> <dd>{{ p.homepage }}</dd>
+                <dt>照片</dt> <dd>{{ p.photo }}</dd>
+                <dt>特长</dt> <dd>{{ p.fortes }}</dd>
+            </dl>
+                {% endblock %}
+        </div>
+        {% endwith %}
+    </div>
+    {% endblock main-content %}
+{% endblock %}

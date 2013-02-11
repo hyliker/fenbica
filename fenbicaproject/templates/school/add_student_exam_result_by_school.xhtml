@@ -1,0 +1,136 @@
+{% extends "index/base.html" %}
+{% block extra-head %}
+<style type="text/css">
+#sidebar {
+    float: right;
+    width: 250px;
+    height: 300px;
+    background-color: #eee;
+}
+#message {
+    background-color: #1259C7;
+    color: #fff;
+}
+#message p {
+    padding: 5px;
+}
+#main-content {
+    background: transparent url({{ MEDIA_URL}}img/mash/bg-gray.jpg) repeat-x;
+    min-height: 500px;
+}
+.nav-section {
+    padding: 10px;
+    clear: both;
+}
+.nav-section a {
+    font-size: 1.2em;
+    padding: 10px;
+}
+ul.navs {
+    list-style-type: none;
+}
+ul.navs li {
+    float: left;
+    padding: 5px 0;
+}
+#edit_form {
+    padding: 10px;
+}
+form p label {
+    display: block;
+    float: left;
+    width: 100px;
+    text-align: right;
+    margin-right: 5px;
+}
+form p {
+    margin-bottom: 10px;
+}
+form p input {
+    width: 300px;
+}
+form textarea {
+    width: 300px;
+}
+form p.submit {
+    margin-left: 105px;
+}
+#main-content ul li {
+    margin-top: 10px;
+    float: left;
+}
+#main-content {
+    font-size: 1.1em;
+}
+#exams-wrapper, #exam-courses-wrapper, #exam-classes-wrapper {
+    padding: 10px;
+    float: left;
+    clear: both;
+}
+ul.hlist {
+    margin-left: 2em;
+}
+.hlist li {
+    float: left;
+    margin-right: 20px;
+}
+
+h5,h6 {
+    clear: both;
+}
+h6 {
+    margin-left: 2em;
+}
+
+</style>
+
+{% endblock %}
+
+{% block navigation %}
+<ul class="menu">
+    <li><a href="/desktop/">个人桌面</a> &gt;</li>
+    <li><a href="#">考试成绩</a>&gt;</li>
+    <li><strong>成绩录入</strong></li>
+</ul>
+{% endblock navigation %}
+{% block content %}
+<div id="message" class="clearfix">
+    <p>提示：请选择要录入哪次考试，哪门考试科目，哪个班成绩后，点击开始录入</p>
+</div><!--/message-->
+<div id="main-content" class="clearfix">
+    <div id="exams-wrapper">
+        <h5>第一步，选择考试名称</h5>
+        <ul class="hlist">
+        {% for e in exams %}
+        <li><a href="{{ e.pk }}">{{ e.learning_year }} {{ e.semester }} {{ e.name }}</a></li>
+        {% endfor %}
+        </ul>
+    </div>
+
+    <div id="exam-courses-wrapper">
+        <h5>第二步，选择考试课程</h5>
+            {% for m in exam_courses %}
+            <h6>{{ m.0.grade }}</h6>
+        <ul class="hlist">
+                {% for n in m %}
+            <li><a href="#{{ m.pk }}">{{ n.course }}</a></li>
+                {% endfor %}
+        </ul>
+            {% endfor %}
+    </div>
+
+    <div id="exam-classes-wrapper">
+        <h5>第三步，选择考试班级</h5>
+            {% for m in classes %}
+            <h6>{{ m.0.grade }}</h6>
+        <ul class="hlist">
+                {% for n in m %}
+            <li><a href="#{{ m.pk }}">{{ n.name }}</a></li>
+                {% endfor %}
+        </ul>
+            {% endfor %}
+    </div>
+    <hr />
+    <input type="submit" class="submit-button" value="开始录入" />
+</div>
+{% endblock %}

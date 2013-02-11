@@ -1,0 +1,107 @@
+{% extends "student/base.html" %}
+
+{% block title %} {{ person.name }} 学生贫困補助 {% endblock %}
+
+{% block infoTitle %}
+<h4 id="info-title">
+    {{ person.name }} {{ person.get_identity_display }} 考试成绩 
+</h4>
+{% endblock %}
+
+{% block infoItems %}
+{% if result_list %}
+<script type="text/javascript">
+$(function () {
+    $("#exam_list").change(function () {
+        var exam_pk = $(this).val();
+        location.href = "{% url student_exam_result_list person.pk %}?exam_pk=" + exam_pk;
+    });
+});
+</script>
+<table>
+    <caption>
+        <select id="exam_list">
+            {% for e in exam_list %}
+            <option value="{{ e.pk }}" {% if e == exam %}selected{% endif %}>{{ e }}</option>
+            {% endfor %}
+        </select>
+    </caption>
+    <thead>
+        <!--<th>考试日期</th>-->
+        <!--<th>学段</th>-->
+        <!--<th>学年</th>-->
+        <!--<th>学期</th>-->
+        <!--<th>年级</th>-->
+        <th>科目</th>
+        <th>满分值</th>
+        <th>分数成绩</th>
+        <th>等级成绩</th>
+        <th>班次</th>
+        <th>级次</th>
+        <th>状态</th>
+        <th>试卷</th>
+    </thead>
+    <tbody>
+        {% for c in result_list %}
+        <tr class="{% cycle "even" "odd" %}">
+        <td><a href="{% url exam_subject_ranking c.subject.pk %}">{{ c.subject.category }}</a></td>
+        <td>{{ c.subject.full_score }}</td>
+        <td>{{ c.score }}</td>
+        <td>{{ c.level }}</td>
+        <td><a href="{% url exam_subject_ranking c.subject.pk %}?klass_pk={{ c.klass_id }}" title="查看班次名单">{{ c.class_ranking }}</a></td>
+        <td><a href="{% url exam_subject_ranking c.subject.pk %}" title="查看级次名单">{{ c.grade_ranking }}</a></td>
+        <td>{{ c.get_status_display }}</td>
+        <td>{% if c.subject.file %}<a href="{{ c.subject.file.url }}">下载</a>{% endif %}</td>
+    </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+    <tr>
+        <td><a href="{% url exam_analyse_student %}?exam_pk={{ exam.pk }}&grade_pk={{ result_list.0.klass.grade.pk }}">总分</a></td>
+        <td>{{ result_list.total.full_score }}</td>
+        <td>{{ result_list.total.score }}</td>
+        <td>{{ result_list.total.level }}</td>
+        <td>{{ result_list.total.class_ranking }}</td>
+        <td>{{ result_list.total.grade_ranking }}</td>
+        <td></td>
+        <td></td>
+    </tr>
+</tfoot>
+</table>
+{% else %}
+<h5>暂没有相关考试成绩信息 </h5>
+{% endif %}
+</div>
+
+<style type="text/css">
+td, th {
+    padding: 5px;
+    border: 1px solid #e7e7e7;
+}
+thead {
+    background: transparent url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+}
+.subTable td {
+    border: 1px solid #eee;
+}
+caption {
+    background: transparent url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+    padding: 5px;
+}
+caption select {
+    font-size: 1.2em;
+    font-weight: bold;
+    padding: 5px;
+}
+tfoot {
+    background-color: #eaeaea;
+    font-weight: bold;
+}
+tfoot td {
+    border:1px solid #ddd;
+}
+.section {
+    margin-right: 10px;
+}
+</style>
+{% endblock %}

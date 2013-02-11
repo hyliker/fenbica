@@ -1,0 +1,21 @@
+{% extends "exam/base.html" %}
+
+{% block extra-head %}
+{{ block.super }}
+<script type="text/javascript" src="{{ MEDIA_URL }}thirdparty/swfobject/swfobject.js"></script>
+<script type="text/javascript">
+    swfobject.embedSWF(
+      "{{ MEDIA_URL }}thirdparty/open-flash-chart/open-flash-chart.swf", "chart",
+      "100%", "550px", "9.0.0", "{{ MEDIA_URL }}thirdparty/swfobject/expressInstall.swf",
+      {"data-file":"/exam/chart/data/exam/analyse/{{ exam.pk }}?grade_pk={{ grade_pk|default_if_none:"" }}"});
+</script>
+{% endblock %}
+
+{% block extra-subnav %}
+    <li><a href="#" class="active">成绩分析图表</a></li>
+{% endblock %}
+
+{% block content %}
+<div id="chart"></div>
+<p class="warning">备注：以上成绩都统一转换成百分制成绩,方便对比分析。</p>
+{% endblock %}

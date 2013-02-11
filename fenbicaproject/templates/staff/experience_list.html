@@ -1,0 +1,45 @@
+{% extends "staff/base.html" %}
+
+{% block title %} {{ person.name }} {{ person.get_identity_display }} 简历 {% endblock %}
+
+{% block infoTitle %}
+<h4 id="info-title">
+    {{ person.name }} {{ person.get_identity_display }} 简历列表 
+    {% if user.pk == person.pk %}
+    <a href="{% url staff_edit_experience %}" class="add_button">新增简历条目</a>
+    {% endif %}
+</h4>
+{% endblock %}
+
+{% block infoItems %}
+</style>
+<table>
+    <thead>
+        <tr>
+            <th>序号</th>
+            <th>所在单位名称</th>
+            <th>时间段</th>
+            <th>曾任党政职务</th>
+            <th>曾任技术职务</th>
+            <th>证明人</th>
+            <th colspan="3" class="th-action">操作</th></tr>
+    </thead>
+    <tbody>
+        {% for e in experience_list %}
+        <tr class="{% cycle "even" "odd" %}">
+            <td>{{ forloop.counter }}</td>
+            <td>{{ e.enterprise }}</td>
+            <td>{{ e.dtstart }} 至 {{ e.dtend }}</td>
+            <td>{{ e.cadre_post }}</td>
+            <td>{{ e.technical_post }}</td>
+            <td>{{ e.attestor }}</td>
+            <td class="td-action"><a href="{% url staff_experience e.pk %}">查看</a></td>
+            <td class="td-action"><a href="{% url staff_edit_experience e.pk %}">编辑</a></td>
+            <td class="td-action"><a href="{% url staff_delete_experience e.pk %}">删除</a></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="999">暂无相关信息记录</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

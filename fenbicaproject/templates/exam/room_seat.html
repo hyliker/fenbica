@@ -1,0 +1,151 @@
+{% extends "exam/base.html" %}
+
+{% block extra-head %}
+<link rel="stylesheet" href="/static/css/table.css" type="text/css" />
+<style type="text/css">
+#content {
+    padding: 10px;
+}
+td, th {
+    padding: 10px;
+    vertical-align: middle;
+    border: 1px solid #ddd;
+}
+tfoot {
+    border-top: 1px solid #ddd;
+    background: transparent url(/static/img/mash/bg-gray.jpg) repeat-x center center;
+    line-height: 2em;
+}
+caption {
+    font-size: 1.5em;
+    font-weight: bold;
+    padding: 10px;
+    background-color: #555;
+    color: #fff;
+}
+#optionBar {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+#platform {
+    width: 200px;
+    text-align: center;
+    padding: 5px;
+    margin: 0 auto;
+    font-size: 1.5em;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="optionBar">
+    <label>第一步，</label>
+    <select name="exam" id="exam">
+        {% for e in exam_list %}
+        <option value="{{ e.pk }}" {% if e.pk == current_exam.pk %}selected{% endif %}>{{ e }}</option>
+        {% endfor %}
+    </select>
+    <label>第二步，</label>
+    <select name="room" id="room">
+        {% for r in current_room_list %}
+        <option value="{{ r.pk }}" {% if r.pk == current_room.pk %}selected{% endif %}>{{ r }} [{{ r.grade.name }}]</option>
+        {% endfor %}
+    </select>
+    <label>第三步，</label>
+    <a href="#" class="print_button print-seat-table">打印此试室座位表</a>
+    <!--<a href="{% url exam_export_seat_list %}" class="down_button down-seat-table">下载此试室登分表</a>-->
+</div>
+    <table>
+        <caption>{{ current_exam }} {{ current_room }} 考生座位表</caption>
+        <thead>
+            <tr>
+                <th colspan="999"> <p id="platform">[ 讲台位置 ]<p></th>
+            </tr>
+            <tr>
+                <th> 行\列号</th>
+                {% for col in current_room_col_num_list %}
+                <th>第 {{ forloop.counter }} 列</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+        {% for row in current_seat_array %}
+            <tr class="{% cycle "even" "odd" %}">
+                <td><strong> 第 {{ forloop.counter }} 行</strong></td>
+                {% for col in row %}
+                    {% if col %}
+                    <td>
+                        <a href="{{ col.examinee.get_absolute_url }}"> {{ col.examinee.name }}</a> <br /><br />
+                        {# 座位: {{ col.col }}行{{ col.row }}列<br /><br /> #}学号:{{ col.examinee.pk }}
+                        座号:{{ col.uuid }}
+                        班级:{{ col.klass_id }}
+                    </td>
+                    {% else %}
+                    <td></td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+            <td colspan="999">
+            共有 {{ current_seat_list|length }} 个考生,
+            考官: 
+            {% for e in current_room.examiner.all %}
+            <a href="{{ e.get_absolute_url }}">[ {{ e }} ]</a> 
+            {% empty %}
+            <span>还没设置考官</span>
+            {% endfor %}
+            </td>
+        </tfoot>
+    </table>
+<script type="text/javascript">
+$(function () {
+    var inital_exam = {{ current_exam.pk }};
+    var inital_room = {{ current_room.pk }};
+
+    $("#exam").change(function () {
+        var exam = $(this).val();
+        var exam_text = $(this).find("option:selected").text();
+        $.getJSON("/exam/get_exam_room_list/" + exam,  function (res) {
+            if (res.success) {
+                var data = res.data, options = [], option = "";
+                if (data.length == 0) {
+                    $("#room").html("");
+                    return null;
+                }
+                for (var i=0;i<data.length;i++) {
+                    option = '<option value="' + data[i].pk+ '">' +  data[i].name + data[i].grade__name + '</option>'; 
+                    options.push(option);
+                }
+                $("#room").html(options.join(""));
+                //$("#room").trigger("change");
+            }
+        });
+    });
+
+    $("#room").change(function () {
+        var exam = $("#exam").val();
+        var room = $(this).val();
+        location.href = "{% url exam_room_seat %}?exam_pk=" + exam + "&room_pk=" + room;
+    });
+
+    $(".print-seat-table").click(function (event) {
+        event.preventDefault();
+        var exam = $("#exam").val();
+        var room = $("#room").val();
+        var print_url = "{% url exam_room_seat %}?exam_pk=" + exam + "&room_pk=" + room + "&action=Print";
+        window.open(print_url);
+    });
+
+    $(".down-seat-table").click(function (event) {
+        var exam = $("#exam").val();
+        var room = $("#room").val();
+        var down_url = $(this).attr("href") + "?exam_pk=" + exam + "&room_pk=" + room;
+        $(this).attr("href", down_url);
+    });
+
+});
+</script>
+
+{% endblock %}

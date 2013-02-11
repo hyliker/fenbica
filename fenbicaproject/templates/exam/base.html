@@ -1,0 +1,22 @@
+{% extends "base/base.html" %}
+
+{% load navactive_tag %}
+{% block subnav %}
+<div id="subnav" class="clearfix">
+    <ul class="menu">
+        <li><a href="{% url exam_subject_list %}" class="{% reverse_navactive request "exam_subject_list" "active" %}">考试信息</a></li>
+        <li><a href="{% url exam_analyse_subject %}" class="{% reverse_navactive request "exam_analyse_subject" "active" %}">科目分析</a></li>
+        <li><a href="{% url exam_analyse_class %}" class="{% reverse_navactive request "exam_analyse_class" "active" %}">班级分析</a></li>
+        <li><a href="{% url exam_analyse_grade %}" class="{% reverse_navactive request "exam_analyse_grade" "active" %}">年级分析</a></li>
+        <li><a href="{% url exam_room_list %}" class="{% reverse_navactive request "exam_room_list" "active" %}">考室信息</a></li>
+        <li><a href="{% url exam_room_seat_arrange %}" class="{% reverse_navactive request "exam_room_seat_arrange" "active" %}">考试座位编排</a></li>
+        <li><a href="{% url exam_room_seat %}" class="{% reverse_navactive request "exam_room_seat" "active" %}">试室座位</a></li>
+        <li><a href="{% url exam_class_seat_list %}" class="{% reverse_navactive request "exam_class_seat_list" "active" %}">班级座位</a></li>
+        <li><a href="{% url exam_add_result_by_room %}" class="{% reverse_navactive request "exam_add_result_by_room" "active" %}">按考室名单录入成绩</a></li>
+        <li><a href="{% url exam_add_result %}" class="{% reverse_navactive request "exam_add_result" "active" %}">按班级名单录入成绩</a></li>
+        <li><a href="{% url exam_import_result %}" class="{% reverse_navactive request "exam_import_result" %}">导入成绩</a></li>
+        <!--<li><a href="{% url exam_analyse_student %}" class="{% reverse_navactive request "exam_analyse_student" "active" %}">总分排名</a></li>-->
+        {% block extra-subnav %} {% endblock %}
+    </ul>
+</div><!--/subnav-->
+{% endblock subnav %}

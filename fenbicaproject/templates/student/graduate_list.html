@@ -1,0 +1,36 @@
+{% extends "student/base.html" %}
+
+{% block title %} {{ person.name }} 学生毕业 {% endblock %}
+
+{% block infoTitle %}
+<h4 id="info-title">
+    {{ person.name }} {{ person.get_identity_display }} 毕业列表 
+</h4>
+{% endblock %}
+
+{% block infoItems %}
+</style>
+<table>
+    <thead>
+        <tr>
+            <th>序号</th>
+            <th>毕业去向</th>
+            <th>毕业年月</th>
+            <th colspan="3" class="th-action">操作</th></tr>
+    </thead>
+    <tbody>
+        {% for k in graduate_list %}
+        <tr class="{% cycle "even" "odd" %}">
+            <td>{{ forloop.counter }}</td>
+            <td>{{ k.direction }}</td>
+            <td>{{ k.date }}</td>
+            <td class="td-action"><a href="{% url student_graduate k.pk %}">查看</a></td>
+            <td class="td-action"><a href="#">编辑</a></td>
+            <td class="td-action"><a href="#">删除</a></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="999">暂无相关信息记录</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

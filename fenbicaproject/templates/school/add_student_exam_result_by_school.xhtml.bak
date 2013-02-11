@@ -1,0 +1,147 @@
+{% extends "index/base.html" %}
+{% block extra-head %}
+<style type="text/css">
+#sidebar {
+    float: right;
+    width: 250px;
+    height: 300px;
+    background-color: #eee;
+}
+#message {
+    background-color: #1259C7;
+    color: #fff;
+}
+#message p {
+    padding: 5px;
+}
+#main-content {
+    background: transparent url({{ MEDIA_URL}}img/mash/bg-gray.jpg) repeat-x;
+    min-height: 500px;
+}
+.nav-section {
+    padding: 10px;
+    clear: both;
+}
+.nav-section a {
+    font-size: 1.2em;
+    padding: 10px;
+}
+ul.navs {
+    list-style-type: none;
+}
+ul.navs li {
+    float: left;
+    padding: 5px 0;
+}
+#edit_form {
+    padding: 10px;
+}
+form p label {
+    display: block;
+    float: left;
+    width: 100px;
+    text-align: right;
+    margin-right: 5px;
+}
+form p {
+    margin-bottom: 10px;
+}
+form p input {
+    width: 300px;
+}
+form textarea {
+    width: 300px;
+}
+form p.submit {
+    margin-left: 105px;
+}
+#sidebar {
+    float: none;
+    width: auto;
+    background-color: transparent;
+    border-right: 1px solid #ddd;
+    padding: 10px;
+    margin-right: 10px;
+    height: auto;
+    clear: both;
+}
+#main-content ul li {
+    margin-top: 10px;
+}
+#main-content {
+    font-size: 1.1em;
+}
+#exam_course {
+    padding: 10px;
+    border-right: 1px solid #ddd;
+    margin-right: 10px;
+    clear: both;
+}
+#exam_classes {
+    padding: 10px;
+    clear: both;
+}
+ul.exams li {
+    float: left;
+}
+
+</style>
+
+{% endblock %}
+
+{% block navigation %}
+<ul class="menu">
+    <li><a href="/desktop/">个人桌面</a> &gt;</li>
+    <li><a href="#">考试成绩</a>&gt;</li>
+    <li><strong>成绩录入</strong></li>
+</ul>
+{% endblock navigation %}
+{% block content %}
+<div id="message" class="clearfix">
+    <p>成绩录入</p>
+</div><!--/message-->
+<div id="main-content" class="clearfix">
+    <select name="some_name" id="some_name">
+        {% for e in exams %}
+        <option value="option">{{ e.learning_year }} {{ e.semester }} {{ e.name }}</option>
+        {% endfor %}
+    </select>
+    <select name="some_name" id="some_name">
+        {% for e in classes %}
+        <option value="option"> {{ e.name }}</option>
+        {% endfor %}
+    </select>
+
+    <div id="sidebar">
+        <h5>第一步，选择考试名称</h5>
+        <ul class="exams">
+        {% for e in exams %}
+        <li><a href="{{ e.pk }}">{{ e.learning_year }} {{ e.semester }} {{ e.name }}</a></li>
+        {% endfor %}
+        </ul>
+    </div><!--/sidebar-->
+
+    <div id="exam_course">
+        <h5>第二步，选择考试课程</h5>
+            {% for m in exam_courses %}
+            <h6>{{ m.0.grade }}</h6>
+        <div class="courses">
+                {% for n in m %}
+            <a href="#{{ m.pk }}">{{ n.course }}</a>
+                {% endfor %}
+        </div>
+            {% endfor %}
+    </div><!--/exam_course-->
+    
+    <div id="exam_classes">
+        <h5>第三步， 选择班级</h5>
+        {% for m in classes2 %}
+            <h6> {{ m.0.grade }}</h6>
+                {% for n in m %}
+            <a href="#{{ n.pk }}">{{ n.name }}班</a>
+                {% endfor %}
+        {% endfor %}
+    </div><!--/exam_classes-->
+
+</div>
+{% endblock %}

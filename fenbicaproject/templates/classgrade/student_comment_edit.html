@@ -1,0 +1,56 @@
+{% extends "classgrade/base.html" %}
+
+{% block extra-head %}
+<style type="text/css">
+#main-content {
+    padding: 10px;
+}
+form p label {
+    display: block;
+    float: left;
+    width: 100px;
+    text-align: right;
+    margin-right: 5px;
+    line-height: 2em;
+}
+form p {
+    margin-bottom: 10px;
+}
+form p input {
+    width: 300px;
+}
+form textarea {
+    width: 300px;
+}
+form p {
+    line-height: 2em;
+}
+form p.submit {
+    margin-left: 105px;
+}
+ul.errorlist {
+    color: red;
+    margin-left: 105px;
+    padding: 5px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="main-content">
+    <div id="student-info">
+        <h5>编辑 期末考评信息</h5>
+        <hr />
+    </div>
+<form method="post">
+    <p><label>学生:</label><a href="{{ student.get_absolute_url }}">{{ classmate.student.name }}  </a> 班别： {{ classmate.klass }} 班学号：{{ classmate.uuid }} 性别：{{ classmate.student.gender }}</p>
+    {% csrf_token %}
+    <input type="hidden" name="student" value="{{ student.pk }}" />
+    <input type="hidden" name="klass" value="{{ klass.pk }}" />
+{{ form.as_p }}
+<p class="submit">
+    <input type="submit" class="submit-button" value="提交">
+</p>
+</form>
+</div>
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends "course/base.xhtml" %}
+{% block content %}
+{% with course as c %}
+<style type="text/css">
+dl.hdl {
+    float: left;
+    width: 100%;
+}
+dl.hdl dt {
+    color: #555;
+    float: left;
+    clear: left;
+    width: 9em;
+    /*height: 1em;*/
+    padding: 5px;
+    text-align: right;
+    line-height: 1.5em;
+}
+dl.hdl dd {
+    margin-left:10em;
+    display: block;
+    line-height: 1.5em;
+    /*height: 1em;*/
+    padding: 5px;
+    min-height:1.5em;
+}
+#course {
+    padding: 10px;
+}
+h5.title {
+    margin-left: 2em;
+}
+a.add {
+    float: right;
+    background: transparent url(/static/img/mash/add2.png) no-repeat left center;
+    padding-left: 36px;
+    line-height: 32px;
+    display: block;
+    font-size: 1.5em;
+    text-decoration: none;
+}
+</style>
+<div id="course">
+    {% if person.identity == person.IDENTITY_STUDENT %}<a href="#" class="add">选修此课程</a>{% endif %}
+    <h5 class="title">{{ course.name }} 课程详情
+    </h5>
+    <hr />
+    <dl class="hdl">
+        {% comment %}
+        {% for field in course.fields %}
+        <dt>{{ field.verbose_name }}</dt> <dd>{{ field.value }}</dd>
+        {% endfor %}
+        {% endcomment %}
+        <dt>名称</dt> <dd>{{ c.name }}</dd> 
+        <dt>编号</dt> <dd>{{ c.uuid }}</dd> 
+        <dt>英文名称</dt> <dd>{{ c.english_name }}</dd> 
+        <dt>授课老师</dt> <dd><a href="{% url person c.teacher.pk %}">{{ c.teacher }}</a></dd>
+        <dt>学期</dt> <dd>{{ c.semester }}</dd> 
+        <dt>开课学年</dt> <dd>{{ c.teaching_year }}</dd> 
+        <dt>考试方式</dt> <dd>{{ c.exam_mode }}</dd> 
+        <dt>授课方式</dt> <dd>{{ c.teaching_mode }}</dd> 
+        <dt>授课年级</dt> <dd>{{ c.grade }}</dd> 
+        <dt>选修学生人数限制</dt> <dd><a href="#" title="查看先修学生名单">{{ c.capacity }}</a></dd> 
+        <dt>课程简介</dt> <dd>{{ c.description }}</dd>
+        <dt>课程要求</dt> <dd>{{ c.requires }}</dd> 
+        <dt>总学时</dt> <dd>{{ c.total_period }}</dd> 
+        <dt>周学时</dt> <dd>{{ c.week_period }}</dd> 
+        <dt>自学学时</dt> <dd>{{ c.self_study_period }}</dd> 
+        <dt>教材</dt> <dd>{{ c.textbook }}</dd> 
+        <dt>参考书目</dt> <dd>{{ c.billiography }}</dd> 
+        <dt>教学资源</dt> <dd>{{ c.teaching_resource }}</dd> 
+        <dt>教学地点</dt> <dd>{{ c.place }}</dd> 
+        <dt>创建日期</dt> <dd>{{ c.dtcreated }}</dd> 
+        <dt>修改日期</dt> <dd>{{ c.dtmodified }}</dd> 
+    </div>
+</div>
+{% endwith %}
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends "article/base.html" %}
+{% load pagination_tag %}
+
+{% block content %}
+<style type="text/css">
+#main-wrapper {
+    padding: 10px;
+    background: transparent url(/static/img/mash/bg-gray.jpg) repeat-x;
+    clear: both;
+}
+.article {
+    width: 820px;
+    margin-bottom: 10px;
+}
+.article-content {
+    font-size: 13px;
+    line-height: 1.5em;
+    padding: 5px;
+}
+.article h5 {
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    /*
+    background-color: #f8f8f8;
+    background: transparent url(/static/img/mash/bg_footer.gif) repeat-x;
+    */
+    padding: 5px;
+}
+.article td {
+    border: 1px solid #555;
+}
+#sidebar {
+    width: 150px;
+    float: left;
+}
+#categories li {
+    padding: 5px 0;
+}
+#articles, #pagebar {
+    margin-left: 160px;
+
+}
+.article-meta {
+    text-align: left;
+    padding: 5px;
+    color: #888;
+    font-size: 13px;
+}
+.article-action {
+    float: right;
+    font-weight: normal;
+    font-size: 13px;
+}
+.article:hover {
+    background-color: #f8f8f8;
+}
+
+#search-submit {
+    height: 24px;
+    width: 24px;
+    background: transparent url(/static/img/mash/search24x24.png) no-repeat right center;
+    border-width: 0;
+    cursor: pointer;
+    padding: 5px;
+}
+#search-input {
+    width: 100px;
+}
+#pagebar {
+    border-top: 1px solid #ddd;
+    width: 820px;
+    padding-top: 5px;
+}
+
+</style>
+
+<div id="main-wrapper">
+    <div id="sidebar">
+        <div id="search">
+            <form action="#" method="get">
+            <input type="text" id="search-input" name="q" />
+            <input type="submit" id="search-submit" value="" /> 
+            </form>
+        </div>
+        <h5>日志分类</h5>
+        <ul id="categories">
+            {% for c in categories %}
+            <li><a href="{% url view_article_category c.pk %}">{{ c.name }} ({{ c.article_count|default_if_none:0 }})</a></li>
+            {% endfor %}
+        </ul>
+    </div><!--/sidebar-->
+    <ul id="articles">
+        {% for a in articles %}
+        <li class="article">
+        <h5><a href="{% url view_article a.pk %}">{{ a.title }}</a><span class="article-action"><a href="{% url edit_article a.pk %}">编辑</a> / <a href="{% url delete_article a.pk %}">删除</a></span></h5>
+            <p class="article-meta">于 {{ a.dtpublished }} 发表在 <a href="{{ a.category.get_absolute_url }}">{{ a.category.name }}</a> 投稿到 <a href="#">{{ a.public_category }}</a> 浏览数: {{ a.read_count }} 评论数: 8</p>
+            <div class="article-content">{{ a.content|striptags|removetags:"script"|slice:":150"|safe }}</div>
+        </li>
+        {% endfor %}
+    </ul>
+    {% paginate pages.page_prefix_link  pages.object_list pages.cur_page.number 10 5 pages.object_list %}
+    <div id="pagebar">
+        {% include 'base/pagination.html' %}
+    </div>
+</div>
+{% endblock content %}

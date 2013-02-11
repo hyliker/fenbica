@@ -1,0 +1,46 @@
+{% extends "student/base.html" %}
+
+{% block title %} {{ person.name }} 学生简历 {% endblock %}
+
+{% block infoTitle %}
+<h4 id="info-title">
+    {{ person.name }} {{ person.get_identity_display }} 考评列表 
+</h4>
+{% endblock %}
+
+{% block infoItems %}
+</style>
+<table>
+    <thead>
+        <tr>
+            <th>序号</th>
+            <th>学年</th>
+            <th>学期</th>
+            <!--<th>学段</th>-->
+            <th>年级</th>
+            <th>考评日期</th>
+            <th>考评老师</th>
+            <!--<th>学期评语</th>-->
+            <th colspan="3" class="th-action">操作</th></tr>
+    </thead>
+    <tbody>
+        {% for c in comment_list %}
+        <tr class="{% cycle "even" "odd" %}">
+            <td>{{ forloop.counter }}</td>
+            <td>{{ c.learning_year }}</td>
+            <td>{{ c.semester }}</td>
+            <!--<td>{{ c.learning_stage }}</td>-->
+            <td>{{ c.grade }}</td>
+            <td>{{ c.dtcomment }}</td>
+            <td><a href="{% url person c.teacher.pk %}">{{ c.teacher.name }}</a></td>
+            <!--<td>{{ c.comment }}</td>-->
+            <td class="td-action"><a href="{% url student_comment c.pk %}">查看</a></td>
+            <td class="td-action"><a href="#">编辑</a></td>
+            <td class="td-action"><a href="#">删除</a></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="999">暂无相关信息记录</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

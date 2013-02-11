@@ -1,0 +1,14 @@
+<dl class="hdl">
+    {% for item  in fields %}
+    <dt>{{ item.key }}</dt>
+    {% if item.value.get_absolute_url %}
+    <dd><a href="{{ item.value.get_absolute_url }}">{{ item.value|default_if_none:"　"}}</a>&nbsp;</dd>
+    {% else %}
+        {% if item.value and item.value.url %}
+    <dd><a href="{{ item.value.url }}">{{ item.value.url|default_if_none:"　"}}</a>&nbsp;</dd>
+        {% else %}
+    <dd>{{ item.value|default_if_none:" "}}&nbsp;</dd>
+        {% endif %}
+    {% endif %}
+    {% endfor %}
+</dl>

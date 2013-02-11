@@ -1,0 +1,27 @@
+{% extends "school/view_basic_profile.html" %}
+
+{% block title %} {{ person.name }} 结业信息{% endblock %}
+
+{% block infoTitle %}
+<h4 id="info-title">{{ person.name }} {{ person.get_identity_display }} 结业信息</h4>
+{% endblock %}
+
+{% block infoType_student_finish_study %}
+<li><strong>结业</strong></li>
+{% endblock %}
+
+{% block infoItems %}
+<dl class="hdl">
+{% if finish_study %}
+    {% with finish_study as f %}
+    <dt>姓名</dt> <dd>{{ f.student.name }}</dd>
+    <dt>教育結果</dt> <dd>{{ f.education_result }}</dd>
+    <dt>结业年月</dt> <dd>{{ f.date|date:"Y年n月d日" }}</dd>
+    <dt>结业原因</dt> <dd>{{ f.causation }}</dd>
+    <hr/>
+    {% endwith %}
+{% else %}
+<h5>暂没有相关结业信息</h5>
+{% endif %}
+</div>
+{% endblock %}

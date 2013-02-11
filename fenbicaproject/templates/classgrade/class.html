@@ -1,0 +1,74 @@
+{% extends "classgrade/base.html" %}
+{% load generic_object_details %}
+{% block content %}
+<style type="text/css">
+dl.hdl {
+    float: left;
+    width: 100%;
+}
+dl.hdl dt {
+    color: #555;
+    float: left;
+    clear: left;
+    width: 9em;
+    /*height: 1em;*/
+    padding: 5px;
+    text-align: right;
+    line-height: 1.5em;
+}
+dl.hdl dd {
+    margin-left:10em;
+    display: block;
+    line-height: 1.5em;
+    /*height: 1em;*/
+    padding: 5px;
+    min-height:1.5em;
+}
+#course {
+    padding: 10px;
+}
+h5.title {
+    margin-left: 2em;
+}
+a.add {
+    float: right;
+    background: transparent url(/static/img/mash/add2.png) no-repeat left center;
+    padding-left: 36px;
+    line-height: 32px;
+    display: block;
+    font-size: 1.5em;
+    text-decoration: none;
+}
+</style>
+<div id="main-content">
+    {% with klass as k %}
+    <h5 class="title">{{ klass.uuid }} 班级详情 </h5>
+    <hr />
+    {# generic_object_details klass #}
+  <dl class="hdl"> 
+    <dt>年级</dt> 
+    <dd>{{ k.grade }}&nbsp;</dd> 
+    <dt>建班年月</dt> 
+    <dd>{{ k.dtcreated }}&nbsp;</dd> 
+    <dt>班级代码</dt> 
+    <dd>{{ k.uuid }}&nbsp;</dd> 
+    <dt>班级名称</dt> 
+    <dd>{{ k.name }}&nbsp;</dd> 
+    <dt>班级类型</dt> 
+    <dd>{{ k.type }}&nbsp;</dd> 
+    <dt>荣誉称号</dt> 
+    <dd>{{ k.honorary_title }}&nbsp;</dd> 
+    <dt>学制</dt> 
+    <dd>{{ k.schooling_length }} &nbsp;</dd> 
+    <dt>班主任</dt> 
+    <dd>{{ k.master }}&nbsp;</dd> 
+    <dt>班长</dt> 
+    <dd>{{ k.monitor }} &nbsp;</dd> 
+    <dt>教室</dt> 
+    <dd>{{ k.classroom }} &nbsp;</dd> 
+    <dt>班学生人数</dt> 
+    <dd><a href="{% url classgrade_classmate_list %}?klass_pk={{ k.pk }}" title="{{ k.name }} 学生名单">{{ k.student_number }}</a></dd>
+</dl> 
+{% endwith %}
+</div>
+{% endblock content %}

@@ -1,0 +1,64 @@
+{% extends "base/base.html" %}
+{% block content %}
+<style type="text/css">
+#main-wrapper {
+    padding: 10px;
+    background: transparent url(/static/img/mash/bg-gray.jpg) repeat-x;
+    height: 500px;
+    clear: both;
+}
+.block {
+    float: left;
+    width: 200px;
+    text-align: center;
+}
+.title {
+    line-height: 1.5em;
+}
+.block .name {
+    line-height: 2em;
+}
+.introduction {
+    line-height: 1.8em;
+    text-align: left;
+    text-indent: 2em;
+    padding: 5px;
+    font-size: 12px;
+}
+#about {
+    width: 350px;
+    float: left;
+    margin-right: 20px;
+    border-right: 1px solid #ddd;
+    padding-right: 10px;
+}
+#about p {
+    text-indent: 2em;
+    line-height:1.7em;
+}
+</style>
+<script type="text/javascript" src="/static/thirdparty/jquery.masonry.min.js"></script>
+<script type="text/javascript">
+$(function () {
+    $("#main-wrapper").masonry({
+        columnWidth: 10,
+        itemSelector: '.block'
+    });
+    $(".block").hover(function () {
+        $(this).css("background-color", "#eee");
+    }, function () {
+        $(this).css("background-color", "transparent");
+    });
+});
+</script>
+<div id="main-wrapper">
+{% for s in teachers %}
+    <div class="block">
+        <p class="name"><a href="{{ s.staff.get_absolute_url }}">{{ s.staff.name }}</a></p>
+        <img src="{{ s.photo.thumbnail.url }}" alt="{{ s.description }}" width="{{ s.photo.thumbnail.width }}" height="{{ s.photo.thumbnail.height }}" />
+        <h6 class="title">{{ s.title }}</h6>
+        <p class="introduction">{{ s.introduction }}</p>
+    </div><!--/block-->
+{% endfor %}
+</div>
+{% endblock %}

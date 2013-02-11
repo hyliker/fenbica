@@ -1,0 +1,149 @@
+{% extends "article/base.html" %}
+{% block extra-head %}
+<style type="text/css">
+#AddArticleForm {
+    padding: 10px;
+}
+form p label {
+    display: block;
+    float: left;
+    width: 100px;
+    text-align: right;
+    margin-right: 5px;
+    line-height: 2em;
+}
+form p {
+    margin-bottom: 10px;
+}
+form p input {
+    width: 800px;
+}
+form textarea {
+    width: 800px;
+    height: 380px;
+}
+form p.submit {
+    margin-left: 105px;
+}
+#id_commented {
+    width: auto;
+}
+
+ul.errorlist {
+    color: red;
+    margin-left: 105px;
+    padding: 5px;
+}
+form textarea {
+    width: 800px;
+}
+.submitWrapper{
+    margin-left: 100px;
+}
+#upload-wrapper {
+    display: none;
+    width: 815px;
+    padding: 5px;
+}
+#fileQueue {
+    height:100px;
+    border:1px solid #E5E5E5;
+    padding: 0;
+    overflow:auto;
+    margin-bottom: 10px;
+}
+</style>
+
+<script src="/static/thirdparty/kindeditor/kindeditor.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="/static/thirdparty/jquery.uploadify/swfobject.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/thirdparty/jquery.uploadify/uploadify.css">
+<script type="text/javascript" src="/static/thirdparty/jquery.uploadify/jquery.uploadify.v2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#uploadify").uploadify({
+		'uploader'       : '/static/thirdparty/jquery.uploadify/uploadify.swf',
+		'script'         : '/article/attachment/upload/',
+		'cancelImg'      : 'cancel.png',
+		'queueID'        : 'fileQueue',
+		'auto'           : true,
+		'multi'          : true,
+        'fileDataName'   : 'file',
+        'scriptData'     : {session_key: '{{ request.COOKIES.sessionid }}'},
+        'onComplete'     : handleUploadedComplete
+	});
+
+    var uploaded_files = [];
+    function handleUploadedComplete(event, queueID, fileObj, response, data) {
+        res = $.parseJSON(response);
+        if (res.success) {
+            var data = res.data;
+            var $link = $("<a>").attr("href", data.uploaded_file_url).html("下载地址为: " + data.uploaded_file_url);
+            $link.appendTo($("#uploadify" + queueID));
+
+            uploaded_files.push(data.attachment_pk);
+            $("#id_attachment").val(uploaded_files.join(","));
+        }
+        return false;
+    }
+
+    $("#add-attachment").toggle(function () {
+        $(this).html("隐藏");
+        $("#upload-wrapper").show();
+    }, function () {
+        $(this).html("显示");
+        $("#upload-wrapper").hide();
+    });
+
+});
+</script>
+
+<script type="text/javascript">
+		KE.show({
+			id : 'id_content',
+			imageUploadJson : '/article/attachment/upload/',
+			fileManagerJson : '/article/attachment/upload/',
+			allowFileManager : true,
+			afterCreate : function(id) {
+				KE.event.ctrl(document, 13, function() {
+					KE.util.setData(id);
+					document.forms['example'].submit();
+				});
+				KE.event.ctrl(KE.g[id].iframeDoc, 13, function() {
+					KE.util.setData(id);
+					document.forms['example'].submit();
+				});
+			}
+		});
+/*
+	KE.show({
+				id : 'editor',
+				resizeMode : 1,
+				allowPreviewEmoticons : false,
+				allowUpload : false,
+				items : [
+				'fontname', 'fontsize', '|', 'textcolor', 'bgcolor', 'bold', 'italic', 'underline',
+				'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+				'insertunorderedlist', '|', 'emoticons', 'image', 'link']
+			}
+*/
+
+</script>
+
+{% endblock %}
+{% block content %}
+<form method="post" id="AddArticleForm">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <p>
+    显示上传附件表单吗？<a href="#" id="add-attachment">显示</a>
+    <input type="hidden" name="attachment" value="" id="id_attachment" />
+    <div id="upload-wrapper">
+        <div id="fileQueue" style="display:hidden"></div>
+        <input type="file" name="file" id="uploadify" />
+    </div>
+    </p>
+    <p class="submitWrapper"><input type="submit" class="submit-button" value="保存" /></p>
+</form>
+{% endblock %}

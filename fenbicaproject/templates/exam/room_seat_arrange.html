@@ -1,0 +1,237 @@
+{% extends "exam/base.html" %}
+{% block extra-head %}
+<link rel="stylesheet" href="/static/css/table.css" type="text/css" />
+<style type="text/css">
+#content {
+    padding: 10px;
+}
+table {
+}
+tfoot {
+    border-top: 1px solid #ddd;
+    background: transparent url(/static/img/mash/bg-gray.jpg) repeat-x center center;
+    line-height: 2em;
+}
+caption {
+    font-size: 1.5em;
+    font-weight: bold;
+    padding: 5px;
+}
+.student_num, .seat_num, .seat_blance_num {
+    font-size: 2em;
+    font-weight: bold;
+    padding: 0 10px;
+}
+#room_num, #room_col_num {
+    width: 20px;
+}
+</style>
+{% endblock %}
+{% block content %}
+<form method="post">
+    <label>第一步，</label>
+    <select name="exam" id="exam">
+        {% for e in exam_list %}
+        <option value="{{ e.pk }}">{{ e }}</option>
+        {% endfor %}
+    </select>
+    <label>第二步，</label>
+    <select name="grade" id="grade">
+        {% for g in grade_list %}
+        <option value="{{ g.grade }}">{{ g.grade__name }} (共有{{ g.klass_num }})</option>
+        {% endfor %}
+    </select>
+    <label>第三步，设置考室总数</label>
+    <input type="text" name="room_num" id="room_num" />
+    <label>考室座位列数</label>
+    <input type="text" name="room_num" id="room_col_num" value="5" />
+    <button class="submit-button" id="next-step">初始化试室</button>
+</form>
+<hr />
+<div>
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="exam" id="exam_input" value="" />
+        <input type="hidden" name="grade" id="grade_input" value="" />
+        <input type="hidden" name="arrange_way" id="arrange_way" value="" />
+    <table id="RoomSeat">
+        <caption>试室座位编排</caption>
+        <thead>
+            <tr>
+                <th>试室号</th>
+                <th>总座位数</th>
+                <th>总列数</th>
+                <th>各列人数</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="999">
+                    考生人数: <span class="student_num"></span>  
+                    座位数: <span class="seat_num"></span>
+                    考生座位分配情况:<span class="seat_blance_num"></span>, 最后一步，请选择下面编排方式生成试室座位表
+                </td>
+            </tr>
+            <tr>
+                <td colspan="999">
+                    <input type="submit" class="submit-button" id="generate_examinee_seat_by_random" value="单纯的随机编排" /> 或者
+                    <input type="submit" class="submit-button" id="generate_examinee_seat_by_prev_exam_score" value="按考生上次考试的总分成绩优先随机编排" />
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+    </form>
+</div>
+<script type="text/javascript">
+
+//已经编排过座位了考试.年级
+var arranged_room_str_list = $.parseJSON('{{ arranged_room_list|safe}}');
+
+$(function () {
+    $("#exam").change(function () {
+        var exam = $(this).val();
+        var exam_text = $(this).find("option:selected").text();
+        $.getJSON("/exam/get_exam_grade_list/" + exam,  function (res) {
+            if (res.success) {
+                var data = res.data, options = [], option = "";
+                if (data.length == 0) {
+                    return null;
+                }
+                for (var i=0;i<data.length;i++) {
+                    option = '<option value="' + data[i].grade + '" student_num="' + data[i].student_num +'">' +  data[i].grade__name + "（共有" + data[i].klass_num + ' 个班, ' + data[i].student_num + ' 人)</option>'; 
+                    options.push(option);
+                }
+                $("#grade").html(options.join(""));
+                $("#grade").trigger("change");
+            }
+        });
+    }).trigger("change");
+
+    $("#grade").change(function () {
+        var student_num = $(this).find("option:selected").attr("student_num");
+        $(".student_num").html(student_num).data("student_num", student_num);
+    });
+
+    $("#next-step").click(function(event) {
+        event.preventDefault();
+
+        var exam = $("#exam").val();
+        var grade = $("#grade").val();
+
+        var exam_grade_str = exam + "." + grade;
+        if (arranged_room_str_list.indexOf(exam_grade_str) != -1) {
+            if(!confirm("警告：此次考试年级座位表已经编排过了,是否要重新编排,重新编排，原来编排过的数目会被清空"))
+                return ;
+        } 
+
+        var student_num = $("#grade option:selected").attr("student_num");
+        var room_num = $("#room_num").val();
+        if (room_num == "") {
+            alert("进入下一步前，　务必先填写所需考室的数目");
+            $("#room_num").focus();
+        }
+        var room_list = makelist(student_num, room_num);
+        var room_tr = [];
+        var room_col_num = $("#room_col_num").val();
+        for (var i=0; i<room_list.length; i++) {
+            var seat_list = makelist(room_list[i], room_col_num);
+            var color = (i % 2 ==0) ? "even": "odd";
+            var tr = ['<tr class="', color, '"><td>', i+1, 
+                      '</td><td class="seat_amount">', room_list[i], "</td><td>",
+                      seat_list.length, '</td><td><input name="room_', i+1 ,'" class="seat_num_input" type="text" value="', seat_list ,
+                      '"/></td></tr>'];
+            room_tr.push(tr.join(""));
+        }
+        $("#RoomSeat tbody").html(room_tr.join(""));
+        $("#RoomSeat .seat_num_input").trigger("change");
+    });
+
+    Array.prototype.sum = function() {
+        for (var i = 0, L = this.length, sum = 0; i < L; sum += this[i++]);
+            return sum;
+    }
+
+    $("#RoomSeat .seat_num_input").live("change", function () {
+        var seat_num_list = [];
+        $("#RoomSeat .seat_num_input").each(function () {
+            var seat_num = $(this).val().split(",");
+            var is_input_error = false;
+            for(var i=0,l=seat_num.length;i<l;i++) {
+                if (isNaN(parseInt(seat_num[i]))) {
+                    alert("输入 [各列人数] 的格式有错，请更正,正确的格式为各数字之间用英文逗号分隔");
+                    is_input_error = true;
+                } else {
+                    seat_num_list.push(parseInt(seat_num[i]));
+                }
+            }
+            if (is_input_error) {
+                $(this).css("color", "red");
+            } else {
+                $(this).css("color", "black");
+            }
+        });
+        var seat_amount = seat_num_list.sum();
+        $(".seat_num").html(seat_amount);
+
+        var seat_num = $(this).val().split(",");
+        var cur_seat_num_list = [];
+        for(var i=0,l=seat_num.length;i<l;i++) {
+            cur_seat_num_list.push(parseInt(seat_num[i]));
+        }
+        //更新座位总数
+        var cur_seat_amount = cur_seat_num_list.sum();
+        $(this).parent().parent().find(".seat_amount").html(cur_seat_amount);
+
+        //检查考生与座位数是否平衡
+        var seat_blance_num = seat_amount - $(".student_num").data("student_num");
+        if (seat_blance_num > 0) {
+            seat_blance_num_str = "多出 " + Math.abs(seat_blance_num);
+        } else if (seat_blance_num < 0) {
+            seat_blance_num_str = "缺少 " + Math.abs(seat_blance_num);
+        } else if (seat_blance_num == 0 ) {
+            seat_blance_num_str = "刚好平衡";
+        }
+        $(".seat_blance_num").html(seat_blance_num_str).data("seat_blance_num", Math.abs(seat_blance_num));
+    });
+
+    function makelist(num, part){
+        var div = Math.floor(num / part);
+        var remainder = num % part;
+        var alist = [];
+        for (var i=0; i<part; i++) {
+            alist.push(div);
+        }
+        for (var i=0; i<remainder; i++) {
+            alist[i] ++;
+        }
+        return alist;
+    }
+
+    $("#generate_examinee_seat_by_prev_exam_score, #generate_examinee_seat_by_random").click(function(event) {
+        event.preventDefault();
+        var seat_blance_num = $(".seat_blance_num").data("seat_blance_num");
+        if (seat_blance_num !== 0) {
+            alert("考生座位分配情况还没有平衡, 请确保考生人数与座位数相同后（即平衡),再点击下一步");
+            return ;
+        }
+        $("#exam_input").val($("#exam").val());
+        $("#grade_input").val($("#grade").val());
+
+        if ($(this).attr("id") == "generate_examinee_seat_by_random") {
+            arrange_way = "pure_random"
+        } else if ($(this).attr("id") == "generate_examinee_seat_by_prev_exam_score") {
+            arrange_way = "prev_exam_score"
+        } else {
+            arrange_way = "pure_random"
+        }
+
+        $("#arrange_way").val(arrange_way);
+        $(this).closest("form").submit();
+    });
+
+
+});
+</script>
+{% endblock %}

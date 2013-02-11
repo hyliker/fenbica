@@ -1,0 +1,74 @@
+{% extends "classgrade/base.html" %}
+{% block subnav %}
+<div id="breadcrumbs">
+    <p><a href="{% url classgrade_index %}">首页</a> &rsaquo; {{ title }} 师生名单 </p>
+</div>
+{% endblock %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="/static/css/table.css">
+<style type="text/css">
+#breadcrumbs {
+    padding: 5px;
+    color: #888;
+    font-size: 12px;
+    border-bottom: 1px solid #eee;
+    background-color: #f8f8f8;
+}
+table {
+    margin: 0 auto;
+}
+caption { 
+    font-size: 1.5em;
+    padding: 10px;
+    background: transparent url(/static/img/mash/bg-gray.jpg) repeat-x center center;
+}
+thead tr {
+    border-bottom: 2px solid #ddd;
+}
+select {
+    font-size: 1em;
+}
+</style>
+<script type="text/javascript">
+$(function () {
+    //cssHoverColor(".innerTable tbody tr","#9AC3F5");
+    cssHoverColor(".innerTable tbody tr","#FFFFCC");
+
+    $("#class_year, #class_grade").change(function () {
+        var year = $("#class_year").val();
+        var grade = $("#class_grade").val();
+        location.href = "/classgrade/class/list/" + year + "/" + grade;
+    });
+
+});
+</script>
+<table class="innerTable">
+    <caption>{{ title }} 学生名单</caption>
+    <thead>
+        <tr>
+            <th>序号</th>
+            <th>学号</th>
+            <th>班学号</th>
+            <th>姓名</th>
+            <th>性别</th>
+        {% if  not klass_pk %} <th>班级</th> {% endif %}
+            <th>加入日期</th>
+            <th>退出日期</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for m in classmate_list %}
+        <tr class="{% cycle "even" "odd" %}">
+            <td>{{ forloop.counter }}</td>
+            <td>{{ m.student.uuid }}</td>
+            <td>{{ m.uuid }}</td>
+            <td><a href="{{ m.student.get_absolute_url }}">{{ m.student.name }}</a></td>
+            <td>{{ m.student.gender.name }}</td>
+        {% if  not klass_pk %} <td>{{ m.klass }}</td> {% endif %}
+            <td>{{ m.dtstart }}</td>
+            <td>{{ m.dtend|default:"" }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

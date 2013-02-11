@@ -1,0 +1,93 @@
+{% extends "base/base.html" %}
+{% block title %} 凭你-数字化校园SaaS解决方案 {% endblock %}
+{% block extra-head %}
+<style type="text/css">
+#wrapper-header {
+    background-color: #1259C7;
+    color: #fff;
+    padding: 5px 5px 5px 30px;
+    margin: 5px 0;
+    font-size: 1em;
+    line-height: 1.5em;
+    font-size: 1.1em;
+    clear: both;
+    height: 20px;
+}
+#personal-info{
+    float: left;
+    width: 210px;
+    background-color: #eee;
+}
+#profile-image {
+    border: 5px solid #eee;
+}
+
+#main-content {
+
+}
+.section {
+    padding: 5px;
+    clear: both;
+}
+
+#im-info {
+    float: right;
+    height: 500px;
+    width: 200px;
+    border: 1px solid #1259C7;
+}
+dl dt {
+    color: #777;
+    margin-right: 1em;
+}
+dd, dt  {
+    padding-bottom: 1em;
+    float: left;
+}
+.section dl {
+    clear: both;
+}
+.section br {
+    clear: both;
+}
+
+#im-info .header {
+    background-color: #1259C7;
+    color: #fff;
+}
+
+</style>
+{% endblock %}
+{% block content %}
+
+<div id="wrapper-header" class="wrapper">
+</div>
+
+<div id="personal-info">
+    <div id="profile-image">
+        <img src="{{ MEDIA_URL }}img/mash/portrait.gif" />
+    </div>
+    <div class="section">
+        <h6>基本资料</h6>
+        <dl>
+            <dt>姓名</dt> <dd>张运来</dd><br/>
+            <dt>生日</dt> <dd>1984年2月24日</dd><br/>
+            <dt>职称</dt> <dd>高级教师</dd><br/>
+            <dt>部门</dt> <dd>高三科室</dd><br/>
+        </dl>
+    </div>
+</div>
+
+<div id="main-content">
+
+</div>
+
+<div id="im-wrapper">
+    <div class="wrapper header"><h6>家校通</h6></div>
+    <form>
+        <input type="text">
+        <input type="submit" class="submit-button" value="搜索">
+    </form>
+
+</div>
+{% endblock %}

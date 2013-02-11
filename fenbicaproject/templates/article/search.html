@@ -1,0 +1,109 @@
+{% extends "index/base.html" %}
+{% load pagination_tag %}
+{% block extra-head %}
+<link rel="stylesheet" media="screen" type="text/css" href="{{ MEDIA_URL }}base/pagination.css" />
+<style type="text/css">
+#search-header {
+    /*background-color: #1259C7;*/
+    color: #fff;
+    padding: 5px 5px 5px 30px;
+    padding: 5px;
+    margin: 0px 0;
+    font-size: 1em;
+    line-height: 1.5em;
+    font-size: 1.1em;
+    clear: both;
+    background-color: #888;
+    background-color: #97BB3F;
+    background-color: #7CBA0F;
+    /*background: #888 url(/static/img/mash/search20x20.png) no-repeat 5px 5px;*/
+}
+#content {
+    background: transparent url({{ MEDIA_URL}}img/mash/bg-gray.jpg) repeat-x;
+}
+#search-input {
+    width: 250px;
+}
+#search-page {
+    clear: left;
+    margin-left: 10px;
+}
+.wrapper {
+    background: transparent url({{ MEDIA_URL}}img/mash/bg-gray.jpg) repeat-x;
+}
+.article {
+    width: 820px;
+    margin-bottom: 10px;
+}
+.article-content {
+    font-size: 13px;
+    line-height: 1.5em;
+    padding: 5px;
+}
+.article h5 {
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    /*
+    background-color: #f8f8f8;
+    background: transparent url(/static/img/mash/bg_footer.gif) repeat-x;
+    */
+    padding: 5px;
+}
+#sidebar {
+    width: 150px;
+    float: left;
+}
+#categories li {
+    padding: 5px 0;
+}
+#articles, #pagebar {
+    margin: 10px;
+    float: left;
+
+}
+.article-meta {
+    text-align: left;
+    padding: 5px;
+    color: #888;
+    font-size: 13px;
+}
+.article-action {
+    float: right;
+    font-weight: normal;
+    font-size: 13px;
+}
+.article:hover {
+    background-color: #f8f8f8;
+}
+
+</style>
+
+{% endblock %}
+
+{% block subnav %}
+<div id="subnav" class="clearfix">
+<span>搜索<strong> {{ q }} </strong>获得约 <strong> {{ pages.count }} </strong> 条结果，以下是第 {{ pages.cur_page.start_index }}-{{ pages.cur_page.end_index }} 条。（用时 {{ qtime|floatformat:2 }} 秒） </span>
+</div>
+{% endblock subnav %}
+
+{% block content %}
+
+
+<div class="wrapper">
+    <ul id="articles">
+        {% for a in articles %}
+        <li class="article">
+        <h5><a href="{% url view_article a.pk %}">{{ a.title }}</a></h5>
+        <p class="article-meta"><a href="{% url person a.author.pk %}">{{ a.author.name }}</a> 于 {{ a.dtpublished }} 发表在 <a href="{{ a.category.get_absolute_url }}">{{ a.category.name }}</a> 投稿到 <a href="#">{{ a.public_category }}</a> 浏览数: {{ a.read_count }} 评论数: 8</p>
+            <div class="article-content">{{ a.content|striptags|removetags:"script"|slice:":150"|safe }}</div>
+        </li>
+        {% endfor %}
+    </ul>
+
+{% paginate pages.page_prefix_link  pages.object_list pages.cur_page.number 20 6 pages.object_list %}
+<div id="search-page">
+    {% include 'base/pagination.html' %}
+</div>
+
+</div>
+{% endblock %}

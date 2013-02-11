@@ -1,0 +1,143 @@
+{% extends "base/base.html" %}
+{% block content %}
+<style type="text/css">
+#scenery-wrapper {
+    padding: 10px;
+    background: transparent url(/static/img/mash/bg-gray.jpg) repeat-x;
+    height: 500px;
+    clear: both;
+}
+.photo-wrapper {
+    float: left;
+    padding: 0;
+    text-align: center;
+    margin: 5px;
+    border: 1px solid #eee;
+}
+.photo-wrapper img {
+    border-bottom: 0;
+    padding: 5px;
+    margin: 0px;
+}
+.photo-wrapper p {
+    padding: 3px;
+}
+
+#footer {
+    clear: both;
+}
+#about {
+    width: 350px;
+    float: left;
+    margin-right: 20px;
+    border-right: 1px solid #ddd;
+    padding-right: 10px;
+}
+#about p {
+    text-indent: 2em;
+    line-height:1.7em;
+}
+table tr.even {
+    background-color: #eee;
+    background-color: #ECF4FF;
+    background-color: #FAFAFA;
+    background-color: #F2F3F3;
+}
+table {
+    border-collapse: collapse;
+    margin-top: 0px;
+    background-color: #fff;
+}
+td, th {
+    padding: 5px 10px;
+    text-align: center;
+}
+td.unpass {
+    color:red;
+}
+/*
+td.excellent {
+    color:green;
+}
+td.fine {
+    color: blue;
+}
+*/
+thead {
+    background-color: #7CBA0F;
+    background-color: #cc8f00;
+    background-color: #ddd;
+    color: #fff;
+    color: #000;
+    background: transparent url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+    border-bottom: 2px solid #ddd;
+    /*
+    background: #fff url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+    color: #000;
+    border-top: 5px solid #7CBA0F;
+    */
+}
+tfoot {
+    background: transparent url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+}
+tfoot td {
+    height: 30px;
+    vertical-align: middle;
+    padding: 6px;
+}
+
+caption {
+    font-size: 1.5em;
+    padding: 10px;
+    background: transparent url(/static/img/mash/bg_footer.gif) repeat-x center center;
+}
+
+</style>
+<script type="text/javascript">
+$(function () {
+    //cssHoverColor(".innerTable tbody tr","#9AC3F5");
+    cssHoverColor(".innerTable tbody tr","#FFFFCC");
+});
+</script>
+<div id="scenery-wrapper">
+    <div id="about">
+    <h5>高考录取榜</h5>
+    <p>
+  热烈祝贺我校囊括2010年阳江市中考全市前18名，胡劲滔同学以总分861分获取阳江市第一名。全市前100名我校占81人,全市800分以上我校有226人，上阳江一中高中正取分数线412人，正取率64%；上阳江一中高中择校分数线592人(参加考试人数646人)。
+    </p>
+    </div>
+    <div class="scenery">
+        <table class="innerTable">
+            <caption> 2010 年高考　录取榜</caption>
+            <thead>
+                <th>准考证</th>
+                <th>姓名</th>
+                <th>性别</th>
+                <th>院校</th>
+                <th>专业</th>
+                <th>总成绩</th>
+                <th>录取批次</th>
+            </thead>
+            <tbody>
+            {% for s in enrollee %}
+                <tr class="{% cycle "even" "odd" %}">
+                    <td>{{ s.uuid }}</td>
+                    <td><a href="{% url person s.student.pk %}">{{ s.student.name }}</a></td>
+                    <td>{{ s.student.gender.name }}</td>
+                    <td>{{ s.college }}</td>
+                    <td>{{ s.major }}</td>
+                    <td>{{ s.score }}</td>
+                    <td>{{ s.level }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+
+            <tfoot>
+                <tr>
+                    <td colspan="888"></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+{% endblock %}

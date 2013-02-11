@@ -1,0 +1,6 @@
+school_id: 1
+model: schoolSetting
+settings:
+    - key: super_admin
+      value: hyliker
+      remark: 值为学校超级管理员的帐号名, 如有多个, 

@@ -1,0 +1,16 @@
+{% extends "base/base.html" %}
+{% block content %}
+<style type="text/css">
+#main-wrapper {
+    padding: 10px;
+    background: transparent url(/static/img/mash/bg-gray.jpg) repeat-x;
+    height: 500px;
+    clear: both;
+}
+</style>
+<div id="main-wrapper">
+    {% for e in exams %}
+    <p>{{ e }}</p>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends "article/base.html" %}
+{% load pagination_tag %}
+{% block extra-head %}
+<link rel="stylesheet" type="text/css" href="/static/css/table.css">
+<style type="text/css">
+#main-wrapper {
+    padding: 10px;
+    min-height: 400px;
+    clear: both;
+}
+td,th {
+    text-align: left;
+}
+#search {
+    padding-bottom: 10px;
+}
+#search-submit {
+    height: 24px;
+    width: 24px;
+    background: transparent url(/static/img/mash/search24x24.png) no-repeat right center;
+    border-width: 0;
+    cursor: pointer;
+    padding: 5px;
+}
+#search-input {
+    width: 150px;
+}
+#pagebar {
+    background: transparent url(/static/img/mash/bg-gray.jpg) repeat-x center center;
+    line-height: 2em;
+    border-top: 1px solid #ddd;
+}
+</style>
+<script type="text/javascript">
+$(function () {
+    //cssHoverColor(".innerTable tbody tr","#9AC3F5");
+    cssHoverColor(".innerTable tbody tr","#FFFFCC");
+
+    //删除附件
+    $(".delete_attachment").click(function (event) {
+        event.preventDefault();
+        var content = $(this).prev().html();
+        if (confirm("确认删除 " + content + " 附件吗")) {
+            $.getJSON($(this).attr("href"), function (res) {
+                if (res.success) {
+                    location.reload();
+                }
+            });
+        }
+    });
+});
+</script>
+{% endblock %}
+{% block content %}
+<div id="main-wrapper">
+    <div id="search">
+        <form method="get">
+         日志附件搜索：
+            <input type="hidden" name="context" value="article_attachment" />
+            <input type="text" id="search-input" name="q" value="{{ q }}" title="日志标题、附件文件名" />
+            <input type="submit" id="search-submit" value="" /> 
+        </form>
+    </div>
+
+    <table class="innerTable">
+        <thead>
+            <tr>
+                <th>序号</th>
+                <th>所属日志</th>
+                <th>附件文件名</th>
+                <th>上传日期</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for a in attachment_list %}
+            <tr class="{% cycle "even" "odd" %}">
+                <td>{{ forloop.counter }}</td>
+                <td>{% if a.article %}<a href="{{ a.article.get_absolute_url }}">{{ a.article }}</a>{% endif %}</td>
+                <td><a href="{{ a.file.url }}">{{ a.file_basename }}</a> <a href="{% url article_delete_attachment a.pk %}" class="remove_button delete_attachment">删除</a>
+                <td>{{ a.dtuploaded }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% paginate pages.page_prefix_link  pages.object_list pages.cur_page.number 20 5 pages.object_list %}
+    <div id="pagebar">
+        {% include 'base/pagination.html' %}
+    </div>
+</div>
+{% endblock %}

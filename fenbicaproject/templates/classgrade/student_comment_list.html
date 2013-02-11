@@ -1,0 +1,51 @@
+{% extends "classgrade/base.html" %}
+{% block extra-head %}
+<link rel="stylesheet" type="text/css" href="/static/css/table.css"> 
+<style type="text/css">
+caption select {
+    font-size: 1.5em;
+    padding: 3px;
+}
+caption {
+    padding: 5px;
+}
+</style>
+{% endblock %}
+{% block content %}
+<script type="text/javascript"> 
+$(function () {
+    cssHoverColor(".innerTable tbody tr","#FFFFCC");
+});
+</script> 
+<table id="classmate_list" class="innerTable">
+    <caption>
+        <select id="class_list">
+            {% for c in class_list %}
+            <option>{{ c }}</option>
+            {% endfor %}
+        </select>
+    </caption>
+    <thead>
+    <tr>
+        <th>序号</th>
+        <th>班学号</th>
+        <th>姓名</th>
+        <th>性别</th>
+        <th>上学期考评</th>
+        <th>下学期考评</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for c in classmate_list %}
+    <tr class="{% cycle "even" "odd" %}">
+        <td>{{ forloop.counter }}</td>
+        <td>{{ c.uuid }}</td>
+        <td><a href="{{ c.student.get_absolute_url }}">{{ c.student.name }}</a></td>
+        <td>{{ c.student.gender.name }}</td>
+        <td><a href="{% url classgrade_student_comment_edit c.pk %}?semester=1">添加</a></td>
+        <td><a href="{% url classgrade_student_comment_edit c.pk %}?semester=2">添加</a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

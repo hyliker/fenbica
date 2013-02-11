@@ -1,0 +1,33 @@
+{% extends "school/view_basic_profile.html" %}
+
+{% block title %} {{ person.name }} 注册信息{% endblock %}
+
+{% block infoTitle %}
+<h4 id="info-title">{{ person.name }} {{ person.get_identity_display }} 注册信息</h4>
+{% endblock %}
+
+{% block infoType_student_register %}
+<li><strong>注册</strong></li>
+{% endblock %}
+
+{% block infoItems %}
+<dl class="hdl">
+{% if register %}
+    {% for r in register %} 
+    <dt>姓名</dt> <dd>{{ r.student.name }}</dd>
+    <dt>学段</dt> <dd>{{ r.learning_stage }}</dd>
+    <dt>学年</dt> <dd>{{ r.learning_year }}</dd>
+    <dt>学期</dt> <dd>{{ r.semester }}</dd>
+    <dt>年级</dt> <dd>{{ r.grade }}</dd>
+    <dt>注册班级代码</dt> <dd>{{ r.class_code }}</dd>
+    <dt>注册状况</dt> <dd>{{ r.status }}</dd>
+    <dt>最晚注册时间</dt> <dd>{{ r.deadline_date }}</dd>
+    <dt>实际注册时间</dt> <dd>{{ r.actual_date }}</dd>
+    <dt>未注册原因</dt> <dd>{{ r.not_reg_causation }}</dd>
+    <hr/>
+    {% endfor %}
+{% else %}
+<h5>暂没有相关注册信息</h5>
+{% endif %}
+</div>
+{% endblock %}

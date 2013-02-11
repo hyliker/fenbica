@@ -1,0 +1,56 @@
+{% extends "index/base.html" %}
+{% block extra-head%}
+<style type="text/css">
+#wrapper {
+    margin: 5px auto;
+}
+.wrapper-header {
+    background-color:#4272BA;
+    background-color:#1259C7;
+    padding: 8px;
+    color: #fff;
+}
+.wrapper-content {
+    padding: 10px;
+    background: transparent url({{ MEDIA_URL}}img/mash/bg-gray.jpg) repeat-x;
+    height: 300px;
+}
+#register-flow {
+    background-color: #5AC712;
+    background-color: #DFE0E4;
+}
+#register-flow li.here {
+    color: #5AC712;
+    color: #1259C7;
+}
+#register-flow li {
+    list-style-type: decimal;
+    float: left;
+    margin-right: 30px;
+    padding: 10px;
+    font-size: 1.3em;
+    list-style-position: inside;
+}
+ul.errorlist li {
+    color: red;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="wrapper" class="clearfix">
+    <h5 class="wrapper-header">单位申请加入的流程</h5>
+    <ol id="register-flow" class="clearfix">
+        <li>递交申请</li>
+        <li class="here">资料审核</li>
+        <li>开通单位</li>
+    </ol>
+    <div class="wrapper-content">
+        <h1>欢迎申请加入数字校园平台!</h1>
+        <p>您已成功递交了开通申请，我们会尽快处理你的申请，并主动与您联系, 以便进一步沟通开通数字化校园平台的细节事情。</p>
+    </div><!--/wrapper-conttent-->
+
+    <div class="wrapper-footer">
+    </div><!--/wrapper-footer-->
+</div>
+{% endblock %}

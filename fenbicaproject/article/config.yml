@@ -1,0 +1,13 @@
+---
+menu:
+    - name: 我的日志 
+      link: /article/my
+    #- name: 好友日志
+      #link: /article/friend
+    #- name: 我的评论
+      #link: /article/comments/
+    #- name: 我的关注
+      #link: /article/score
+    - name: 日志管理 
+      link: /article/manager
+...

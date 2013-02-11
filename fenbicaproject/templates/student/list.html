@@ -1,0 +1,17 @@
+{% extends "student/base.html" %}
+
+{% block title %} {{ person.name }} 学生简历 {% endblock %}
+
+{% block infoTitle %}
+<h4 id="info-title">{{ person.name }} {{ person.get_identity_display }} 简历 </h4>
+{% endblock %}
+
+{% block infoItems %}
+    <form action="" method="get">
+        {{ filter.form.as_p }}
+        <input type="submit" />
+    </form>
+    {% for obj in filter %}
+        {{ obj.school_name }} - {{ obj.dtstart }}<br />
+    {% endfor %}
+{% endblock %}

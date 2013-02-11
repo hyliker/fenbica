@@ -1,0 +1,217 @@
+{% extends "index/base.html" %}
+{% load pagination_tag %}
+{% block extra-head %}
+<style type="text/css">
+#sidebar {
+    float: right;
+    width: 250px;
+    height: 300px;
+    background-color: #eee;
+}
+#message {
+    background-color: #1259C7;
+    color: #fff;
+}
+#message p {
+    padding: 5px;
+}
+#main-content {
+    background: transparent url({{ MEDIA_URL}}img/mash/bg-gray.jpg) repeat-x;
+    min-height: 500px;
+}
+.nav-section {
+    padding: 10px;
+    clear: both;
+}
+.nav-section a {
+    font-size: 1.2em;
+    padding: 10px;
+}
+ul.navs {
+    list-style-type: none;
+}
+ul.navs li {
+    float: left;
+    padding: 5px 0;
+}
+#edit_form {
+    padding: 10px;
+}
+form p label {
+    display: block;
+    float: left;
+    width: 100px;
+    text-align: right;
+    margin-right: 5px;
+}
+form p {
+    margin-bottom: 10px;
+}
+form p input {
+    width: 300px;
+}
+form textarea {
+    width: 300px;
+}
+form p.submit {
+    margin-left: 105px;
+}
+#main-content ul li {
+    margin-top: 10px;
+    float: left;
+}
+#main-content {
+    font-size: 1.1em;
+}
+#exams-wrapper, #exam-courses-wrapper, #exam-classes-wrapper {
+    padding: 10px;
+    float: left;
+    clear: both;
+}
+ul.hlist {
+    margin-left: 2em;
+}
+.hlist li {
+    clear: both;
+    margin-right: 20px;
+}
+
+h5,h6 {
+    clear: both;
+}
+h6 {
+    margin-left: 2em;
+}
+table tr.even {
+    background-color: #eee;
+    background-color: #ECF4FF;
+    background-color: #FAFAFA;
+    background-color: #F2F3F3;
+}
+table {
+    border-collapse: collapse;
+    margin-top: 0px;
+    background-color: #fff;
+    width: 100%;
+}
+td, th {
+    padding: 5px;
+    text-align: center;
+}
+thead {
+    background-color: #7CBA0F;
+    color: #fff;
+    /*
+    background: #fff url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+    color: #000;
+    border-top: 5px solid #7CBA0F;
+    */
+}
+caption {
+    font-size: 1.5em;
+    padding: 10px;
+    background: transparent url(/static/img/mash/bg_footer.gif) repeat-x center center;
+}
+tfoot {
+    background: transparent url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+}
+tfoot td {
+    height: 30px;
+    vertical-align: middle;
+    padding: 6px;
+}
+td.sidebar{
+    background: #DEDDDE url(/static/img/mash/bg_footer.gif) repeat-x top center;
+    background: #E3E3E3 url(/static/img/mash/bg_footer.gif.none) repeat-x top center;
+}
+</style>
+<script type="text/javascript">
+$(function () {
+    cssHoverColor(".innerTable tbody tr","#FFFFCC");
+    //cssHoverColor(".innerTable tbody tr","#9AC3F5");
+    $("#StudentExamResultForm").submit(function (event) {
+        //event.preventDefault();
+    });
+
+    $("#StudentExamResultForm input").focus(function (event) {
+        $(this).closest("tr").css("background-color", "#FFFFCC");
+    }).blur(function () {
+        $(this).closest("tr").css("background-color", "");
+    });
+});
+</script>
+{% endblock %}
+
+{% block navigation %}
+<ul class="menu">
+    <li><a href="/desktop/">个人桌面</a> &gt;</li>
+    <li><a href="#">考试成绩</a>&gt;</li>
+    <li><strong>成绩批量录入</strong></li>
+</ul>
+{% endblock navigation %}
+{% block content %}
+<div id="message" class="clearfix">
+    <p>第三步：输入成绩时应把输入法切换到英文状态。</p>
+</div><!--/message-->
+<div id="main-content" class="clearfix">
+    <form id="StudentExamResultForm" method="post">
+        {% csrf_token %}
+        <table class="innerTable cssHoverColor" id="checkbox-table">
+            {% with exam_course as e %}
+            <caption>
+                <p>{{ e.exam.learning_year_verbose_name }} {{ e.exam.semester }} {{ e.grade }} {{ class.name }} {{ e.course }}</p>
+            </caption>
+            {% endwith %}
+            <thead>
+                <tr>
+                    <th> 序号</th>
+                    <th> 学号</th>
+                    <th> 性别</th>
+                    <th> 姓名</th>
+                    <th> 分数成绩(满分为:{{ exam_course.full_score }})</th>
+                    <th style="width:300px">备注</th>
+                </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td colspan="5" class="sidebar"></td>
+                <td rowspan="{{ students|length|add:"1" }}" class="sidebar">
+                    <dl>
+                        <dt>人数:</dt>
+                        <dd> {{ students|length }}</dd>
+                        <dt>最高分:</dt>
+                        <dd> 98 李小明 </dd>
+                    </dl>
+                </td>
+            </tr>
+            {% for s in students %}
+            <tr class="{% cycle "even" "odd" %}">
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ s.uuid }}</td>
+                    <td>{{ s.gender.name }} </td>
+                    <td><a href="{% url view_profile s.pk %}" target="_blank">{{ s.name }}</a></td>
+                    {% if action == "save" %}
+                    <td>{{ s.score|default_if_none:"" }}</td>
+                    {% else %}
+                    <td><input type="text"  tabindex="{{ forloop.counter }}" name="student_pk_{{ s.pk }}" value="{{ s.score|default_if_none:"" }}" /></td>
+                    {% endif %}
+            </tr>
+            {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="11" id="search-page">
+                        {% if action == "save" %}
+                        <input type="button" onclick="javascript:history.go(-1);" class="submit-button" value="返回修改" style="padding:5px 20px" />
+                        <!--<a href="javascript:history.go(-1)">返回修改</a>-->
+                        {% else %}
+                        <input type="submit" class="submit-button" value="保存" style="padding:5px 20px" />
+                        {% endif %}
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </form>
+
+</div>
+{% endblock %}

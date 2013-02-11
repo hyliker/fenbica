@@ -1,0 +1,37 @@
+{% extends "school/view_basic_profile.html" %}
+
+{% block title %} {{ person.name }} 学籍异动信息 {% endblock %}
+
+{% block infoTitle %}
+<h4 id="info-title">{{ person.name }} {{ person.get_identity_display }} 学籍异动信息 共 {{ transfer|length }} 个 </h4>
+{% endblock %}
+
+{% block infoType_student_transfer %}
+<li><strong>学籍异动 </strong></li>
+{% endblock %}
+
+{% block infoItems %}
+<dl class="hdl">
+{% if transfer %}
+    {% for t in transfer %} 
+    <dt>变动类别</dt> <dd>{{ t.type.name  }}</dd>
+    <dt>变动日期</dt> <dd>{{ t.date|date:"Y年n月d日"}}</dd>
+    <dt>变动原因</dt> <dd>{{ t.causation }}</dd>
+    <dt>审批日期</dt> <dd>{{ t.date|date:"Y年n月d日"}}</dd>
+    <dt>审批文号</dt> <dd>{{ t.auditing_file_no }}</dd>
+    <dt>原学校名称</dt> <dd>{{ t.original_school_name }}</dd>
+    <dt>原就读学校代码</dt> <dd>{{ t.original_school_code }}</dd>
+    <dt>现就读学校代码</dt> <dd>{{ t.target_school_code }}</dd>
+    <dt>原就读班级代码</dt> <dd>{{ t.original_class_code }}</dd>
+    <dt>现就读班级代码</dt> <dd>{{ t.target_class_code }}</dd>
+    <dt>原学籍号</dt> <dd>{{ t.original_student_code }}</dd>
+    <dt>现学籍号</dt> <dd>{{ t.target_student_code }}</dd>
+    <dt>处理状态</dt> <dd>{{ t.status.name  }}</dd>
+    <dt>处理結果</dt> <dd>{{ t.result }}</dd>
+    <hr/>
+    {% endfor %}
+{% else %}
+<h5>暂没有相关学籍异动信息</h5>
+{% endif %}
+</div>
+{% endblock %}

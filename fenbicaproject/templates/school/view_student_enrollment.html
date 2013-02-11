@@ -1,0 +1,33 @@
+{% extends "school/view_basic_profile.html" %}
+
+{% block title %} {{ person.name }} 入学信息{% endblock %}
+
+{% block infoTitle %}
+<h4 id="info-title">{{ person.name }} {{ person.get_identity_display }} 入学信息</h4>
+{% endblock %}
+
+{% block infoType_student_enrollment %}
+<li><strong>入学</strong></li>
+{% endblock %}
+
+{% block infoItems %}
+<dl class="hdl">
+{% if enrollment %}
+    {% with enrollment as e %}
+    <dt>姓名</dt> <dd>{{ e.student.name }}</dd>
+    <dt>原学校名称</dt> <dd>{{ e.original_school_name }}</dd>
+    <dt>原学校代码</dt> <dd>{{ e.original_school_code }}</dd>
+    <dt>入学年月</dt> <dd>{{ e.date|date:"Y年n月d日" }}</dd>
+    <dt>入学方式</dt> <dd>{{ e.type }}</dd>
+    <dt>来源地区</dt> <dd>{{ e.original_area }}</dd>
+    <dt>学生来源</dt> <dd>{{ e.original_student }}</dd>
+    <dt>就读方式</dt> <dd>{{ e.attendance_type }}</dd>
+    <dt>升学总分</dt> <dd>{{ e.graduate_scores }}</dd>
+    <dt>特长</dt> <dd>{{ e.fortes }}</dd>
+    <hr/>
+    {% endwith %}
+{% else %}
+<h5>暂没有相关入学信息</h5>
+{% endif %}
+</div>
+{% endblock %}

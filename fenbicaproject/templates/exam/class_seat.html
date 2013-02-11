@@ -1,0 +1,232 @@
+{% extends "exam/base.html" %}
+{% load pagination_tag %}
+{% block extra-head %}
+<style type="text/css">
+#message {
+    background-color: #1259C7;
+    color: #fff;
+}
+#message p {
+    padding: 5px;
+}
+#main-content {
+    background: transparent url({{ MEDIA_URL}}img/mash/bg-gray.jpg) repeat-x;
+    min-height: 500px;
+}
+.nav-section {
+    padding: 10px;
+    clear: both;
+}
+.nav-section a {
+    font-size: 1.2em;
+    padding: 10px;
+}
+ul.navs {
+    list-style-type: none;
+}
+ul.navs li {
+    float: left;
+    padding: 5px 0;
+}
+#edit_form {
+    padding: 10px;
+}
+caption {
+    font-size: 1.5em;
+    padding: 5px;
+    background: transparent url(/static/img/mash/bg_footer.gif) repeat-x center center;
+}
+form p label {
+    display: block;
+    float: left;
+    width: 100px;
+    text-align: right;
+    margin-right: 5px;
+}
+form p {
+    margin-bottom: 10px;
+}
+form p input {
+    width: 300px;
+}
+form textarea {
+    width: 300px;
+}
+form p.submit {
+    margin-left: 105px;
+}
+#main-content {
+    font-size: 1.1em;
+}
+#exams-wrapper, #exam-courses-wrapper, #exam-classes-wrapper {
+    padding: 10px;
+    float: left;
+    clear: both;
+}
+ul.hlist {
+    margin-left: 2em;
+}
+.hlist li {
+    clear: both;
+    margin-right: 20px;
+}
+
+h5,h6 {
+    clear: both;
+}
+h6 {
+    margin-left: 2em;
+}
+table tr.even {
+    background-color: #eee;
+    background-color: #ECF4FF;
+    background-color: #FAFAFA;
+    background-color: #F2F3F3;
+}
+table {
+    border-collapse: collapse;
+    margin-top: 0px;
+    background-color: #fff;
+}
+td, th {
+    padding: 5px 10px;
+    text-align: center;
+    vertical-align: middle;
+    border:1px solid #ddd;
+}
+tr.class_course_avg {
+    background-color: #eee;
+}
+thead {
+    background-color: #7CBA0F;
+    background-color: #cc8f00;
+    background-color: #ddd;
+    color: #fff;
+    color: #000;
+    background: transparent url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+    border-bottom: 2px solid #ddd;
+    /*
+    background: #fff url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+    color: #000;
+    border-top: 5px solid #7CBA0F;
+    */
+}
+tfoot {
+    background: transparent url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+}
+tfoot td {
+    height: 30px;
+    vertical-align: middle;
+    padding: 6px;
+}
+#upload {
+    padding: 10px;
+}
+tr.import_error {
+    color:red;
+    background-color: #eee;
+    background-color: #ffeeee !important;
+    padding: 5px;
+    padding: 5px;
+    padding-left: 25px !important;
+}
+caption select {
+    font-size: 1em;
+    padding: 5px;
+}
+#sidebar{
+    float: left;
+    margin-right: 30px;
+}
+#sidebar h6 {
+    border-bottom: 5px solid #ddd;
+}
+#sidebar li {
+    border-bottom: 1px solid #ddd;
+    clear: both;
+    margin-left: 20px;
+}
+#sidebar li a{
+    display: block;
+    padding: 5px;
+    padding-left: 1em;
+}
+#sidebar li a:hover {
+    color: #fff;
+    background-color: #1259C7;
+    text-decoration: none;
+}
+#sidebar li a.active {
+    color: #fff;
+    background-color: #7CBA0F;
+}
+</style>
+<script type="text/javascript">
+$(function () {
+    //cssHoverColor(".innerTable tbody tr","#9AC3F5");
+    cssHoverColor(".innerTable > tbody > tr","#FFFFCC");
+    //cssHoverColor(".innerTable tbody tr table tr","#9AC3F5");
+    cssHoverColor(".innerTable tbody tr table tr","#FFFFA0");
+
+    $("#exam").change(function () {
+        location.href = "{% url exam_analyse_class %}?exam_pk=" + $(this).val();
+    });
+
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<div id="message" class="clearfix">
+</div><!--/message-->
+
+<div id="main-content" class="clearfix">
+    <div id="sidebar">
+        <h6>本次考试班级列表 共 {{ class_list|length }} 个</h6>
+        <ul>
+        {% for c in class_list %}
+            {% if c == klass %}
+            <li><a href="{% url exam_class_seat %}?exam_pk={{ exam.pk }}&klass_pk={{ c.pk }}" class="active">{{ c }}</a></li>
+            {% else %}
+            <li><a href="{% url exam_class_seat %}?exam_pk={{ exam.pk }}&klass_pk={{ c.pk }}">{{ c }}</a></li>
+            {% endif %}
+        {% empty %}
+        <li>暂没有相关科目</li>
+        {% endfor %}
+        </ul>
+    </div>
+    <table class="innerTable cssHoverColor" id="checkbox-table">
+        <caption> <a href="{{ klass.get_absolute_url }}">{{ klass }}</a> 考生试室座位表</caption>
+        <thead>
+            <tr>
+                <th>序号</th>
+                <th>学号</th>
+                <th>姓名</th>
+                <th>性别</th>
+                <th>考室</th>
+                <th>座号</th>
+                <th>座位</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for k in seat_list %}
+        <tr class="{% cycle "even" "odd" %}">
+                <td>{{ forloop.counter }}</td>
+                <td>{{ k.examinee.uuid }}</td>
+                <td><a href="{{ k.examinee.get_absolute_url }}">{{ k.examinee.name }}</a></td>
+                <td>{{ k.examinee.gender }}</td>
+                <td><a href="{{ k.room.get_absolute_url }}">{{ k.room }}</a></td>
+                <td>{{ k.uuid }}</td>
+                <td><a href="{% url exam_room_seat %}?exam_pk={{ exam.pk }}&room_pk={{ k.room.pk }}&action=Print">{{ k.row }} 行 {{ k.col }} 列</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="12"></td>
+            </td>
+        </tfoot>
+    </table>
+
+</div>
+{% endblock %}

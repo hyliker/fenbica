@@ -1,0 +1,206 @@
+{% extends "index/base.html" %}
+{% block extra-head %}
+<style type="text/css">
+#sidebar {
+    float: right;
+    width: 250px;
+    height: 300px;
+    background-color: #eee;
+}
+#message {
+    background-color: #1259C7;
+    color: #fff;
+}
+#message p {
+    padding: 5px;
+}
+#main-content {
+    background: transparent url({{ MEDIA_URL}}img/mash/bg-gray.jpg) repeat-x;
+    min-height: 500px;
+}
+.nav-section {
+    padding: 10px;
+    clear: both;
+}
+.nav-section a {
+    font-size: 1.2em;
+    padding: 10px;
+}
+ul.navs {
+    list-style-type: none;
+}
+ul.navs li {
+    float: left;
+    padding: 5px 0;
+}
+#edit_form {
+    padding: 10px;
+}
+form p label {
+    display: block;
+    float: left;
+    width: 100px;
+    text-align: right;
+    margin-right: 5px;
+    line-height: 2em;
+}
+form p {
+    margin-bottom: 10px;
+}
+form p input {
+    width: 300px;
+}
+form textarea {
+    width: 300px;
+}
+form p.submit {
+    margin-left: 105px;
+}
+
+ul.errorlist {
+    color: red;
+    margin-left: 105px;
+    padding: 5px;
+}
+caption {
+    font-size: 1.5em;
+    padding: 10px;
+    background: transparent url(/static/img/mash/bg_footer.gif) repeat-x center center;
+}
+
+table tr.even {
+    background-color: #eee;
+    background-color: #ECF4FF;
+    background-color: #FAFAFA;
+    background-color: #F2F3F3;
+}
+table {
+    border-collapse: collapse;
+    margin-top: 0px;
+    background-color: #fff;
+    width: 100%;
+    clear: both;
+}
+td, th {
+    padding: 5px 10px;
+    text-align: center;
+}
+thead {
+    background-color: #7CBA0F;
+    color: #fff;
+    /*
+    background: #fff url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+    color: #000;
+    border-top: 5px solid #7CBA0F;
+    */
+}
+tfoot {
+    background: transparent url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+}
+tfoot td {
+    height: 30px;
+    vertical-align: middle;
+    padding: 6px;
+}
+
+</style>
+
+<script type="text/javascript">
+$(function () {
+    //cssHoverColor(".innerTable tbody tr","#9AC3F5");
+    cssHoverColor(".innerTable tbody tr","#FFFFCC");
+
+    $("#exam").change(function () {
+        location.href = "{% url analysis_class %}exam-" + $(this).val();
+    });
+    $(".delete_studentexamcourse").click(function (event) {
+        $(this).closest("tr").css("background-color", "#ffccff");
+        if(confirm("警告，确认要删除此次考试的记录吗,　所有与此次考试的考试科目与学生成绩也会一同删除?")) {
+        } else {
+            event.preventDefault();
+        }
+    });
+
+});
+</script>
+
+{% endblock %}
+
+{% block navigation %}
+<ul class="menu">
+    <li><a href="/desktop/">个人桌面</a> &gt;</li>
+    <li><a href="#">考试成绩</a>&gt;</li>
+    <li><strong>编辑考试</strong></li>
+</ul>
+{% endblock navigation %}
+
+{% block content %}
+<div id="message" class="clearfix">
+    <p>编辑 <strong>{{ exam }}</strong> </p>
+</div><!--/message-->
+<div id="main-content" class="clearfix">
+    {% if form.errors %}
+    <p class="error"> 保存失败， 请更正表单中的错误，再保存</p>
+    {% endif %}
+    {% if form.success %}
+    <p class="success"> 保存成功</p>
+    {% endif %}
+
+    <form id="edit_form" method="post">
+    {% csrf_token %}
+    {{ form.as_p}}
+    <p class="submit">
+        <input type="submit" value="保存" class="submit-button" style="padding: 5px 20px" />
+        <input type="button" value="取消" onclick="javascript:history.go(-1);" class="button" style="padding: 5px 20px" />
+        <a href="{% url add_studentexamcourse %}?exam={{ exam.pk }}">添加此次考试科目</a>
+    </form>
+
+    <hr />
+
+    <div id="exam_courses">
+        <table class="innerTable">
+            <caption>{{ exam }}</caption>
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>年级</th>
+                    <th>科目</th>
+                    <th>考试开始时间</th>
+                    <th>考试结束时间</th>
+                    <th>学段</th>
+                    <th>满分值</th>
+                    <!--<th>备注</th>-->
+                    <th colspan="2">动作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in exam_courses %}
+                <tr class="{% cycle "even" "odd" %}">
+                    <td>{{ forloop.counter }}</td>
+                    <td><a href="{% url analysis_grade_student exam.pk c.grade.pk %}">{{ c.grade }}</a></td>
+                    <td><a href="{% url grade_course c.pk %}">{{ c.course }}</a></td>
+                    <td>{{ c.dtstart }}</td>
+                    <td>{{ c.dtend }}</td>
+                    <td>{{ c.learning_stage }}</td>
+                    <td>{{ c.full_score }}</td>
+                    <!--<td>{{ c.remark }}</td>-->
+                    <td><a href="{% url delete_studentexamcourse c.pk %}" class="delete_studentexamcourse">删除</td>
+                    <td><a href="{% url edit_studentexamcourse c.pk %}">编辑</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="888">
+                        {% if not exam_courses %}
+                        没有此次考试相关的科目
+                        {% else %}
+                        {% endif %}
+                    </td>
+                </tr>
+            </tfoot>
+        </table><!--/exam_courses-->
+
+    </div>
+</div>
+{% endblock %}

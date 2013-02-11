@@ -1,0 +1,93 @@
+{% extends "exam/base.html" %}
+{% load generic_object_details %}
+
+{% block content %}
+
+<style type="text/css">
+dl.hdl {
+    float: left;
+}
+dl.hdl dt {
+    color: #555;
+    float: left;
+    clear: left;
+    width: 9em;
+    /*height: 1em;*/
+    padding: 5px;
+    text-align: right;
+    line-height: 1.5em;
+}
+dl.hdl dd {
+    margin-left:10em;
+    display: block;
+    line-height: 1.5em;
+    /*height: 1em;*/
+    padding: 5px;
+    min-height:1.5em;
+}
+#course {
+    padding: 10px;
+}
+h5.title {
+    margin-left: 2em;
+}
+a.add {
+    float: right;
+    background: transparent url(/static/img/mash/add2.png) no-repeat left center;
+    padding-left: 36px;
+    line-height: 32px;
+    display: block;
+    font-size: 1.5em;
+    text-decoration: none;
+}
+#sidebar{
+    float: left;
+    width: 150px;
+}
+#sidebar h6 {
+    padding-left: 10px;
+    border-bottom: 5px solid #ddd;
+}
+#sidebar li {
+    border-bottom: 1px solid #ddd;
+}
+#sidebar li a{
+    display: block;
+    padding: 5px;
+    padding-left: 1em;
+}
+#sidebar li a:hover {
+    color: #fff;
+    background-color: #1259C7;
+    text-decoration: none;
+}
+#sidebar li a.active {
+    color: #fff;
+    background-color: #7CBA0F;
+}
+#info-details {
+    float: left;
+    margin-top: 2em;
+}
+</style>
+<div id="main-content">
+    <div id="sidebar">
+        <h6>相关考室列表 共 {{ related_room_list|length }} 个</h6>
+        <ul>
+        {% for c in related_room_list %}
+            {% if c == room %}
+        <li><a href="{{ c.get_absolute_url }}" class="active">{{ c.name }}</a></li>
+            {% else %}
+        <li><a href="{{ c.get_absolute_url }}">{{ c.name }}</a></li>
+            {% endif %}
+        {% empty %}
+        <li>暂没有相关科目</li>
+        {% endfor %}
+        </ul>
+    </div>
+
+    <div id="info-details">
+        {% generic_object_details room %}
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,15 @@
+{% extends "student/base.html" %}
+{% load generic_object_details %}
+{% block main-content %}
+<div id="main-content">
+        {% block infoTitle %}
+        <h4 id="info-title">{{ person.name }} {{ person.get_identity_display }} 考评条目详情
+            <a href="javascript:print();" class="print_button">打印</a>
+            {% if user.pk == person.pk %}<a href="{% url edit_person person.pk %}">编辑</a>{% endif %}
+            <a href="#" class="add_button">新增考评条目</a>
+        </h4>
+        {% endblock %}
+
+    {% generic_object_details comment %}
+</div>
+{% endblock main-content %}

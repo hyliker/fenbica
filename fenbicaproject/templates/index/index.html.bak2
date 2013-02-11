@@ -1,0 +1,61 @@
+{% extends "index/base.html" %}
+{% block extra-head %}
+<style type="text/css">
+#school-info p {
+    text-indent: 2em;
+    line-height: 1.5em;
+    font-size: 13px;
+}
+#school-info {
+    padding: 10px;
+    background-color: #DBE3EC;
+}
+#school-banner {
+    background-color: #DBE3EC;
+}
+#slideshow {
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+}
+</style>
+<script type="text/javascript">
+$(function() {
+
+    var $slideshowImg  = $("#slideshow > img");
+    $("#slideshow > img:gt(0)").hide();
+    var slideshowCount = $slideshowImg.size();
+    var currentIndex = 0;
+    setInterval(function () {
+        if (currentIndex == slideshowCount -1) {
+            $slideshowImg.eq(currentIndex).fadeOut("slow", function () {
+                $slideshowImg.eq(0).fadeIn("slow");
+            });
+            currentIndex = 0;
+        } else {
+            $slideshowImg.eq(currentIndex).fadeOut("slow", function () {
+                $(this).next().fadeIn("slow");
+            })
+            currentIndex++; 
+        }
+    }, 3000);
+
+});
+</script>
+
+{% endblock %}
+{% block content %}
+
+<div id="school-banner" class="clearfix">
+    <div id="slideshow">
+        <img src="/static/img/school/banner4.jpg" alt="阳西县兴华中学大门口" width="100%" />
+        <img src="/static/img/school/banner2.jpg" alt="阳西县兴华中学学生打乒乓球" width="100%" />
+        <img src="/static/img/school/banner3.jpg" alt="阳西县兴华中学学生书画作品展" width="100%" />
+    </div>
+</div>
+<div id="school-info" class="clearfix">
+    <p>
+广东省阳西县兴华中学位于阳西县城中心，创办于1985年。现在校学生２８００多人，在职员工１８０多人。拥有一支爱岗敬业、无私奉献、业务精良、经验丰富的师资队伍。一直以来坚持“以人为本，和谐发展”的办学理念，以“学生向往，家长放心，社会认同”为办学目标，以“团结、勤奋、求实、创新”为校训，科学决策，严格管理，全面贯彻国家教育方针和推行素质教育，致力于培养新世纪创造型人才。建校至今，学生获县市级以上学科竞赛奖达８００多人次。近年中考成绩辉煌：０８年有６人进入全县总分前１０名，０９年有４人进入全县总分前１０名，其中有全县第一名是兴华中学学生。兴华中学是阳江市一级学校，阳西县窗口学校，阳西县教育系统先进单位，阳江市师德建设先进集体，广东省文明单位。
+    </p>
+</div>
+{% endblock %}

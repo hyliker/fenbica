@@ -1,0 +1,199 @@
+{% extends "exam/base.html" %}
+{% load pagination_tag %}
+{% block extra-head %}
+<style type="text/css">
+#sidebar {
+    float: right;
+    width: 250px;
+    height: 300px;
+    background-color: #eee;
+}
+#message {
+    background-color: #1259C7;
+    color: #fff;
+}
+#message p {
+    padding: 5px;
+}
+#main-content {
+    background: transparent url({{ MEDIA_URL}}img/mash/bg-gray.jpg) repeat-x;
+    min-height: 500px;
+}
+.nav-section {
+    padding: 10px;
+    clear: both;
+}
+.nav-section a {
+    font-size: 1.2em;
+    padding: 10px;
+}
+ul.navs {
+    list-style-type: none;
+}
+ul.navs li {
+    float: left;
+    padding: 5px 0;
+}
+#edit_form {
+    padding: 10px;
+}
+caption {
+    font-size: 1.5em;
+    padding: 5px;
+    background: transparent url(/static/img/mash/bg_footer.gif) repeat-x center center;
+}
+form p label {
+    display: block;
+    float: left;
+    width: 100px;
+    text-align: right;
+    margin-right: 5px;
+}
+form p {
+    margin-bottom: 10px;
+}
+form p input {
+    width: 300px;
+}
+form textarea {
+    width: 300px;
+}
+form p.submit {
+    margin-left: 105px;
+}
+#main-content ul li {
+    margin-top: 10px;
+    float: left;
+}
+#main-content {
+    font-size: 1.1em;
+}
+#exams-wrapper, #exam-courses-wrapper, #exam-classes-wrapper {
+    padding: 10px;
+    float: left;
+    clear: both;
+}
+ul.hlist {
+    margin-left: 2em;
+}
+.hlist li {
+    clear: both;
+    margin-right: 20px;
+}
+
+h5,h6 {
+    clear: both;
+}
+h6 {
+    margin-left: 2em;
+}
+table tr.even {
+    background-color: #eee;
+    background-color: #ECF4FF;
+    background-color: #FAFAFA;
+    background-color: #F2F3F3;
+}
+table {
+    border-collapse: collapse;
+    margin-top: 0px;
+    background-color: #fff;
+    width: 100%;
+}
+td, th {
+    padding: 5px 10px;
+    text-align: center;
+    vertical-align: middle;
+    border:1px solid #ddd;
+}
+tr.class_course_avg {
+    background-color: #eee;
+}
+thead {
+    background-color: #7CBA0F;
+    background-color: #cc8f00;
+    background-color: #ddd;
+    color: #fff;
+    color: #000;
+    background: transparent url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+    border-bottom: 2px solid #ddd;
+    /*
+    background: #fff url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+    color: #000;
+    border-top: 5px solid #7CBA0F;
+    */
+}
+tfoot {
+    background: transparent url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+}
+tfoot td {
+    height: 30px;
+    vertical-align: middle;
+    padding: 6px;
+}
+caption select {
+    font-size: 1em;
+    padding: 5px;
+}
+</style>
+<script type="text/javascript">
+$(function () {
+    cssHoverColor(".innerTable > tbody > tr","#FFFFCC");
+
+    $("#exam").change(function () {
+        location.href = "{% url exam_class_seat_list %}?exam_pk=" + $(this).val();
+    });
+
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<div id="message" class="clearfix">
+</div><!--/message-->
+<div id="main-content" class="clearfix">
+
+    <table class="innerTable cssHoverColor" id="checkbox-table">
+        <caption> 
+            <select name="exam" id="exam">
+                {% for e in exam_list %}
+                    {% if e.pk == current_exam.pk %}
+                <option value="{{ e.pk }}" selected> {{ e }} </option>
+                    {% else %}
+                <option value="{{ e.pk }}"> {{ e }} </option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            <a  style="position: absolute;margin-top: 10px; font-size: 15px; right: 10px;" href="{% url exam_export_class_seat %}?exam_pk={{ current_exam.pk }}" class="down_button">下载所有年级的座位表</a>
+        </caption>
+        <thead>
+            <tr>
+                <th>序号</th>
+                <th>年级</th>
+                <th>班号</th>
+                <th>班名</th>
+                <th>班主任</th>
+                <th colspan="2">该班考生座位表</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for k in class_list %}
+        <tr class="{% cycle "even" "odd" %}">
+                <td>{{ forloop.counter }}</td>
+                <td>{{ k.grade.name }}</td>
+                <td><a href="{{ k.get_absolute_url }}">{{ k.uuid }}</a></td>
+                <td>{{ k.name }}</td>
+                <td><a href="{{ k.master.get_absolute_url }}">{{ k.master }}</a></td>
+                <td><a href="{% url exam_class_seat %}?klass_pk={{ k.pk }}&exam_pk={{ current_exam.pk }}">查看</a></td>
+                <td><a href="{% url exam_export_class_seat %}?exam_pk={{ current_exam.pk }}&klass_pk={{ k.pk }}">下载</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="999"></td>
+            </td>
+        </tfoot>
+    </table>
+
+</div>
+{% endblock %}

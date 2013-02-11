@@ -1,0 +1,63 @@
+{% extends "classgrade/base.html" %}
+{% block subnav %}
+<div id="breadcrumbs">
+    <p>
+    <a href="{% url classgrade_index %}">首页</a> &rsaquo; <a href="{% url classgrade_check_index %}">考核评比</a> &rsaquo;
+    {{ check.klass }} {{ check.dtchecked }} 考核条目详情
+    </p>
+</div>
+{% endblock %}
+{% load generic_object_details %}
+{% block content %}
+<style type="text/css">
+#breadcrumbs {
+    padding: 5px;
+    color: #888;
+    font-size: 12px;
+    border-bottom: 1px solid #eee;
+    background-color: #f8f8f8;
+}
+dl.hdl {
+    float: left;
+    width: 100%;
+}
+dl.hdl dt {
+    color: #555;
+    float: left;
+    clear: left;
+    width: 9em;
+    /*height: 1em;*/
+    padding: 5px;
+    text-align: right;
+    line-height: 1.5em;
+}
+dl.hdl dd {
+    margin-left:10em;
+    display: block;
+    line-height: 1.5em;
+    /*height: 1em;*/
+    padding: 5px;
+    min-height:1.5em;
+}
+#course {
+    padding: 10px;
+}
+h5.title {
+    margin-left: 2em;
+}
+a.add {
+    float: right;
+    background: transparent url(/static/img/mash/add2.png) no-repeat left center;
+    padding-left: 36px;
+    line-height: 32px;
+    display: block;
+    font-size: 1.5em;
+    text-decoration: none;
+}
+</style>
+<div id="main-content">
+    <h5 class="title">{{ check.klass }} {{ check.dtchecked }} 总分: {{ check.sum_ranking }} 考核条目详情 </h5>
+    <hr />
+    {% generic_object_details check %}
+</div>
+{% endblock content %}

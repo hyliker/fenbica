@@ -1,0 +1,82 @@
+<input type="text" id="LocationMultiLevelSelect_{{ field }}" name="{{ field }}" value="{{ value }}" style="width: 60px" />
+{{ value_obj.name }}   
+<a href="#" id="LocationMultiLevelSelect_{{ field }}_change">此项区域码， 点击通过选择来填写</a>
+<span style="display:none" id="LocationMultiLevelSelect_{{ field }}_wrapper">
+    <select id="{{ field }}_province" name="province">
+        <option value="0">--请选择省份--</option>
+        {% for p in provinces %}
+        <option value="{{ p.code }}">{{ p.name }}</option>
+        {% endfor %}
+        </select>
+        <select id="{{ field }}_city" name="city">
+            <option value="0">--请选择市--</option>
+        </select>
+        <select id="{{ field }}_country" name="country">
+            <option value="0">--请选择区县--</option>
+    </select>
+</span>
+<script type="text/javascript">
+$(function(){
+
+    $("#LocationMultiLevelSelect_{{ field }}_change").click( function () {
+        $("#LocationMultiLevelSelect_{{ field }}_wrapper").toggle();
+        return false;
+    });
+
+    // 绑定省下拉框
+    $("#{{ field }}_province").change(function(){
+        var provincde_pk = $(this).val();
+        if (provincde_pk != 0) {
+            $.getJSON("/standard/location_code/get_children", { "pk": provincde_pk, "by": "province" }, function (res) {
+                if (res.success) {
+                    $("#LocationMultiLevelSelect_{{ field }}").val(provincde_pk);
+                    $("#{{ field }}_city option").slice(1).remove();
+                    var $city = $("#{{ field }}_city");
+                    $.each(res.data, function(index,value){
+                        $city.append($("<option/>").attr("value", value.pk).html(value.name));
+                    });
+                } else {
+                    alert("failure");
+                }
+            });
+        } else {
+            $("#{{ field }}_city option").slice(1).remove();
+            $("#{{ field }}_country option").slice(1).remove();
+        }
+    });
+
+    /*
+
+    if($("#LocationMultiLevelSelect_{{ field }}").val()) {
+        $("#{{ field }}_province").val($("input[name=born_place]").val());
+        $("#{{ field }}_province").trigger("change");
+    };
+    */
+
+    // 绑定市级选择框
+    $("#{{ field }}_city").change(function () {
+        var city_pk = $(this).val();
+        if (city_pk != 0) {
+            $.getJSON("/standard/location_code/get_children", { "pk": city_pk, "by": "city" }, function (res) {
+                if (res.success) {
+                    $("#{{ field }}_country option").slice(1).remove();
+                    $("#LocationMultiLevelSelect_{{ field }}").val(city_pk);
+                    var $country = $("#{{ field }}_country");
+                    $.each(res.data, function (index, value) {
+                        $country.append($("<option/>").attr("value",value.pk).html(value.name));
+                    });
+                } else {
+                    alert("failure");
+                }
+            });
+        }
+    });
+
+    $("#{{ field }}_country").change(function () {
+        var country = $(this).val();
+        $("#LocationMultiLevelSelect_{{ field }}").val(country);
+    });
+
+});
+    
+</script>

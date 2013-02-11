@@ -1,0 +1,28 @@
+{% extends "school/view_basic_profile.html" %}
+
+{% block title %} {{ person.name }} 学生简历 {% endblock %}
+
+{% block infoTitle %}
+<h4 id="info-title">{{ person.name }} {{ person.get_identity_display }} 学生简历 </h4>
+{% endblock %}
+
+{% block infoType_student_experience %}
+<li><strong>简历</strong></li>
+{% endblock %}
+
+{% block infoItems %}
+<dl class="hdl">
+{% if experience %}
+    {% for e in experience %} 
+    <dt>所在学校名称</dt> <dd>{{ e.school_name }}</dd>
+    <dt>时间</dt> <dd> {{ e.dtstart|date:"Y年n月d日" }} 至 {{ e.dtend|date:"Y年n月d日" }}</dd>
+    <dt>担任职务</dt> <dd>{{ e.duty }}</dd>
+    <dt>证明人</dt> <dd>{{ e.attestor }}</dd>
+    <dt>备注</dt> <dd>{{ e.remark }}</dd>
+    <hr/>
+    {% endfor %}
+{% else %}
+<h5>暂没有相关简历信息</h5>
+{% endif %}
+</div>
+{% endblock %}

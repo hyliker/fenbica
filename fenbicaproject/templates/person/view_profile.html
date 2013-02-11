@@ -1,0 +1,104 @@
+{% extends "base/base.html" %}
+{% block title %} 凭你-数字化校园SaaS解决方案 {% endblock %}
+{% block extra-head %}
+<style type="text/css">
+#main-wrapper{
+    background-color: #1259C7;
+    padding: 5px 5px 5px 5px;
+    margin: 5px 0;
+    font-size: 1em;
+    line-height: 1.5em;
+    font-size: 1.1em;
+    clear: both;
+    border-top: 10px solid #1259C7;
+    background: transparent url({{ MEDIA_URL}}img/mash/bg-gray.jpg) repeat-x;
+}
+#personal-info{
+    float: left;
+    width: 150px;
+}
+.section {
+    padding: 5px;
+    clear: both;
+}
+
+dl dt {
+    color: #777;
+    margin-right: 1em;
+}
+dd, dt  {
+    padding-bottom: 1em;
+    float: left;
+}
+.section dl {
+    clear: both;
+}
+.section br {
+    clear: both;
+}
+
+img.portrait {
+    width: 140px;
+    border: 5px solid #eee;
+}
+#example {
+    float: left;
+    width: 100%;
+    <!--height: 700px;-->
+}
+#main-content {
+    margin-left: 160px;
+    margin-right: 5px;
+}
+</style>
+<script type="text/javascript">
+$(function(){
+    $("#example").tabs();
+});
+</script>
+{% endblock %}
+{% block content %}
+
+<div id="main-wrapper" class="clearfix">
+    <div id="wrapper-header" class="wrapper">
+    </div>
+
+    <div id="personal-info">
+        <div id="profile-image">
+            <img class="portrait" src="{{ MEDIA_URL }}img/mash/portrait.gif" />
+        </div>
+        <div class="section">
+            <dl>
+                <dt>姓名</dt> <dd>张运来</dd><br/>
+                <dt>编号</dt> <dd>8383884848</dd><br/>
+                <dt>身份</dt> <dd>学生／教职工</dd><br/>
+                <dt>部门</dt> <dd>高三科室</dd><br/>
+                <dt>电话</dt> <dd>13714204690</dd><br/>
+                <dt>Q Q</dt> <dd>350352028</dd><br/>
+            </dl>
+        </div>
+    </div>
+
+    <div id="main-content">
+        <div id="example">
+             <ul>
+                 <li><a href="{% url view_profile profileID %}?context=Profile"><span>基本信息</span></a></li>
+                 <li><a href="ahah_2.html"><span>简历</span></a></li>
+                 <li><a href="ahah_2.html"><span>来源</span></a></li>
+                 <li><a href="ahah_2.html"><span>学籍异动</span></a></li>
+                 <li><a href="ahah_2.html"><span>注册</span></a></li>
+                 <li><a href="ahah_2.html"><span>军训</span></a></li>
+                 <li><a href="ahah_3.html"><span>考试</span></a></li>
+                 <li><a href="ahah_3.html"><span>学历学位</span></a></li>
+                 <li><a href="ahah_3.html"><span>课程</span></a></li>
+                 <li><a href="ahah_3.html"><span>家庭</span></a></li>
+                 <li><a href="ahah_3.html"><span>奖励</span></a></li>
+                 <li><a href="ahah_3.html"><span>处分</span></a></li>
+                 <li><a href="ahah_3.html"><span>家庭</span></a></li>
+                 <li><a href="ahah_3.html"><span>考勤</span></a></li>
+             </ul>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

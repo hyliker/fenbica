@@ -1,0 +1,14 @@
+{% load navactive_tag %}
+{% block subnav %}
+<div id="subnav" class="clearfix">
+    <ul class="menu">
+        <li><a href="{% url add_studentexamresult %}" class="{% reverse_navactive request "add_studentexamresult" "active" %}">成绩录入</a></li>
+        <li><a href="{% url import_studentexamresult_by_school %}" class="{% reverse_navactive request "import_studentexamresult_by_school" %}">成绩导入</a></li>
+        <li><a href="{% url analysis_course %}" class="{% reverse_navactive request "analysis_course" "active" %}">科目分析</a></li>
+        <li><a href="{% url analysis_class_course %}" class="{% reverse_navactive request "analysis_class_course" "active" %}">班级分析</a></li>
+        <li><a href="{% url analysis_grade_course %}" class="{% reverse_navactive request "analysis_grade_course" "active" %}">年级分析</a></li>
+        <li><a href="{% url manage_studentexam %}" class="{% reverse_navactive request "manage_studentexam" %}">考试管理</a></li>
+        {% block extra-subnav %} {% endblock %}
+    </ul>
+</div><!--/subnav-->
+{% endblock subnav %}

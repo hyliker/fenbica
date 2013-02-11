@@ -1,0 +1,90 @@
+{% extends "dorm/base.html" %}
+{% load pagination_tag %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="/static/css/table.css">
+<style type="text/css">
+table {
+    margin: 0 auto;
+}
+caption { 
+    font-size: 1.5em;
+    padding: 10px;
+    background: transparent url(/static/img/mash/bg-gray.jpg) repeat-x center center;
+}
+thead tr {
+    border-bottom: 2px solid #ddd;
+}
+select {
+    font-size: 1em;
+}
+#search-submit {
+    height: 24px;
+    width: 24px;
+    background: transparent url(/static/img/mash/search24x24.png) no-repeat right center;
+    border-width: 0;
+    cursor: pointer;
+    padding: 5px;
+}
+#search-input {
+    width: 150px;
+}
+#menubar {
+    padding: 5px;
+}
+#pagebar {
+    padding: 10px 0;
+    background: transparent url(/static/img/mash/bg_footer.gif) repeat-x center center;
+    background: transparent url(/static/img/mash/big-bg.png) repeat-x center center;
+}
+.labelify {
+    color: #999;
+}
+</style>
+<script type="text/javascript">
+$(function () {
+    //cssHoverColor(".innerTable tbody tr","#9AC3F5");
+    cssHoverColor(".innerTable tbody tr","#FFFFCC");
+
+});
+</script>
+<div id="menubar">
+    <div id="search">
+        <form method="get">
+         搜索
+            <input type="hidden" name="context" value="check" />
+            <input type="text" id="search-input" name="q" value="{{ q }}" title="寝室号" />
+            <input type="submit" id="search-submit" value="" /> 
+        </form>
+    </div>
+</div>
+<table class="innerTable">
+    <thead>
+        <tr>
+            <th>序号</th>
+            <th>日期</th>
+            <th>宿舍楼</th>
+            <th>寝室</th>
+            <th>住宿生</th>
+            <th>寝室长</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for k in latelog_list %}
+        <tr class="{% cycle "even" "odd" %}">
+            <td>{{ forloop.counter }}</td>
+            <td>{{ k.dtlogged }}</td>
+            <td>{{ k.boarder.bed.bedchamber.building }}</td>
+            <td><a href="{{ k.boarder.bed.bedchamber.get_absolute_url }}">{{ k.boarder.bed.bedchamber }}</a></td>
+            <td><a href="{{ k.boarder.bed.bedchamber.master.get_absolute_url }}">{{ k.boarder.bed.bedchamber.master }}</a></td>
+            <td><a href="{{ k.boarder.student.get_absolute_url }}">{{ k.boarder.student.name }}</a></td>
+            <td>{{ k.telephone }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% paginate pages.page_prefix_link  pages.object_list pages.cur_page.number 20 6 pages.object_list %}
+<div id="search-page">
+    {% include 'base/pagination.html' %}
+</div>
+{% endblock %}

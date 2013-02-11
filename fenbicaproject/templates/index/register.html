@@ -1,0 +1,223 @@
+{% extends "index/base.html" %}
+{% block extra-head%}
+<style type="text/css">
+#wrapper {
+    margin: 5px auto;
+}
+.wrapper-header {
+    background-color:#4272BA;
+    background-color:#1259C7;
+    padding: 8px;
+    color: #fff;
+}
+.wrapper-content {
+    padding: 10px;
+    background: transparent url({{ MEDIA_URL}}img/mash/bg-gray.jpg) repeat-x;
+}
+form p {
+    margin-top: 10px;
+}
+form p label {
+    display: inline-block;
+    width: 65px;
+    margin-right: 20px;
+    vertical-align:top;
+    padding: 5px;
+}
+#register-flow {
+    background-color: #5AC712;
+    background-color: #DFE0E4;
+}
+#register-flow li.here {
+    color: #5AC712;
+    color: #1259C7;
+}
+#register-flow li {
+    list-style-type: decimal;
+    float: left;
+    margin-right: 30px;
+    padding: 10px;
+    font-size: 1.3em;
+    list-style-position: inside;
+}
+ul.errorlist li {
+    color: red;
+
+}
+form input, form textarea {
+    width: 450px;
+}
+form select {
+    width: 150px;
+}
+form p.form-submit {
+    clear: both;
+    width: 565px;
+}
+form p.form-submit input {
+    float: right;
+    margin-right: 5px;
+}
+span.requried {
+    color: red;
+}
+</style>
+<script type="text/javascript" charset="utf-8">
+$(function(){
+
+    // 绑定省下拉框
+    $("#province").change(function(){
+        var provincde_pk = $(this).val();
+        if (provincde_pk != 0) {
+            $.getJSON("/standard/location_code/get_children", { "pk": provincde_pk, "by": "province" }, function (res) {
+                if (res.success) {
+                    $("#city option").slice(1).remove();
+                    var $city = $("#city");
+                    $.each(res.data, function(index,value){
+                        $city.append($("<option/>").attr("value", value.pk).html(value.name));
+                    });
+                } else {
+                    alert("failure");
+                }
+            });
+        }
+    });
+
+    // 绑定市级选择框
+    $("#city").change(function () {
+        var city_pk = $(this).val();
+        if (city_pk != 0) {
+            $.getJSON("/standard/location_code/get_children", { "pk": city_pk, "by": "city" }, function (res) {
+                if (res.success) {
+                    $("#country option").slice(1).remove();
+                    var $country = $("#country");
+                    $.each(res.data, function (index, value) {
+                        $country.append($("<option/>").attr("value",value.pk).html(value.name));
+                    });
+                } else {
+                    alert("failure");
+                }
+            });
+        }
+    });
+
+});
+    
+</script>
+{% endblock %}
+
+{% block content %}
+<div id="wrapper" class="clearfix">
+    <h5 class="wrapper-header">单位申请加入的流程</h5>
+    <ol id="register-flow" class="clearfix">
+        <li class="here">递交申请</li>
+        <li>资料审核</li>
+        <li>开通单位</li>
+    </ol>
+    <div class="wrapper-content">
+        <form action="/register/" method="post" class="clearfix">
+            {% if error.category %}
+            <p class="error">
+                <label for="category">单位分类<span class="required">＊</span></label>
+                <select id="category" name="category">
+                    {% for c in category %}
+                    {% ifequal form.category c.0 %}
+                    <option value="{{ c.0 }}">{{ c.1 }} {{ form.category }}</option>
+                    {% else %}
+                    <option value="{{ c.0 }}" selected>{{ c.1 }}{{ form.category }}</option>
+                    {% endifequal %}
+                    {% endfor %}
+                </select>
+                <span class="error-msg">{{ error.category }}</span>
+            </p>
+            {% else %}
+            <p>
+                <label for="category">单位分类<span class="required">＊</span></label>
+                <select id="category" name="category">
+                    {% for c in category %}
+                    {% ifequal form.category c.0 %}
+                    <option value="{{ c.0 }}" selected>{{ c.1 }}</option>
+                    {% else %}
+                    <option value="{{ c.0 }}">{{ c.1 }}</option>
+                    {% endifequal %}
+                    {% endfor %}
+                </select>
+            </p>
+            {% endif %}
+
+            {% if error.enterprise %} <p class="error"> {% else %} <p> {% endif %}
+                <label for="enterprise">单位名称<span class="required">＊</span></label>
+                <input id="id_enterprise" type="text" name="enterprise" maxlength="32" value="{{ form.enterprise }}" />
+            {% if error.enterprise %} <span class="error-mg">{{ error.enterprise }}</span>{% endif %}
+            </p>
+            <p>
+            {% if error.location %}<p class="error">{% else %}<p>{% endif %}
+                <label for="province">行政区划<span class="required">＊</span></label>
+                <select id="province" name="province">
+                <option value="0">--请选择省份--</option>
+                {% for p in provinces %}
+                <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endfor %}
+                </select>
+                <select id="city" name="city">
+                    <option value="0">--请选择市--</option>
+                </select>
+                <select id="country" name="country">
+                    <option value="0">--请选择区县--</option>
+                </select>
+                {% if error.location %}<span class="error-msg">{{ error.location }}</span>{% endif %}
+            </p>
+            {% if error.person %}
+            <p class="error">
+                <label for="person">联系人名<span class="required">＊</span></label>
+                <input id="id_person" type="text" name="person" maxlength="12" value="{{ form.person }}" />
+                <span class="error-msg">{{ error.person }}</span>
+            </p>
+            {% else %}
+            <p>
+                <label for="person">联系人名<span class="required">＊</span></label>
+                <input id="id_person" type="text" name="person" maxlength="12" value="{{ form.person }}" />
+            </p>
+            {% endif %}
+
+            {% if error.contact %}
+            <p class="error">
+                <label for="contact">联系方式<span class="required">＊</span></label>
+                <input id="id_contact" type="text" name="contact" maxlength="256" value="{{ form.contact }}" /> 手机或者电话
+                <span class="error-msg">{{ error.contact }}</span>
+            </p>
+            {% else %}
+            <p>
+                <label for="contact">联系方式<span class="required">＊</span></label>
+                <input id="id_contact" type="text" name="contact" maxlength="256" value="{{ form.contact }}" /> 手机或者电话
+            </p>
+            {% endif %}
+
+            {% if error.address %}
+            <p class="error">
+                <label for="address">单位地址<span class="required">＊</span></label>
+                <input id="id_address" type="text" name="address" maxlength="128" value="{{ form.address }}" />
+                <span class="error-msg">{{ error.address }}</span>
+            </p>
+            {% else %}
+            <p>
+                <label for="address">单位地址<span class="required">＊</span></label>
+                <input id="id_address" type="text" name="address" maxlength="128" value="{{ form.address }}" />
+            </p>
+            {% endif %}
+            <p>
+                <label for="message">客户留言</label>
+                <textarea id="id_message" rows="10" cols="40" name="message">{{ form.message }}</textarea>
+            </p>
+            <p class="form-submit">
+            <label></label>
+            <input type="reset" class="reset-button" value="重新填写" />
+            <input type="submit" class="submit-button" value="提交申请" />
+            </p>
+        </form>
+    </div><!--/wrapper-conttent-->
+
+    <div class="wrapper-footer">
+    </div><!--/wrapper-footer-->
+</div>
+{% endblock %}

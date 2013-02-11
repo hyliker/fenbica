@@ -1,0 +1,63 @@
+{% extends "classgrade/base.html" %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="/static/css/table.css">
+<style type="text/css">
+table {
+    margin: 0 auto;
+}
+caption { 
+    font-size: 1.5em;
+    padding: 10px;
+    background: transparent url(/static/img/mash/bg-gray.jpg) repeat-x center center;
+}
+thead tr {
+    border-bottom: 2px solid #ddd;
+}
+select {
+    font-size: 1em;
+}
+</style>
+<script type="text/javascript">
+$(function () {
+    //cssHoverColor(".innerTable tbody tr","#9AC3F5");
+    cssHoverColor(".innerTable tbody tr","#FFFFCC");
+});
+</script>
+<table class="innerTable">
+    <caption>
+        <select>
+            {% for m in klass_years %}
+            <option>{{ m.year }} 年度班级列表 </option>
+            {% endfor %}
+        </select>
+    </caption>
+    <thead>
+        <tr>
+            <th>班级代码</th>
+            <th>建班年月</th>
+            <th>年级</th>
+            <th>班号</th>
+            <th>名称</th>
+            <th>荣誉称号</th>
+            <th>班主任</th>
+            <th>课程表</th>
+            <th>考核评比</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for k in klasses %}
+        <tr class="{% cycle "even" "odd" %}">
+            <td><a href="{{ k.get_absolute_url }}">{{ k.uuid }}</a></td>
+            <td>{{ k.dtcreated }}</td>
+            <td>{{ k.grade }}</td>
+            <td>{{ k.class_no }}</td>
+            <td>{{ k.name }}</td>
+            <td>{{ k.honorary_title }}</td>
+            <td><a href="{{ k.master.get_absolute_url }}">{{ k.master }}</a></td>
+            <td><a href="{% url classgrade_timetable k.uuid %}">课程表</a></td>
+            <td>考核评比</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,129 @@
+{% extends "index/base.html" %}
+{% block extra-head %}
+<style type="text/css">
+#intro {
+    background-color: #1259C7;
+    color: #fff;
+    padding: 15px 5px 15px 30px;
+    margin: 5px 0;
+    font-size: 1em;
+    line-height: 1.5em;
+    clear: both;
+}
+#intro a {
+    color: #fff;
+}
+#intro h3 {
+    font-size: 1.5em;
+}
+
+#learning_more {
+    margin-top: -2em;
+}
+#intro p {
+    font-size: 1.2em;
+    margin-top: 10px;
+}
+
+#school-info {
+    width: 400px;
+    padding: 5px;
+    margin-top: 5px;
+}
+#school-info dl dd {
+    margin-left: 2em;
+}
+#search {
+    padding: 5px;
+    background-color: #eee;
+    margin: 10px 0;
+    font-size: 1.1em;
+}
+#search-input {
+    width: 250px;
+}
+#search-slug {
+    float: left;
+    line-height: 2em;
+}
+#sidebar {
+    float: right;
+    width: 250px;
+    height: 300px;
+    background-color: #eee;
+}
+#main-content {
+    float: left;
+}
+
+</style>
+
+{% endblock %}
+{% block content %}
+
+<div id="intro" class="clearfix">
+    <h3>数字化校园建设新模式</h3>
+    <p class="floatleft"> 一根宽带， 一台电脑的配置，即实现 教育厅 教育局 学校 家庭 全面的教育信息化 </p>
+    <a href="/333#" id="learning_more" class="floatright"><strong>了解更多……</strong></a>
+    <!--<ul class="floatleft">-->
+        <!--<li>信息化建设费 <strong>0元</strong></li>-->
+        <!--<li> 信息化应用培训费 <strong>0元</strong></li>-->
+        <!--<li>电信运营级信息安全 <strong>0元</strong></li>-->
+        <!--[><li><strong>一根宽带， 一台电脑的配置，即实现 教育厅 教育局 学校 家庭 全面的教育信息化</strong></li><]-->
+    <!--</ul>-->
+</div><!--/intro-->
+
+<div id="search" class="clearfix">
+    <p id="search-slug"><strong>搜索</strong> 教学、家教、培训、课件、图书、学习、考试资源……</p>
+    <form id="search-form" class="floatright">
+        <select>
+            <option>课件</option>
+            <option>图书</option>
+            <option>试题</option>
+            <option>教学</option>
+            <option>家教</option>
+            <option>培训</option>
+        </select>
+        <input type="text" id="search-input"/>
+        <button type="submit" class="focus">搜索</button>
+    </form>
+</div><!--/search-->
+
+<div class="wrapper">
+    <div id="main-content">
+        <div id="school-info" class="wrapper">
+            <h3>教育局/学校</h3>
+            <dl>
+                <dt>公文流转、日常办公</dt> 
+                <dd>全程电子化、方便、快捷，成本大大降低。</dd>
+                <dt>学生学籍管理</dt>
+                <dd>将原先繁琐的学籍异动实现了电子化，通过简单的操作就可以轻松管理。</dd>
+                <dt>学生成绩管理</dt>
+                <dd>自动编排考场，轻松录入成绩，自动生成各类统计、分析报表。</dd>
+                <dt>校讯通平台</dt>
+                <dd>保障了学生安全，与学生、家长进行实时、高效沟通，家校教育配合紧密，有利于学生各方面成长。</dd>
+            </dl>
+
+        </div>
+
+    </div><!--/main-content-->
+
+    <div id="sidebar">
+        <h3>实用工具</h3>
+    </div><!--/sidebar-->
+</div>
+
+
+<!--<p class="warning"><strong>提示</strong>请输入您的户口部真实姓名</p>-->
+<!--<p class="error"><strong>提示</strong>请输入您的户口部真实姓名</p>-->
+<!--<p class="success"><strong>提示</strong>请输入您的户口部真实姓名</p>-->
+<!--<p class="prompt"><strong>提示</strong>请输入您的户口部真实姓名</p>-->
+<!--<form>-->
+    <!--<label for="id_name">姓名</label><input type="text" id="id_name" />-->
+    <!--<textarea>数字化校园</textarea>-->
+<!--</form>-->
+<!--<br />-->
+<!--<button class="focus">保存</button>-->
+<!--<button class="blur">提交</button>-->
+<!--<button>提交</button>-->
+{% endblock %}

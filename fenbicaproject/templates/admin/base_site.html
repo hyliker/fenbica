@@ -1,0 +1,29 @@
+{% extends "admin/base.html" %}
+{% load navactive_tag %}
+{% load i18n %}
+
+{% block title %}{{ title }} | {% trans 'Django site admin' %}{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">系统管理</h1>
+{% endblock %}
+
+{% block extrastyle %}
+{% if not is_popup %}
+<link rel="stylesheet" media="screen" type="text/css" href="{{ MEDIA_URL }}thirdparty/reset.css" />
+<link rel="stylesheet" media="screen" type="text/css" href="{{ MEDIA_URL }}css/admin.hack.css" />
+{% endif %}
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
+
+    {% block header %}
+    <div id="mheader"class="clearfix">
+        {% include  "base/include/header.html" %}
+    </div><!--/header-->
+    {% endblock header %}
+{% block footer %}
+    <div id="footer" class="clearfix">
+        <p id="copyright">Copyright &copy; 2010 Hyliker. All Rights Reserved.</p>
+    </div><!--/footer-->
+{% endblock %}

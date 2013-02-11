@@ -1,0 +1,327 @@
+{% extends "index/base.html" %}
+{% load pagination_tag %}
+{% block extra-head %}
+<style type="text/css">
+#sidebar {
+    float: right;
+    width: 250px;
+    height: 300px;
+    background-color: #eee;
+}
+#message {
+    background-color: #1259C7;
+    background-color: #ddd;
+    color: #fff;
+    color: #000;
+    background: transparent url({{ MEDIA_URL}}img/mash/bg-gray.jpg) repeat-x;
+    padding: 10px;
+}
+#message p {
+    padding: 5px;
+}
+#main-content {
+    background: transparent url({{ MEDIA_URL}}img/mash/bg-gray.jpg) repeat-x;
+    min-height: 500px;
+}
+.nav-section {
+    padding: 10px;
+    clear: both;
+}
+.nav-section a {
+    font-size: 1.2em;
+    padding: 10px;
+}
+ul.navs {
+    list-style-type: none;
+}
+ul.navs li {
+    float: left;
+    padding: 5px 0;
+}
+#edit_form {
+    padding: 10px;
+}
+form p label {
+    display: block;
+    float: left;
+    width: 100px;
+    text-align: right;
+    margin-right: 5px;
+}
+form p {
+    margin-bottom: 10px;
+}
+form p input {
+    width: 300px;
+}
+form textarea {
+    width: 300px;
+}
+form p.submit {
+    margin-left: 105px;
+}
+#main-content ul li {
+    margin-top: 10px;
+    float: left;
+}
+#main-content {
+    font-size: 1.1em;
+}
+#exams-wrapper, #exam-courses-wrapper, #exam-classes-wrapper {
+    padding: 10px;
+    float: left;
+    clear: both;
+}
+ul.hlist {
+    margin-left: 2em;
+}
+.hlist li {
+    clear: both;
+    margin-right: 20px;
+}
+
+h5,h6 {
+    clear: both;
+}
+h6 {
+    margin-left: 2em;
+}
+table tr.even {
+    background-color: #eee;
+    background-color: #ECF4FF;
+    background-color: #FAFAFA;
+    background-color: #F3F3F3;
+}
+table {
+    border-collapse: collapse;
+    margin-top: 0px;
+    background-color: #fff;
+    width: 100%;
+}
+td, th {
+    padding: 5px 10px;
+    text-align: center;
+}
+thead {
+    background-color: #7CBA0F;
+    background-color: #cc8f00;
+    background-color: #ddd;
+    color: #fff;
+    color: #000;
+    background: transparent url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+    border-bottom: 2px solid #ddd;
+    /*
+    background: #fff url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+    color: #000;
+    */
+}
+thead th {
+    padding: 10px;
+}
+caption {
+    font-size: 1.5em;
+    padding: 10px;
+    background: transparent url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+}
+tfoot {
+    background: transparent url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+}
+tfoot td {
+    height: 30px;
+    vertical-align: middle;
+    padding: 6px;
+}
+#back-button, #save-button {
+    display: none;
+}
+</style>
+<script type="text/javascript">
+$(function () {
+    //cssHoverColor(".innerTable tbody tr","#9AC3F5");
+    cssHoverColor(".innerTable tbody tr","#FFFFCC");
+});
+</script>
+{% endblock %}
+
+{% block subnav %}
+{% include "school/include/exam_subnav.xhtml" %}
+{% endblock subnav %}
+
+{% block content %}
+<script type="text/javascript">
+$(function () {
+
+    //考试选择后，显示相应考试科目
+    $("#exam").change(function () {
+        var exam = $(this).val();
+        $.getJSON("/exam/get_exam_courses_by_exam/" + exam,  function (res) {
+            if (res.success) {
+                var data = res.data, options = [], option = "";
+                for (var i=0;i<data.length;i++) {
+                    option = '<option value="' + data[i].id + '" full_score="' +  data[i].full_score +'">' + 
+                               data[i].grade__name + " " + data[i].course + "</option>";
+                    options.push(option);
+                }
+                $("#exam_course").html(options.join(""));
+                $("#exam_course").trigger("change");
+            }
+        });
+
+
+    }).trigger("change");
+
+    //考试科目选择后，显示相应的班别下拉框
+    $("#exam_course").change(function () {
+        var exam_course_pk = $("#exam_course").val();
+        $("#id_exam_course_pk").val(exam_course_pk);
+        $.getJSON("/exam/get_exam_course_classgrade/", {"exam_course_pk": exam_course_pk}, function (res) {
+            if (res.success) {
+                var data = res.data, options = [], option = "";
+                for (var i=0;i<data.length;i++) {
+                    option = '<option value="' + data[i].id + '">' + data[i].name + " " + "</option>";
+                    options.push(option);
+                }
+                $("#exam_class").html(options.join(""));
+                $("#exam_class").trigger("change");
+            }
+        });
+    }).trigger("change");
+
+    cssHoverColor(".innerTable tbody tr","#FFFFCC");
+    //cssHoverColor(".innerTable tbody tr","#9AC3F5");
+
+    $("#StudentExamResultForm tbody input").live("focus", function (event) {
+        $(this).closest("tr").css("background-color", "#FFFFCC");
+    }).live("blur", function () {
+        $(this).closest("tr").css("background-color", "");
+
+        var full_score = $("#exam_course option:selected").attr("full_score");
+        var input_score = parseInt($(this).val());
+        if (input_score >= 0 && input_score <= full_score || $(this).val() == "") {
+            $(this).parent().next().empty();
+        } else if ($(this).val() != "") {
+            $(this).parent().next().html('<span class="error">成绩录入值范围为 0<= X <= ' + full_score + " 之间</span>");
+            $(this).focus();
+        }
+    });
+
+    $("#display_students_button, #back-button").click(function () {
+        $("#back-button").hide();
+        $("#save-button").show();
+        var caption = $("#exam option:selected").text() + " " + $("#exam_course option:selected").text() + " " + $("#exam_class option:selected").text();
+        $("#caption").html(caption);
+        var class_pk = $("#exam_class").val();
+        var exam_course_pk = $("#exam_course").val();
+        $.getJSON("/exam/get_exam_course_students/", {"class_pk": class_pk, "exam_course_pk": exam_course_pk}, function (res) {
+            if (res.success) {
+                var tr="", student, students=res.data, even_or_odd;
+                for (var i=0; i<students.length;i++) {
+                    student = students[i];
+                    even_or_odd = (i % 2 ==0) ? "even" : "odd";
+                    tr += '<tr class="' + even_or_odd + '">' + 
+                          '<td>' + (i+1) +  '</td>' + 
+                          '<td><a href="/profile/view/' + student.pk + '">' + student.name + "</a></td>" +
+                          "<td>" + student.gender__name + "</td>" + 
+                          "<td>" + student.pk + "</td>" + 
+                          '<td><input type="text" tabindex="' + (i + 1) + '" name="student_pk_' + student.pk  + '" value="' + student.score +'" /></td>' + 
+                          '<td></td>' + 
+                          "</tr>";
+                }
+                $("#students").html(tr).hide().fadeTo("slow", "1");
+                cssHoverColor(".innerTable tbody tr","#FFFFCC");
+            }
+        });
+        return false;
+    });
+
+    $("#StudentExamResultForm").submit(function () {
+        var url = $(this).attr("action");
+        $.post(url, $(this).serialize(), function (res) {
+            if (res.success) {
+                var class_pk = $("#exam_class").val();
+                var exam_course_pk = $("#exam_course").val();
+                $.getJSON("/exam/get_exam_course_students/", {"class_pk": class_pk, "exam_course_pk": exam_course_pk}, function (res) {
+                    if (res.success) {
+                        var tr="", student, students=res.data, even_or_odd;
+                        for (var i=0; i<students.length;i++) {
+                            student = students[i];
+                            even_or_odd = (i % 2 ==0) ? "even" : "odd";
+                            tr += '<tr class="' + even_or_odd + '">' + 
+                                  '<td>' + (i+1) +  '</td>' + 
+                                  '<td><a href="/profile/view/' + student.pk + '">' + student.name + "</a></td>" +
+                                  "<td>" + student.gender__name + "</td>" + 
+                                  "<td>" + student.pk + "</td>" + 
+                                  '<td>' + student.score +'</td>' + 
+                                  '<td></td>' + 
+                                  "</tr>";
+                        }
+                        $("#students").html(tr).hide().fadeTo("slow", "1");
+                        cssHoverColor(".innerTable tbody tr","#FFFFCC");
+                    }
+                });
+                $("#save-button").hide();
+                $("#back-button").show();
+            }
+        }, "json");
+        return false;
+    });
+
+    $("#excel_input").click(function () {
+        var exam_course = $("#exam_course").val();
+        var exam_class = $("#exam_class").val();
+        var href = "/exam/export/studentexamresult/by_class/exam_course-" + exam_course + "/class-" + exam_class;
+        $(this).attr("href", href);
+    });
+
+});
+</script>
+<div id="message" class="clearfix">
+    第一步:
+    <select name="exam" id="exam">
+        {% for e in exams %}
+        <option value="{{ e.pk }}">{{ e.learning_year }} {{ e.semester }} {{ e.name }}</option>
+        {% endfor %}
+    </select>
+    第二步:
+    <select name="exam_course" id="exam_course">
+        {% for e in exam_courses %}
+        <option value="{{ e.pk }}">{{ e.grade }} {{ e.course }}</option>
+        {% endfor %}
+    </select>
+    第三步:
+    <select name="exam_class" id="exam_class">
+        {% for e in exam_classes %}
+        <option value="{{ e.pk }}">{{ e.name }}</option>
+        {% endfor %}
+    </select>
+    第四步:<a href="#" id="display_students_button">在线录入</a> | <a href="#" id="excel_input">Excel表格录入</a>
+</div><!--/message-->
+<div id="main-content" class="clearfix">
+    <form id="StudentExamResultForm" method="post" action="/exam/studentexamresult/add/">
+        <input type="hidden" name="exam_course_pk" value="0" id="id_exam_course_pk" />
+        <table class="innerTable cssHoverColor" id="checkbox-table">
+            <caption id="caption"></caption>
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>姓名</th>
+                    <th>性别</th>
+                    <th>学号</th>
+                    <th>分数成绩</th>
+                    <th style="width:300px">备注</th>
+                </tr>
+            </thead>
+            <tbody id="students">
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="11" id="search-page">
+                        <input type="submit" class="submit-button" id="save-button" value="保存" style="padding:5px 20px" />
+                        <input type="button" class="submit-button" id="back-button" value="返回修改" style="padding:5px 20px" />
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </form>
+</div>
+{% endblock %}

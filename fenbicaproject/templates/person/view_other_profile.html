@@ -1,0 +1,77 @@
+<style type="text/css">
+#inner-wrapper {
+    padding: 0px;
+}
+#inner-wrapper img.portrait2 {
+    float: left;
+    padding: 5px;
+}
+#inner-wrapper .section  {
+    margin-left: 10px;
+    float: left;
+    clear: none;
+    margin-top:0;
+}
+#inner-wrapper .section dl {
+    clear: none;
+}
+#inner-wrapper dd, #inner-wrapper dt {
+    padding-bottom:5px;
+}
+#inner-wrapper dt {
+    width: 7em;
+    text-align: right;
+}
+#inner-wrapper dd {
+    width: 400px;
+}
+</style>
+
+<div id="inner-wrapper" class="clearfix">
+        <img class="portrait2" src="{{ MEDIA_URL }}img/mash/portrait.gif" />
+        {% with profile as p %}
+        <div class="section">
+            <dl>
+                <dt>姓名</dt> <dd>{{ p.name }}</dd><br/>
+                <dt>性别</dt> <dd>{{ p.gender.name }}</dd><br/>
+                <dt>姓名拼音</dt> <dd>{{ p.spell_name }}</dd><br/>
+                <dt>曾用名</dt> <dd>{{ p.used_name }}</dd><br/>
+                <dt>身份证号</dt> <dd>{{ p.id_no }}</dd><br/>
+                <dt>出生日期</dt> <dd>{{ p.birthday|date:"Y年n月j日" }}</dd><br/>
+                <dt>学校</dt> <dd>{{ p.school.name }}</dd><br/>
+                <dt>职工编号</dt> <dd>{{ p.uuid  }}</dd><br/>
+                <dt>编制类别</dt> <dd>{{ p.type }}</dd><br/>
+                <dt>入校年月</dt> <dd>{{ p.dtenrollment }}</dd><br/>
+                <dt>来校年月</dt> <dd>{{ p.dtcome }}</dd><br/>
+                <dt>从教年月</dt> <dd>{{ p.dtteach }}</dd><br/>
+                <dt>档案编号</dt> <dd>{{ p.profile_no }}</dd><br/>
+                <dt>档案文本</dt> <dd>{{ p.profile_text }}</dd><br/>
+                <dt>科室号</dt> <dd>{{ p.section_code }}</dd><br/>
+                <dt>岗位职业</dt> <dd>{{ p.post_occupation_code }}</dd><br/>
+                <dt>婚姻状况</dt> <dd>{{ p.marriage.name }}</dd><br/>
+                <dt>血型</dt> <dd>{{ p.blood_type.name }}</dd><br/>
+                <dt>文化程度</dt> <dd>{{ p.diploma.name }}</dd><br/>
+                <dt>出生地</dt> <dd>{{ p.born_place.name }}</dd><br/>
+                <dt>籍贯</dt> <dd>{{ p.native_place.name }}</dd><br/>
+                <dt>民族</dt> <dd>{{ p.folk.name }}</dd><br/>
+                <dt>宗教信仰</dt> <dd>{{ p.religion }}</dd><br/>
+                <dt>港澳台侨</dt> <dd>{{ p.emigrant.name }}</dd><br/>
+                <dt>健康状况</dt> <dd>{{ p.health.name }}</dd><br/>
+                <dt>政治面貌</dt> <dd>{{ p.politics.name }}</dd><br/>
+                <dt>现住址</dt> <dd>{{ p.residence_address }}</dd><br/>
+                <dt>户口所在地</dt> <dd>{{ p.domicle_location }}</dd><br/>
+                <dt>户口性质</dt> <dd>{{ p.domicle_type.name }}</dd><br/>
+                <dt>流动人口状况</dt> <dd>{{ p.is_floating.name }}</dd><br/>
+                <dt>国别</dt> <dd>{{ p.nationality.name }}</dd><br/>
+                <dt>联系电话</dt> <dd>{{ p.telephone }}</dd><br/>
+                <dt>通信地址</dt> <dd>{{ p.postal_address }}</dd><br/>
+                <dt>邮政编码</dt> <dd>{{ p.postal_code }}</dd><br/>
+                <dt>电子信箱</dt> <dd>{{ p.email }}</dd><br/>
+                <dt>主页地址</dt> <dd>{{ p.homepage }}</dd><br/>
+                <dt>照片</dt> <dd>{{ p.photo }}</dd><br/>
+                <dt>特长</dt> <dd>{{ p.fortes }}</dd><br/>
+            </dl>
+        </div>
+        {% endwith %}
+
+</div>

@@ -1,0 +1,186 @@
+{% extends "base/base.html" %}
+{% block title %} {{ person.name }} 基本信息 {% endblock %}
+
+{% block extra-head %}
+<style type="text/css">
+{% include "school/view_basic_profile.css" %}
+</style>
+{% endblock %}
+
+
+{% block content %}
+    <!--<div id="header" class="clearfix">-->
+        <!--<a href="/">-->
+           <!--<img id="logo" src="/static/img/logo.png" alt="Logo">-->
+        <!--</a>-->
+        <!--<span id="identity_group_name">{{ person.identity_group_name }}</span>-->
+        <!--<div id="search" style="float: right;">-->
+            <!--<form action="{% url search %}">-->
+                <!--<input type="text" name="q" />-->
+                <!--<input type="submit" value="搜索" />-->
+            <!--</form>-->
+        <!--</div>-->
+    <!--</div>-->
+    <div id="sidebar">
+        {% if person.photo %}
+        <img class="person-photo" src="{{ person.photo }}" />
+        {% else %}
+        <img class="person-photo" src="{{ MEDIA_URL }}img/mash/photo.png" />
+        {% endif %}
+
+        {% block infoType %}
+        <ul class="info_type">
+        {% if person.identity == "School.Student" %}
+             {% block infoType_basic %}
+             <li><a href="{% url view_profile person.pk %}">基本信息</a></li>
+             {% endblock %}
+
+             {% block infoType_student_experience %}
+             <li><a href="{% url student_experience person.pk %}">简历</a></li>
+             {% endblock %}
+
+             {% block infoType_student_keeper %}
+             <li><a href="{% url student_keeper person.pk %}">监护人</a></li>
+             {% endblock %}
+
+             {% block infoType_student_family_member %}
+             <li><a href="{% url student_family_member person.pk %}">家庭成员</a></li>
+             {% endblock %}
+
+             {% block infoType_student_register %}
+             <li><a href="{% url student_register person.pk %}">注册</a></li>
+             {% endblock %}
+
+             {% block infoType_student_comment %}
+             <li><a href="{% url student_comment person.pk %}">考评</a></li>
+             {% endblock %}
+
+             {% block infoType_student_rewards %}
+             <li><a href="{% url student_rewards person.pk %}">奖励</a></li>
+             {% endblock %}
+
+             {% block infoType_student_punishment %}
+             <li><a href="{% url student_punishment person.pk %}">处分</a></li>
+             {% endblock %}
+
+             {% block infoType_student_enrollment %}
+             <li><a href="{% url student_enrollment person.pk %}">入学</a></li>
+             {% endblock %}
+
+             {% block infoType_student_graduate %}
+             <li><a href="{% url student_graduate person.pk %}">毕业</a></li>
+             {% endblock %}
+
+             {% block infoType_student_finish_study %}
+             <li><a href="{% url student_finish_study person.pk %}">结业</a></li>
+             {% endblock %}
+
+             {% block infoType_student_transfer %}
+             <li><a href="{% url student_transfer person.pk %}">学籍异动</a></li>
+             {% endblock %}
+
+             {% block infoType_student_assistance %}
+             <li><a href="{% url student_assistance person.pk %}">贫困補助</a></li>
+             {% endblock %}
+
+             {% block infoType_student_drill %}
+             <li><a href="{% url student_drill person.pk %}">军训</a></li>
+             {% endblock %}
+
+             {% block infoType_student_exam_result %}
+             <li><a href="{% url view_studentexamresult person.pk %}">考试成绩</a></li>
+             {% endblock %}
+
+        {% endif %}
+
+        {% if person.identity == "School.Staff" %}
+             {% block infoType_staff_basic %}
+             <li><a href="{% url view_profile person.pk %}">基本信息</a></li>
+             {% endblock %}
+
+             {% block infoType_staff_experience %}
+             <li><a href="{% url staff_experience person.pk %}">简历</a></li>
+             {% endblock %}
+
+             {% block infoType_staff_diploma %}
+             <li><a href="{% url staff_diploma person.pk %}">学历学位</a></li>
+             {% endblock %}
+
+             {% block infoType_staff_spouse %}
+             <li><a href="{% url staff_spouse person.pk %}">配偶</a></li>
+             {% endblock %}
+
+             {% block infoType_staff_other_family %}
+             <li><a href="{% url staff_other_family person.pk %}">其他家人</a></li>
+             {% endblock %}
+
+             {% block infoType_staff_teaching_workload %}
+             <li><a href="{% url staff_teaching_workload person.pk %}">教学工作量</a></li>
+             {% endblock %}
+
+             {% block infoType_staff_teaching %}
+             <li><a href="{% url staff_teaching person.pk %}">任课</a></li>
+             {% endblock %}
+
+        {% endif %} 
+        </ul>
+        {% endblock infoType %}
+
+    </div>
+    
+    <div id="main-content">
+        {% block infoTitle %}
+        <h4 id="info-title">{{ person.name }} {{ person.get_identity_display }} 基本信息 
+            <a href="javascript:print();">打印</a>
+            <a href="{% url edit_profile person.pk %}">编辑</a>
+        </h4>
+        {% endblock %}
+
+        {% with person as p %}
+        <div class="section">
+                {% block infoItems %}
+            <dl class="hdl">
+                <dt>姓名</dt> <dd>{{ p.name }}</dd>
+                <dt>姓名拼音</dt> <dd>{{ p.spell_name }}</dd>
+                <dt>曾用名</dt> <dd>{{ p.used_name }}</dd>
+                <dt>性别</dt> <dd>{{ p.gender.name }}</dd>
+                <dt>身份证号</dt> <dd>{{ p.id_no }}</dd>
+                <dt>出生日期</dt> <dd>{{ p.birthday|date:"Y年n月j日" }}</dd>
+                <dt>学校</dt> <dd>{{ p.student.school.name }}</dd>
+                <dt>职工编号</dt> <dd>{{ p.uuid  }}</dd>
+                <dt>编制类别</dt> <dd>{{ p.type }}</dd>
+                <dt>入校年月</dt> <dd>{{ p.dtenrollment }}</dd>
+                <dt>来校年月</dt> <dd>{{ p.dtcome }}</dd>
+                <dt>从教年月</dt> <dd>{{ p.dtteach }}</dd>
+                <dt>档案编号</dt> <dd>{{ p.profile_no }}</dd>
+                <dt>档案文本</dt> <dd>{{ p.profile_text }}</dd>
+                <dt>科室号</dt> <dd>{{ p.section_code }}</dd>
+                <dt>岗位职业</dt> <dd>{{ p.post_occupation_code }}</dd>
+                <dt>婚姻状况</dt> <dd>{{ p.marriage.name }}</dd>
+                <dt>血型</dt> <dd>{{ p.blood_type.name }}</dd>
+                <dt>文化程度</dt> <dd>{{ p.diploma.name }}</dd>
+                <dt>出生地</dt> <dd>{{ p.born_place.name }}</dd>
+                <dt>籍贯</dt> <dd>{{ p.native_place.name }}</dd>
+                <dt>民族</dt> <dd>{{ p.folk.name }}</dd>
+                <dt>宗教信仰</dt> <dd>{{ p.religion }}</dd>
+                <dt>港澳台侨</dt> <dd>{{ p.emigrant.name }}</dd>
+                <dt>健康状况</dt> <dd>{{ p.health.name }}</dd>
+                <dt>政治面貌</dt> <dd>{{ p.politics.name }}</dd>
+                <dt>现住址</dt> <dd>{{ p.residence_address }}</dd>
+                <dt>户口所在地</dt> <dd>{{ p.domicle_location }}</dd>
+                <dt>户口性质</dt> <dd>{{ p.domicle_type.name }}</dd>
+                <dt>流动人口状况</dt> <dd>{{ p.is_floating.name }}</dd>
+                <dt>国别</dt> <dd>{{ p.nationality.name }}</dd>
+                <dt>联系电话</dt> <dd>{{ p.telephone }}</dd>
+                <dt>通信地址</dt> <dd>{{ p.postal_address }}</dd>
+                <dt>邮政编码</dt> <dd>{{ p.postal_code }}</dd>
+                <dt>电子信箱</dt> <dd>{{ p.email }}</dd>
+                <dt>主页地址</dt> <dd>{{ p.homepage }}</dd>
+                <dt>照片</dt> <dd>{{ p.photo }}</dd>
+                <dt>特长</dt> <dd>{{ p.fortes }}</dd>
+            </dl>
+                {% endblock %}
+        </div>
+        {% endwith %}
+    </div>
+{% endblock %}

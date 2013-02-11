@@ -1,0 +1,22 @@
+        <div id="globalNav" class="clearfix">
+            <ul class="menu">
+                <li class="home"><a href="/">首页</a></li>
+                <li><a href="/teaching/">教学</a></li>
+                <li><a href="/jiajiao/">家教</a></li>
+                <li><a href="/pei/">培训</a></li>
+                <li><a href="/kaoshi/">考试</a></li>
+                <li><a href="/book/">图书</a></li>
+                <li><a href="/group/">小组</a></li>
+                <li><a href="/ppt">课件</a></li>
+                <li><a href="/test/">测试</a></li>
+                <li><a href="/test/">学校/教育局</a></li>
+            </ul>
+
+            <ul class="menu" id="user">
+                <li id="signedInAs">欢迎你，<strong><a href="{% url profile user.id %}">{{ user.username }}</a></strong></li>
+                <!--<li><a class="inbox" href="/settings/">信箱</a></li>-->
+                <li><a href="/settings/">设置</a></li>
+                <li><a href="/help/">帮助</a></li>
+                <li class="logout"><a href="/logout/">退出</a></li>
+            </ul>
+        </div><!--/globalNav-->

@@ -1,0 +1,10 @@
+User-agent:*
+Disallow:/admin/
+Disallow:/person/
+Disallow:/static/
+Disallow:/student/
+Disallow:/staff/
+Disallow:/exam/
+Disallow:/dorm/
+Disallow:/classgrade/
+Disallow:/course/

@@ -1,0 +1,24 @@
+{% extends "student/base.html" %}
+
+{% block title %} {{ person.name }} 考试成绩汇总分析 {% endblock %}
+
+{% block infoTitle %}
+<h4 id="info-title">
+    {{ person.name }} {{ person.get_identity_display }} 考试成绩汇总分析 
+</h4>
+{% endblock %}
+
+{% block extra-head %}
+{{ block.super }}
+<script type="text/javascript" src="{{ MEDIA_URL }}thirdparty/swfobject/swfobject.js"></script>
+<script type="text/javascript">
+    swfobject.embedSWF(
+      "{{ MEDIA_URL }}thirdparty/open-flash-chart/open-flash-chart.swf", "chart",
+      "100%", "550px", "9.0.0", "{{ MEDIA_URL }}thirdparty/swfobject/expressInstall.swf",
+      {"data-file":"/exam/chart/student/analyse/{{ person.pk }}"});
+</script>
+{% endblock %}
+
+{% block infoItems %}
+<div id="chart"></div>
+{% endblock %}

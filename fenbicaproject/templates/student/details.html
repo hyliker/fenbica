@@ -1,0 +1,14 @@
+{% extends "student/base.html" %}
+{% load generic_object_details %}
+{% block main-content %}
+<div id="main-content">
+        {% block infoTitle %}
+        <h4 id="info-title">{{ person.name }} {{ person.get_identity_display }} 基本信息 
+            <a href="javascript:print();">打印</a>
+            {% if user.pk == person.pk %}<a href="{% url edit_person person.pk %}">编辑</a>{% endif %}
+        </h4>
+        {% endblock %}
+
+    {% generic_object_details person %}
+</div>
+{% endblock main-content %}

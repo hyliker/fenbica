@@ -1,0 +1,73 @@
+{% load navactive_tag %}
+<div id="topbar">
+    <div id="announcement">
+        <!--<p>通知:全年级学生请于2010年10月1号前，在系统中完善自己的档案资料!</p>-->
+        <p>校园网试运行过程中， 如遇到技术性相关的问题， 请发邮件到 <a href="mailto:support@fenbica.com">support@fenbica.com</a>反馈。</p>
+    </div><!--/announcement-->
+
+
+{% if user.is_authenticated %}
+    <ul id="account">
+        {% comment %}
+        <li id="signedInAs">欢迎你，<strong><a href="{% url profile user.id %}">{{ user.username }}</a></strong> </li>
+        {% endcomment %}
+        <li id="signedInAs">欢迎你，<strong><a href="{% url person user.id %}">{{ user.username }}</a></strong> </li>
+        <!--<li><a class="inbox" href="/settings/">信箱</a></li>-->
+        <li><a href="/settings/">设置</a></li>
+        <!--<li><a href="/help/">帮助</a></li>-->
+        <li class="logout"><a href="/logout/">退出</a></li>
+    </ul>
+{% else %}
+    <ul id="account">
+        <!--<li id="forget_password"><a href="/forget_password">忘记密码</a></li>-->
+        <!--<li id="join"><a href="/register">加入</a></li>-->
+        <li id="signin"><a href="/login">登录</a></li>
+    </ul>
+{% endif %}
+</div><!--/topbar-->
+
+<div id="mashbar">
+<div id="branding">
+    <a href="/" title="返回首页">
+        <img id="logo" src="{{ MEDIA_URL }}img/logo.png" alt="阳西县兴华中学 标志 logo" />
+    </a>
+</div><!--/branding-->
+
+<div id="tagline">
+    <span>校园网</span>
+</div>
+
+<div id="search-wrapper">
+    <form action="{% url search %}" method="get" id="global-search-form">
+        <select name="context" id="global-search-form-context">
+            <option value="person" {% if context == "profile" %}selected{% endif %}>档案</option>
+            <option value="article" {% if context == "article" %}selected{% endif %}>文章</option>
+        </select>
+        <input type="text" name="q" class="input_text" title="姓名、姓名拼音、姓名简称、身份证、用户名、编号" id="search-input-text" value="{{ q }}" />
+        <!--<input type="hidden" name="context" value="officalProfile" />-->
+        <input type="submit" id="search-submit-button" class="button" value="" />
+    </form>
+</div><!--/search-wrapper-->
+
+<div id="navigation">
+    <ul class="menu">
+        <li><a href="/" class="{% navactive request "^/$" %}">首页</a></li>
+        <li><a href="{% url page_scenery_index %}" class="{% reverse_navactive request "page_scenery_index" %}">校园</a></li>
+        <li><a href="{% url article_index %}" class="{% reverse_navactive request "article_index" %}">日志</a></li>
+        <li><a href="{% url exam_index %}" class="{% navactive request "^/exam/" "active" %}">考试</a></li>
+        <li><a href="{% url course.views.index %}" class="{% navactive request "^/course/" "active" %}">课程</a></li>
+        <!--<li><a href="{% url college_enroll_index %}" class="{% navactive request "^/page/college_enroll/" %}">高考录取榜</a></li>-->
+        <li><a href="{% url dorm_index %}" class="{% navactive request "^/dorm/" %}">宿舍</a></li>
+        <li><a href="{% url classgrade_index %}" class="{% navactive request "^/classgrade/" "active" %}">班级</a></li>
+        <li><a href="{% url page_teacher_index %}" class="{% reverse_navactive request "page_teacher_index" %}">师资</a></li>
+        <li><a href="{% url page_service_index %}" class="{% reverse_navactive request "page_service_index" %}">办工电话</a></li>
+{% if user.is_authenticated %}
+        {% url person user.pk as person_link %}
+        <li><a href="{% url person user.pk %}" class="{% navactive request "^/(person|student|staff)/"%}">档案</a></li>
+        <li><a href="/admin/" class="{% navactive request "^/admin/" %}">管理</a></li>
+{% endif %}
+    </ul>
+</div><!--/navigation-->
+
+</div><!--mashbar-->
+

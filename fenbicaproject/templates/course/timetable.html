@@ -1,0 +1,56 @@
+{% extends "course/base.xhtml" %}
+{% block title %}
+{{ block.super }} 老师课程表
+{% endblock %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="/static/css/table.css">
+<style type="text/css">
+table {
+    margin: 0 auto;
+}
+caption { 
+    font-size: 1.5em;
+    padding: 10px;
+    background: transparent url(/static/img/mash/bg-gray.jpg) repeat-x center center;
+}
+td, th {
+    border: 1px solid #ddd;
+}
+thead tr {
+    border-bottom: 2px solid #ddd;
+}
+</style>
+{% for timetable in timetable_ds%}
+<table>
+    <caption><strong>{{ teacher.name }}</strong> 老师 {{ learning_year }} 学年度 {{ timetable.0.0.semester }} 课程表</caption>
+    <thead>
+        <tr>
+            <th>节</th>
+            <th>时间段</th>
+            <th>星期一</th>
+            <th>星期二</th>
+            <th>星期三</th>
+            <th>星期四</th>
+            <th>星期五</th>
+            <th>星期六</th>
+            <th>星期日</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for t in timetable %}
+        <tr class="{% cycle "even" "odd" %}">
+            <td>{{ forloop.counter }}</td> 
+            <td>{{ t.0.dtstart }} - {{ t.0.dtend }}</td>
+            <td>{% if t.1 %}<a href="{% url view_course t.1.course.pk|default:1 %}">{{ t.1.course.name }}</a> , <a href="{{ t.1.klass.get_absolute_url }}">{{ t.1.klass.name }}</a>{% endif %}</td>
+            <td>{% if t.2 %}<a href="{% url view_course t.2.course.pk|default:1 %}">{{ t.2.course.name }}</a> , <a href="{{ t.1.klass.get_absolute_url }}">{{ t.2.klass.name }}</a>{% endif %}</td>
+            <td>{% if t.3 %}<a href="{% url view_course t.3.course.pk|default:1 %}">{{ t.3.course.name }}</a> , <a href="{{ t.1.klass.get_absolute_url }}">{{ t.3.klass.name }}</a>{% endif %}</td>
+            <td>{% if t.4 %}<a href="{% url view_course t.4.course.pk|default:1 %}">{{ t.4.course.name }}</a> , <a href="{{ t.1.klass.get_absolute_url }}">{{ t.4.klass.name }}</a>{% endif %}</td>
+            <td>{% if t.5 %}<a href="{% url view_course t.5.course.pk|default:1 %}">{{ t.5.course.name }}</a> , <a href="{{ t.1.klass.get_absolute_url }}">{{ t.5.klass.name }}</a>{% endif %}</td>
+            <td>{% if t.6 %}<a href="{% url view_course t.6.course.pk|default:1 %}">{{ t.6.course.name }}</a> , <a href="{{ t.1.klass.get_absolute_url }}">{{ t.6.klass.name }}</a>{% endif %}</td>
+            <td>{% if t.7 %}<a href="{% url view_course t.7.course.pk|default:1 %}">{{ t.7.course.name }}</a> , <a href="{{ t.1.klass.get_absolute_url }}">{{ t.7.klass.name }}</a>{% endif %}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endfor %}
+{% endblock %}

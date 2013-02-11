@@ -1,0 +1,55 @@
+             {% block infoType_basic %}
+             <li><a href="{% url view_profile person.pk %}">基本信息</a></li>
+             {% endblock %}
+
+             {% block infoType_student_experience %}
+             <li><a href="{% url student_experience person.pk %}">简历</a></li>
+             {% endblock %}
+
+             {% block infoType_student_keeper %}
+             <li><a href="{% url student_keeper person.pk %}">监护人</a></li>
+             {% endblock %}
+
+             {% block infoType_student_family_member %}
+             <li><a href="{% url student_family_member person.pk %}">家庭成员</a></li>
+             {% endblock %}
+
+             {% block infoType_student_register %}
+             <li><a href="{% url student_register person.pk %}">注册</a></li>
+             {% endblock %}
+
+             {% block infoType_student_comment %}
+             <li><a href="{% url student_comment person.pk %}">考评</a></li>
+             {% endblock %}
+
+             {% block infoType_student_rewards %}
+             <li><a href="{% url student_rewards person.pk %}">奖励</a></li>
+             {% endblock %}
+
+             {% block infoType_student_punishment %}
+             <li><a href="{% url student_punishment person.pk %}">处分</a></li>
+             {% endblock %}
+
+             {% block infoType_student_enrollment %}
+             <li><a href="{% url student_enrollment person.pk %}">入学</a></li>
+             {% endblock %}
+
+             {% block infoType_student_graduate %}
+             <li><a href="{% url student_graduate person.pk %}">毕业</a></li>
+             {% endblock %}
+
+             {% block infoType_student_finish_study %}
+             <li><a href="{% url student_finish_study person.pk %}">结业</a></li>
+             {% endblock %}
+
+             {% block infoType_student_transfer %}
+             <li><a href="{% url student_transfer person.pk %}">学籍异动</a></li>
+             {% endblock %}
+
+             {% block infoType_student_assistance %}
+             <li><a href="{% url student_assistance person.pk %}">贫困補助</a></li>
+             {% endblock %}
+
+             {% block infoType_student_drill %}
+             <li><a href="{% url student_drill person.pk %}">军训</a></li>
+             {% endblock %}

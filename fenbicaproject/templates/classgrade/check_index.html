@@ -1,0 +1,133 @@
+{% extends "classgrade/base.html" %}
+{% load pagination_tag %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="/static/css/table.css">
+<style type="text/css">
+table {
+    margin: 0 auto;
+}
+caption { 
+    font-size: 1.5em;
+    padding: 10px;
+    background: transparent url(/static/img/mash/bg-gray.jpg) repeat-x center center;
+}
+thead tr {
+    border-bottom: 2px solid #ddd;
+}
+tr.spacebar {
+    background: transparent url(/static/img/mash/bg_footer.gif) repeat-x center center;
+    background-color: #7CBA0F;
+}
+select {
+    font-size: 1em;
+}
+#search-submit {
+    height: 24px;
+    width: 24px;
+    background: transparent url(/static/img/mash/search24x24.png) no-repeat right center;
+    border-width: 0;
+    cursor: pointer;
+    padding: 5px;
+}
+#search-input {
+    width: 150px;
+}
+#menubar {
+    padding: 5px;
+}
+#pagebar {
+    padding: 10px 0;
+    background: transparent url(/static/img/mash/bg_footer.gif) repeat-x center center;
+    background: transparent url(/static/img/mash/big-bg.png) repeat-x center center;
+}
+</style>
+<script type="text/javascript">
+$(function () {
+    //cssHoverColor(".innerTable tbody tr","#9AC3F5");
+    cssHoverColor(".innerTable tbody tr:not(.spacebar)","#FFFFCC");
+
+    $("#class_year, #class_grade").change(function () {
+        var year = $("#class_year").val();
+        var grade = $("#class_grade").val();
+        location.href = "/classgrade/class/list/" + year + "/" + grade;
+    });
+
+});
+</script>
+<div id="menubar">
+    <div id="search">
+        <form method="get">
+         搜索
+            <input type="hidden" name="context" value="check" />
+            <input type="text" id="search-input" name="q" value="{{ q }}" />
+            <input type="submit" id="search-submit" value="" /> 
+        </form>
+    </div>
+</div>
+<table class="innerTable">
+    <thead>
+        <tr>
+            <th>序号</th>
+            <th>班级代码</th>
+            <th>班级名称</th>
+            <th>班主任</th>
+            <!--<th>早晨考勤</th>-->
+            <!--<th>上午考勤</th>-->
+            <!--<th>下午考勤</th>-->
+            <!--<th>晚上考勤</th>-->
+            <!--<th>学生出勤</th>-->
+            <!--<th>校服</th>-->
+            <!--<th>教室秩序</th>-->
+            <!--<th>发型服饰</th>-->
+            <!--<th>吸烟喝酒</th>-->
+            <!--<th>手机游戏</th>-->
+            <!--<th>课堂纪律</th>-->
+            <!--<th>家长联系</th>-->
+            <!--<th>其他分数</th>-->
+            <th>总分</th>
+            <th>检查者</th>
+            <!--<th>录入者</th>-->
+            <th>考核日期</th>
+            <th>详情</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for k in check_list %}
+            {% ifchanged k.dtchecked %}
+                {% if not forloop.first %}
+        <tr class="spacebar"><td colspan="999"></td></tr>
+                {% endif %}
+            {% endifchanged %}
+        <tr class="{% cycle "even" "odd" %}">
+            <td>{{ forloop.counter }}</td>
+            <td><a href="{% url classgrade_check_list %}?klass_pk={{ k.klass.uuid }}">{{ k.klass.uuid }}</a></td>
+            <td><a href="{{ k.get_absolute_url }}">{{ k.klass.name }}</a></td>
+            <td><a href="{{ k.klass.master.get_absolute_url }}">{{ k.klass.master.name }}</a></td>
+            <!--<td>{{ k.early_moring_ranking }}</td>-->
+            <!--<td>{{ k.morning_ranking }}</td>-->
+            <!--<td>{{ k.afternoon_ranking }}</td>-->
+            <!--<td>{{ k.evening_ranking }}</td>-->
+            <!--<td>{{ k.student_attendance_ranking }}</td>-->
+            <!--<td>{{ k.school_uniform_ranking }}</td>-->
+            <!--<td>{{ k.classroom_order_ranking }}</td>-->
+            <!--<td>{{ k.hairstyle_finery_ranking }}</td>-->
+            <!--<td>{{ k.smoke_drink_ranking }}</td>-->
+            <!--<td>{{ k.game_ranking }}</td>-->
+            <!--<td>{{ k.classroom_discipline_ranking }}</td>-->
+            <!--<td>{{ k.home_visiting_ranking }}</td>-->
+            <!--<td>{{ k.other_ranking }}</td>-->
+            <td>{{ k.sum_ranking }}</td>
+            <td><a href="{{ k.checker.get_absolute_url }}">{{ k.checker.name }}</a></td>
+            <!--<td>{{ k.creator }}</td>-->
+            <td>{{ k.dtchecked }}</td>
+            <td><a href="{{ k.get_absolute_url }}" title="{{ k.klass }}">详情</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% paginate pages.page_prefix_link  pages.object_list pages.cur_page.number 20 6 pages.object_list %}
+<div id="pagebar">
+    {% include 'base/pagination.html' %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "student/base.html" %}
+
+{% block title %} {{ person.name }} 班级列表 {% endblock %}
+
+{% block infoTitle %}
+<h4 id="info-title">
+    {{ person.name }} {{ person.get_identity_display }} 班级列表 
+</h4>
+{% endblock %}
+
+{% block infoItems %}
+</style>
+<table>
+    <thead>
+        <tr>
+            <th>序号</th>
+            <th>开始日期</th>
+            <th>结束日期</th>
+            <th>年级</th>
+            <th>班级名称</th>
+            <th>班学号</th>
+            <th>班主任</th>
+            <th>备注</th>
+    </thead>
+    <tbody>
+        {% for c in classmate_list %}
+        <tr class="{% cycle "even" "odd" %}">
+            <td>{{ forloop.counter }}</td>
+            <td>{{ c.dtstart|default:"" }}</td>
+            <td>{{ c.dtend|default:"" }}</td>
+            <td>{{ c.klass.grade|default:"" }}</td>
+            <td><a href="{{ c.klass.get_absolute_url }}">{{ c.klass.name }}</a></td>
+            <td>{{ c.uuid }}</td>
+            <td><a href="{{ c.klass.master.get_absolute_url }}">{{ c.klass.master|default_if_none:"" }}</a></td>
+            <td>{{ c.remark }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="999">暂无相关信息记录</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

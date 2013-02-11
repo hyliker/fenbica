@@ -1,0 +1,162 @@
+{% extends "article/base.html" %}
+
+{% block content %}
+<style type="text/css">
+#main-wrapper {
+    padding: 10px;
+    background: transparent url(/static/img/mash/bg-gray.jpg) repeat-x;
+    height: 500px;
+    clear: both;
+}
+caption {
+    font-size: 1.5em;
+    padding: 10px;
+    background: transparent url(/static/img/mash/bg_footer.gif) repeat-x center center;
+}
+table tr.even {
+    background-color: #eee;
+    background-color: #ECF4FF;
+    background-color: #FAFAFA;
+    background-color: #F2F3F3;
+}
+table {
+    border-collapse: collapse;
+    margin-top: 0px;
+    background-color: #fff;
+    width: 100%;
+}
+td, th {
+    padding: 5px 10px;
+    text-align: center;
+}
+td.unpass {
+    color:red;
+}
+/*
+td.excellent {
+    color:green;
+}
+td.fine {
+    color: blue;
+}
+*/
+thead {
+    background-color: #7CBA0F;
+    background-color: #cc8f00;
+    background-color: #ddd;
+    color: #fff;
+    color: #000;
+    background: transparent url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+    border-bottom: 2px solid #ddd;
+    /*
+    background: #fff url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+    color: #000;
+    border-top: 5px solid #7CBA0F;
+    */
+}
+tfoot {
+    background: transparent url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+}
+tfoot td {
+    height: 30px;
+    vertical-align: middle;
+    padding: 6px;
+}
+</style>
+<script type="text/javascript">
+$(function () {
+    //cssHoverColor(".innerTable tbody tr","#9AC3F5");
+    cssHoverColor(".innerTable tbody tr","#FFFFCC");
+
+    $("#add_category_form").submit(function () {
+        var category_name = $("#id_category_name").val();
+        if (category_name == "") {
+            alert("日志分类名称不能为空");
+            return false;
+        }
+    });
+    $(".delete_article_category").click(function () {
+        if (! confirm('你确定删除此日志分类么?\n 提示:删除分类不会删除该分类下的日志')) 
+            return false;
+    });
+
+    $(".cancel_rename").live("click", function () {
+        var $category = $(this).closest("tr").find("td:first");
+        var old_link = $category.data("old_link");
+        $(this).closest("tr").find(".rename_article_category").show();
+        $category.html(old_link);
+    });
+
+    $(".sure_rename").live("click", function () {
+        var $input = $(this).prev();
+        var new_category_name = $input.val();
+        var old_cateogry_name = $input.attr("_category_name");
+        var $obj = $(this);
+        if (old_cateogry_name != new_category_name && new_category_name != "") {
+            var url = $(this).closest("tr").find(".rename_article_category").attr("href");
+            $.post(url, {"category_name": new_category_name}, function (res) {
+                if(res.success) {
+                    var $new_category = $obj.closest("td").data("old_link").text(new_category_name);
+                    $obj.closest("td").html($new_category);
+                }
+            }, "json");
+        } else {
+        }
+        $(this).closest("tr").find(".rename_article_category").show();
+    });
+
+    $(".rename_article_category").click( function () {
+        var linkpart = $(this).attr("href").split("/");
+        var category_pk = linkpart[linkpart.length-2];
+        var $category = $(this).closest("tr").find("td:first");
+        var category_name = $category.text();
+        var rename_html = '<input type="text" _category_name="' + category_name + '" _category="' + category_pk + '" value="' + $category.text() + '" />' + 
+                          ' <button class="focus sure_rename">确认</button><button class="cancel_rename">取消</button>';
+        $category.data("old_link", $category.children());
+        $category.html(rename_html);
+        $(this).hide();
+        return false;
+    });
+});
+</script>
+
+<div id="main-wrapper">
+    <p>注意：删除分类后，原分类里的日志不会被删除，但将自动变为默认分类。</p>
+    <br />
+    <table class="innerTable">
+        <thead>
+        <tr>
+            <th>分类名称</th>
+            <th>日志数</th>
+            <th colspan="2">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for c in categories %}
+        <tr class="{% cycle "even" "odd" %}">
+            <td><a href="{% url view_article_category c.pk %}">{{ c.name }}</a></td>
+            <td>{{ c.article_count }}</td>
+            {% if c.name == "默认分类" %}
+            <td></td><td></td>
+            {% else %}
+            <td><a href="{% url rename_article_category c.pk %}" class="rename_article_category">重命名</a></td>
+            <td><a href="{% url delete_article_category c.pk %}" class="delete_article_category">删除分类</a></td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="4">
+                    <form action="{% url add_article_category %}" id="add_category_form" method="post">
+                        {% csrf_token %}
+                        <label>添加新的分类</label>
+                        <input type="text" name="category_name" id="id_category_name" />
+                        <input type="submit" value="确定" id="id_submit_button" class="submit-button" />
+                    </form>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+{% endblock content %}

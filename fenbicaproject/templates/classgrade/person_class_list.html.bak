@@ -1,0 +1,72 @@
+{% extends "classgrade/base.html" %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="/static/css/table.css">
+<style type="text/css">
+#breadcrumbs {
+    padding: 5px;
+    color: #888;
+    font-size: 12px;
+    border-bottom: 1px solid #eee;
+    background-color: #f8f8f8;
+}
+table {
+    margin: 0 auto;
+}
+caption { 
+    font-size: 1.5em;
+    padding: 5px;
+    background: transparent url(/static/img/mash/bg-gray.jpg) repeat-x center center;
+}
+thead tr {
+    border-bottom: 2px solid #ddd;
+}
+select {
+    font-size: 1em;
+}
+</style>
+<script type="text/javascript">
+$(function () {
+    //cssHoverColor(".innerTable tbody tr","#9AC3F5");
+    cssHoverColor(".innerTable tbody tr","#FFFFCC");
+
+    $("#class_list").change(function () {
+        var klass = $("#class_list").val();
+        location.href = "/classgrade/class/list/" + year + "/" + grade;
+    });
+
+});
+</script>
+<table class="innerTable">
+    <caption>
+        <select id="class_list">
+            {% for c in class_list %}
+                {% if c.pk == klass_pk %}
+            <option value="{{ c.pk }}" selected>{{ c.name }}</option>
+                {% else %}
+            <option value="{{ c.pk }}">{{ c }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+    </caption>
+    <thead>
+        <tr>
+            <th>序号</th>
+            <th>姓名</th>
+            <th>性别</th>
+            <th>身份</th>
+            <th>邮箱</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for m in member_list %}
+        <tr class="{% cycle "even" "odd" %}">
+            <td>{{ forloop.counter }}</td>
+            <td><a href="{{ m.person.get_absolute_url }}">{{ m.person.name }}</a></td>
+            <td>{{ m.person.gender.name }}</td>
+            <td>{{ m.person.get_identity_display }}</td>
+            <td>{{ m.person.email }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

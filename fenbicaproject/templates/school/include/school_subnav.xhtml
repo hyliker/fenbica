@@ -1,0 +1,19 @@
+{% load navactive_tag %}
+{% block subnav %}
+<div id="subnav" class="clearfix">
+    <ul class="menu">
+        <li><a href="{% url exam_add_result %}" class="{% reverse_navactive request "exam_add_result" "active" %}">学校简介</a></li>
+        <li><a href="{% url page_scenery_index %}" class="{% reverse_navactive request "page_scenery_index" %}">校园风光</a></li>
+        <li><a href="#">文化活动</a></li>
+        <li><a href="#">新闻中心</a></li>
+        <li><a href="#">历任领导</a></li>
+        <li><a href="#">现任领导</a></li>
+        <li><a href="#">校务公开</a></li>
+        <li><a href="#">教学科研</a></li>
+        <li><a href="#">校园期刊</a></li>
+        <li><a href="#">招生招聘</a></li>
+        <li><a href="#">学校荣誉</a></li>
+        {% block extra-subnav %} {% endblock %}
+    </ul>
+</div><!--/subnav-->
+{% endblock subnav %}

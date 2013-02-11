@@ -1,0 +1,90 @@
+{% extends "classgrade/base.html" %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="/static/css/table.css">
+<style type="text/css">
+table {
+    margin: 0 auto;
+}
+caption { 
+    font-size: 1.5em;
+    padding: 10px;
+    background: transparent url(/static/img/mash/bg-gray.jpg) repeat-x center center;
+}
+thead tr {
+    border-bottom: 2px solid #ddd;
+}
+select {
+    font-size: 1em;
+}
+</style>
+<script type="text/javascript">
+$(function () {
+    //cssHoverColor(".innerTable tbody tr","#9AC3F5");
+    cssHoverColor(".innerTable tbody tr","#FFFFCC");
+
+    $("#class_year, #class_grade").change(function () {
+        var year = $("#class_year").val();
+        var grade = $("#class_grade").val();
+        location.href = "/classgrade/class/list/" + year + "/" + grade;
+    });
+
+});
+</script>
+<table class="innerTable">
+    <caption>
+        <select id="class_year">
+        {% for m in klass_years %}
+            {% if m == klass_year %}
+            <option value="{{ m }}" selected>{{ m }} </option>
+            {% else %}
+            <option value="{{ m }}">{{ m }} </option>
+            {% endif %}
+        {% endfor %}
+        </select>
+        年度
+        <select id="class_grade">
+            <option value="">全年级</option>
+            {% for g in grades %}
+                {% if g.grade_id == klass_grade %}
+            <option value="{{ g.grade_id }}" selected>{{ g.grade__name }}</option>
+                {% else %}
+            <option value="{{ g.grade_id }}">{{ g.grade__name }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+       班级列表 
+    </caption>
+    <thead>
+        <tr>
+            <th>序号</th>
+            <th>班级代码</th>
+            <th>建班年月</th>
+            <th>年级</th>
+            <th>名称</th>
+            <th>人数</th>
+            <th>荣誉称号</th>
+            <th>班主任</th>
+            <th>课程表</th>
+            <th>考核评比</th>
+            <th>学生名单</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for k in klasses %}
+        <tr class="{% cycle "even" "odd" %}">
+            <td>{{ forloop.counter }}</td>
+            <td><a href="{{ k.get_absolute_url }}">{{ k.uuid }}</a></td>
+            <td>{{ k.dtcreated }}</td>
+            <td>{{ k.grade }}</td>
+            <td>{{ k.name }}</td>
+            <td>{{ k.student_number }}</td>
+            <td>{{ k.honorary_title }}</td>
+            <td><a href="{{ k.master.get_absolute_url }}">{{ k.master }}</a></td>
+            <td><a href="{% url classgrade_timetable k.pk %}" title="{{ k.name }}">课程表</a></td>
+            <td><a href="{% url classgrade_check_list %}?klass_pk={{ k.pk }}" title="{{ k.name }}">考核评比</a></td>
+            <td><a href="{% url classgrade_classmate_list %}?klass_pk={{ k.pk }}" title="{{ k.name }}">学生名单</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

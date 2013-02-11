@@ -1,0 +1,33 @@
+{% extends "school/view_basic_profile.html" %}
+
+{% block title %} {{ person.name }} 教职工其他家人信息 {% endblock %}
+
+{% block infoTitle %}
+<h4 id="info-title">{{ person.name }} {{ person.get_identity_display }} 其他家人 </h4>
+{% endblock %}
+
+{% block infoType_staff_other_family %}
+<li><strong>其他家人</strong></li>
+{% endblock %}
+
+{% block infoItems %}
+<dl class="hdl">
+{% if other_family %}
+    {% for o in other_family %}
+    <dt>姓名</dt> <dd>{{ o.name }}</dd>
+    <dt>关系</dt> <dd>{{ o.relation.name }}</dd>
+    <dt>婚姻状况</dt> <dd>{{ o.marriage.name }}</dd>
+    <dt>政治面貌</dt> <dd>{{ o.politics.name }}</dd>
+    <dt>职业</dt> <dd>{{ o.occupation.name }}</dd>
+    <dt>侨居地</dt> <dd>{{ o.colony.name }}</dd>
+    <dt>所在单位名称</dt> <dd>{{ o.enterprise }}</dd>
+    <dt>联系电话</dt> <dd>{{ o.telephone }}</dd>
+    <dt>曾任技术职务</dt> <dd>{{ o.technical_post.name }}</dd>
+    <dt>职务级别</dt> <dd>{{ o.cadre_post_level }}</dd>
+    <hr/>
+    {% endfor %}
+{% else %}
+<h5>暂没有相关其他家人信息</h5>
+{% endif %}
+</div>
+{% endblock %}

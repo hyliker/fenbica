@@ -1,0 +1,15 @@
+{% extends "staff/base.html" %}
+{% load generic_object_details %}
+{% block main-content %}
+<div id="main-content">
+        {% block infoTitle %}
+        <h4 id="info-title">{{ person.name }} {{ person.get_identity_display }} 任课条目详情
+            <a href="javascript:print();" class="print_button">打印</a>
+            {% if user.pk == person.pk %}<a href="{% url staff_edit_teaching teaching.pk %}">编辑</a>{% endif %}
+            <a href="#" class="add_button">新增任课条目</a>
+        </h4>
+        {% endblock %}
+
+    {% generic_object_details teaching %}
+</div>
+{% endblock main-content %}

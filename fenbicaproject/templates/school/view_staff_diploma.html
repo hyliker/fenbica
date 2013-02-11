@@ -1,0 +1,33 @@
+{% extends "school/view_basic_profile.html" %}
+
+{% block title %} {{ person.name }} 教职工学位学历 {% endblock %}
+
+{% block infoTitle %}
+<h4 id="info-title">{{ person.name }} {{ person.get_identity_display }} 学位学历 </h4>
+{% endblock %}
+
+{% block infoType_staff_diploma %}
+<li><strong>学位学历</strong></li>
+{% endblock %}
+
+{% block infoItems %}
+<dl class="hdl">
+{% if diploma %}
+    {% for d in diploma %} 
+    <dt>文化程度</dt> <dd>{{ d.diploma.name }}</dd>
+    <dt>所学专业</dt> <dd>{{ d.major }}</dd>
+    <dt>入学年月</dt> <dd> {{ d.date_enrollment|date:"Y年n月d日" }}</dd> 
+    <dt>学习形式</dt> <dd>{{ d.learning_mode }}</dd>
+    <dt>学习方式</dt> <dd>{{ d.learning_way }}</dd>
+    <dt>学制</dt> <dd>{{ d.learning_year }} 年</dd>
+    <dt>学位</dt> <dd>{{ d.degree }}</dd>
+    <dt>毕肄业学校/单位</dt> <dd>{{ d.graduate_school }}</dd>
+    <dt>学位授予国家/地区</dt> <dd>{{ d.grant_country }}</dd>
+    <dt>学位授予单位</dt> <dd>{{ d.grant_org }}</dd>
+    <hr/>
+    {% endfor %}
+{% else %}
+<h5>暂没有相关学位学历信息</h5>
+{% endif %}
+</div>
+{% endblock %}

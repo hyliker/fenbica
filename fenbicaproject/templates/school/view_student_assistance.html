@@ -1,0 +1,31 @@
+{% extends "school/view_basic_profile.html" %}
+
+{% block title %} {{ person.name }} 穷困補助信息 {% endblock %}
+
+{% block infoTitle %}
+<h4 id="info-title">{{ person.name }} {{ person.get_identity_display }} 穷困補助信息 共 {{ assistance|length }} 条 </h4>
+{% endblock %}
+
+{% block infoType_student_assistance %}
+<li><strong>穷困補助 </strong></li>
+{% endblock %}
+
+{% block infoItems %}
+<dl class="hdl">
+{% if assistance %}
+    {% for a in assistance %} 
+    <dt>学段</dt> <dd>{{ a.learning_stage }}</dd>
+    <dt>学年</dt> <dd>{{ a.learning_year }}</dd>
+    <dt>学期</dt> <dd>{{ a.semester }}</dd>
+    <dt>年级</dt> <dd>{{ a.grade }} (元)</dd>
+    <dt>补助金额</dt> <dd>{{ a.amount }}</dd>
+    <dt>补助时间</dt> <dd>{{ a.date|date:"Y年n月d日"}}</dd>
+    <dt>经办老师</dt> <dd>{{ a.implementator }}</dd>
+    <dt>补助原因</dt> <dd>{{ a.reason }}</dd>
+    <hr/>
+    {% endfor %}
+{% else %}
+<h5>暂没有相关穷困補助信息</h5>
+{% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "school/view_basic_profile.html" %}
+
+{% block title %} {{ person.name }} 家庭成员 {% endblock %}
+
+{% block infoTitle %}
+<h4 id="info-title">{{ person.name }} {{ person.get_identity_display }} 家庭成员 </h4>
+{% endblock %}
+
+{% block infoType_student_family_member %}
+<li><strong>家庭成员</strong></li>
+{% endblock %}
+
+{% block infoItems %}
+<dl class="hdl">
+{% if family_member %}
+    {% for f in family_member %} 
+    <dt>姓名</dt> <dd>{{ f.name }} ({{ f.relation }})</dd>
+    <dt>关系</dt> <dd>{{ f.relation }}</dd>
+    <dt>民族</dt> <dd>{{ f.folk }}</dd>
+    <dt>婚姻状况</dt> <dd>{{ f.marriage }}</dd>
+    <dt>侨居地</dt> <dd>{{ f.emigrant }}</dd>
+    <dt>身份证号</dt> <dd>{{ f.id_no }}</dd>
+    <dt>联系电话</dt> <dd>{{ f.telephone }}</dd>
+    <hr/>
+    {% comment %}
+        {{ f.name }} {{ f.relation }} {{ f.folk }} {{ f.marriage }} {{ f.emigrant }} {{ f.id_no }} {{ f.telephone }}
+    {% endcomment %}
+    {% endfor %}
+    <div>
+    </div>
+{% else %}
+<h5>暂没有相关家庭成员信息</h5>
+{% endif %}
+</div>
+{% endblock %}

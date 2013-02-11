@@ -1,0 +1,88 @@
+{% extends "dorm/base.html" %}
+{% load pagination_tag %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="/static/css/table.css">
+<style type="text/css">
+table {
+    margin: 0 auto;
+}
+caption { 
+    font-size: 1.5em;
+    padding: 10px;
+    background: transparent url(/static/img/mash/bg-gray.jpg) repeat-x center center;
+}
+thead tr {
+    border-bottom: 2px solid #ddd;
+}
+tr.spacebar {
+    background: transparent url(/static/img/mash/bg_footer.gif) repeat-x center center;
+    background-color: #7CBA0F;
+}
+select {
+    font-size: 1em;
+}
+#pagebar {
+    padding: 10px 0;
+    background: transparent url(/static/img/mash/bg_footer.gif) repeat-x center center;
+    background: transparent url(/static/img/mash/big-bg.png) repeat-x center center;
+}
+</style>
+<script type="text/javascript">
+$(function () {
+    //cssHoverColor(".innerTable tbody tr","#9AC3F5");
+    cssHoverColor(".innerTable tbody tr:not(.spacebar)","#FFFFCC");
+
+    $("#class_year, #class_grade").change(function () {
+        var year = $("#class_year").val();
+        var grade = $("#class_grade").val();
+        location.href = "/classgrade/class/list/" + year + "/" + grade;
+    });
+
+});
+</script>
+<table class="innerTable">
+    <caption> {{ year }}年{{ month }}月份考核评比汇总 </caption>
+    <thead>
+        <tr>
+            <th>序号</th>
+            <th>排名</th>
+            <th>寝室</th>
+            <th>成员</th>
+            <th>创建日期</th>
+            <th>寝室长</th>
+            <th>总分</th>
+            <th>详情</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for k in check_list %}
+            {% ifchanged k.dtchecked %}
+                {% if not forloop.first %}
+        <tr class="spacebar"><td colspan="999"></td></tr>
+                {% endif %}
+            {% endifchanged %}
+        <tr class="{% cycle "even" "odd" %}">
+            <td>{{ forloop.counter }}</td>
+            <td>{{ k.ranking }}</td>
+            <td><a href="{% url dorm_check_list %}?bedchamber_pk={{ k.bedchamber }}">{{ k.bedchamber }}</a></td>
+            <td><a href="{% url dorm_boarder_list %}?bedchamber_pk={{ k.bedchamber }}">名单</a></td>
+            <td>{{ k.bedchamber__dtcreated }}</td>
+            {% if k.bedchamber__master__pk %}
+            <td><a href="{% url person k.bedchamber__master__pk %}">{{ k.bedchamber__master__name }}</a></td>
+            {% else %}
+            <td></td>
+            {% endif %}
+            <td>{{ k.sum_ranking__sum }}</td>
+            <td><a href="{% url dorm_check_list %}?bedchamber_pk={{ k.bedchamber }}&year={{ year }}&month={{ month }}" title="{{ k.bedchamber }}">详情</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% comment %}
+{% paginate pages.page_prefix_link  pages.object_list pages.cur_page.number 20 6 pages.object_list %}
+<div id="pagebar">
+    {% include 'base/pagination.html' %}
+</div>
+{% endcomment %}
+
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "exam/base.html" %}
+
+{% block extra-head %}
+
+{{ block.super }}
+<script type="text/javascript" src="{{ MEDIA_URL }}thirdparty/swfobject/swfobject.js"></script>
+<script type="text/javascript">
+    swfobject.embedSWF(
+      "{{ MEDIA_URL }}thirdparty/open-flash-chart/open-flash-chart.swf", "overall_chart",
+      "100%", "400px", "9.0.0", "{{ MEDIA_URL }}thirdparty/swfobject/expressInstall.swf",
+      {"data-file":"{% url exam_chart_data_subject_analyse subject.pk %}"});
+
+    swfobject.embedSWF(
+      "{{ MEDIA_URL }}thirdparty/open-flash-chart/open-flash-chart.swf", "klass_chart",
+      "100%", "400px", "9.0.0", "{{ MEDIA_URL }}thirdparty/swfobject/expressInstall.swf",
+      {"data-file":"{% url exam_chart_data_subject_class_analyse subject.pk %}"});
+</script>
+<style type="text/css">
+#charts {
+}
+</style>
+{% endblock %}
+
+{% block extra-subnav %}
+    <li><a href="#" class="active">成绩分析图表</a></li>
+{% endblock %}
+
+{% block content %}
+<div id="charts">
+    <div id="overall_chart"></div>
+    <div id="klass_chart"></div>
+</div>
+{% endblock %}

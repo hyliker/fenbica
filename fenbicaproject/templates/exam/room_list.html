@@ -1,0 +1,82 @@
+{% extends "exam/base.html" %}
+{% load pagination_tag %}
+
+{% block extra-head %}
+<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/table.css">
+<style type="text/css">
+#pagebar {
+    background: transparent url(/static/img/mash/bg-gray.jpg) repeat-x center center;
+    padding: 5px;
+}
+#content {
+    padding: 5px 10px;
+}
+th, td {
+    border:1px solid #eee;
+}
+#filterBar {
+    padding: 5px;
+}
+#search-submit {
+    height: 24px;
+    width: 24px;
+    background: transparent url(/static/img/mash/search24x24.png) no-repeat right center;
+    border-width: 0;
+    cursor: pointer;
+    padding: 5px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<script type="text/javascript"> 
+$(function () {
+    cssHoverColor(".innerTable tbody tr","#FFFFCC");
+});
+</script> 
+<div id="filterBar">
+    <form method="get">
+        搜索
+        <input type="text" name="q" value="{{ q }}" title="学生" />
+        <input type="submit" id="search-submit" value="" />
+        你可以在此搜索考生所在的考室信息
+    </form>
+
+</div>
+<table class="innerTable">
+    <thead>
+        <tr>
+            <th>序号</th>
+            <th>学年</th>
+            <th>学期</th>
+            <th>考试分类</th>
+            <th>年级</th>
+            <th>试室</th>
+            <th>考官</th>
+            <th>座位数</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for r in room_list %}
+        <tr class="{% cycle "even" "odd" %}">
+            <td>{{ pages.cur_page.start_index|add:forloop.counter0 }}</td>
+            <td>{{ r.exam.learning_year|slice:"4" }} - {{ r.exam.learning_year|slice:"4:8" }}</td>
+            <td>{{ r.exam.semester.name }}</td>
+            <td>{{ r.exam.category }}</td>
+            <td>{{ r.grade }}</td>
+            <td><a href="{{ r.get_absolute_url }}">{{ r.name }}</a></td>
+            <td>
+                {% for m in r.examiner.all %}
+                <a href="{{ m.get_absolute_url }}">{{ m.name }}</a>   
+                {% endfor %}
+            </td>
+            <td><a href="{%url exam_room_seat %}?room_pk={{ r.pk }}&action=Print" target="_blank">{{ r.seat_num }}</a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+    {% paginate pages.page_prefix_link  pages.object_list pages.cur_page.number 10 5 pages.object_list %}
+    <div id="pagebar">
+        {% include 'base/pagination.html' %}
+    </div>
+{% endblock %}

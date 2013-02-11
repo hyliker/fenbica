@@ -1,0 +1,178 @@
+{% extends "index/base.html" %}
+{% load pagination_tag %}
+{% block extra-head %}
+<style type="text/css">
+#sidebar {
+    float: right;
+    width: 250px;
+    height: 300px;
+    background-color: #eee;
+}
+#message {
+    background-color: #1259C7;
+    color: #fff;
+}
+#message p {
+    padding: 5px;
+}
+#main-content {
+    background: transparent url({{ MEDIA_URL}}img/mash/bg-gray.jpg) repeat-x;
+    min-height: 500px;
+}
+.nav-section {
+    padding: 10px;
+    clear: both;
+}
+.nav-section a {
+    font-size: 1.2em;
+    padding: 10px;
+}
+ul.navs {
+    list-style-type: none;
+}
+ul.navs li {
+    float: left;
+    padding: 5px 0;
+}
+#edit_form {
+    padding: 10px;
+}
+form p label {
+    display: block;
+    float: left;
+    width: 100px;
+    text-align: right;
+    margin-right: 5px;
+}
+form p {
+    margin-bottom: 10px;
+}
+form p input {
+    width: 300px;
+}
+form textarea {
+    width: 300px;
+}
+form p.submit {
+    margin-left: 105px;
+}
+#main-content ul li {
+    margin-top: 10px;
+    float: left;
+}
+#main-content {
+    font-size: 1.1em;
+}
+#exams-wrapper, #exam-courses-wrapper, #exam-classes-wrapper {
+    padding: 10px;
+    float: left;
+    clear: both;
+}
+ul.hlist {
+    margin-left: 2em;
+}
+.hlist li {
+    clear: both;
+    margin-right: 20px;
+}
+
+h5,h6 {
+    clear: both;
+}
+h6 {
+    margin-left: 2em;
+}
+table tr.even {
+    background-color: #eee;
+    background-color: #ECF4FF;
+    background-color: #FAFAFA;
+    background-color: #F2F3F3;
+}
+table {
+    border-collapse: collapse;
+    margin-top: 0px;
+    background-color: #fff;
+    width: 100%;
+}
+td, th {
+    padding: 5px 10px;
+    text-align: center;
+}
+thead {
+    background-color: #7CBA0F;
+    color: #fff;
+    /*
+    background: #fff url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+    color: #000;
+    border-top: 5px solid #7CBA0F;
+    */
+}
+tfoot {
+    background: transparent url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+}
+tfoot td {
+    height: 30px;
+    vertical-align: middle;
+    padding: 6px;
+}
+</style>
+<script type="text/javascript">
+$(function () {
+    //cssHoverColor(".innerTable tbody tr","#9AC3F5");
+    cssHoverColor(".innerTable tbody tr","#FFFFCC");
+});
+</script>
+{% endblock %}
+
+{% block navigation %}
+<ul class="menu">
+    <li><a href="/desktop/">个人桌面</a> &gt;</li>
+    <li><a href="#">考试成绩</a>&gt;</li>
+    <li><strong>成绩批量录入</strong></li>
+</ul>
+{% endblock navigation %}
+{% block content %}
+<div id="message" class="clearfix">
+    <p>提示：请选择要录入哪次考试</p>
+</div><!--/message-->
+<div id="main-content" class="clearfix">
+
+        <table class="innerTable cssHoverColor" id="checkbox-table">
+            <thead>
+                <tr>
+                    <th> 考试日期</th>
+                    <th> 学年</th>
+                    <th> 学期</th>
+                    <th> 名称</th>
+                    <th> 类型</th>
+                    <th> 年级</th>
+                    <th> 科目</th>
+                    <th> 动作</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for m in exam_courses %}
+            <tr class="{% cycle "even" "odd" %}">
+                    <td>{{ m.dtstart }}</td>
+                    <td>{{ m.exam.learning_year }}</td>
+                    <td>{{ m.exam.semester }}</td>
+                    <td>{{ m.exam.name }}</td>
+                    <td>{{ m.exam.exam_type }} </td>
+                    <td>{{ m.grade }}</td>
+                    <td>{{ m.course }}</td>
+                    <td><a href="#/{{ m.pk }}">批量录入</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="11" id="search-page">
+                        {% paginate pages.page_prefix_link  pages.object_list pages.cur_page.number 10 6 pages.object_list %}
+                            {% include 'base/pagination.html' %}
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+
+</div>
+{% endblock %}

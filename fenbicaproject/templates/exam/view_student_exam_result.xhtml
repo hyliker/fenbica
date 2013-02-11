@@ -1,0 +1,71 @@
+{% extends "school/view_basic_profile.html" %}
+
+{% block title %} {{ person.name }} 考试成绩 {% endblock %}
+
+{% block infoTitle %}
+<h4 id="info-title">{{ person.name }} {{ person.get_identity_display }} 考试成绩 </h4>
+{% endblock %}
+
+{% block infoType_student_exam_result %}
+<li><strong>考试成绩</strong></li>
+{% endblock %}
+
+{% block infoItems %}
+{% if exam_result %}
+<table>
+    <thead>
+        <!--<th>考试日期</th>-->
+        <!--<th>学段</th>-->
+        <!--<th>学年</th>-->
+        <!--<th>学期</th>-->
+        <!--<th>年级</th>-->
+        <th>考试名称</th>
+        <th>科目成绩</th>
+        <th>总分</th>
+        <!--<th>类型</th>-->
+        <!--<th>满分值</th>-->
+        <!--<th>分数成绩</th>-->
+        <!--<th>等级成绩</th>-->
+        <!--<th>班名次</th>-->
+        <!--<th>级名次</th>-->
+    </thead>
+    <tbody>
+    {% for e in exams %} 
+    <!--{% ifchanged e.course.exam.pk %}-->
+    <!--<tr>-->
+        <!--<td colspan="9"></td>-->
+    <!--</tr>-->
+    <!--{% endifchanged %}-->
+    <tr>
+        <!--<td> {{ e.exam_course.dtstart|date:"Y-m-d" }}</td>-->
+        <!--<td> {{ e.exam.learning_stage  }}</td>-->
+        <td>
+            <a href="{% url analysis_grade_student e.pk e.grade.pk %}">
+            {{ e.learning_year|slice:"0:4" }} - {{ e.learning_year|slice:"4:8" }} {{ e.semester }} {{ e.grade }} {{ e.name }}
+            </a>
+        </td>
+        <td>
+        {% for c in e.exam_courses %}
+        <a href="{% url exam_grade_course c.pk %}">{{ c.name }}:{{ c.result.score }}</a> 
+        {% endfor %}
+        </td>
+        <td>{{ e.sum_score }}</td>
+    </tr>
+
+    {% endfor %}
+    </tbody>
+</table>
+<style type="text/css">
+td, th {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+}
+thead {
+    background: transparent url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+}
+</style>
+{% else %}
+<h5>暂没有相关考试成绩信息 </h5>
+{% endif %}
+</div>
+{% endblock %}

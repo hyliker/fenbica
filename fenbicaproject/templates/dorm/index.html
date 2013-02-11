@@ -1,0 +1,85 @@
+{% extends "dorm/base.html" %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="/static/css/table.css">
+<style type="text/css">
+table {
+    margin: 0 auto;
+}
+caption { 
+    font-size: 1.5em;
+    padding: 10px;
+    background: transparent url(/static/img/mash/bg-gray.jpg) repeat-x center center;
+}
+thead tr {
+    border-bottom: 2px solid #ddd;
+}
+select {
+    font-size: 1em;
+}
+#search-submit {
+    height: 24px;
+    width: 24px;
+    background: transparent url(/static/img/mash/search24x24.png) no-repeat right center;
+    border-width: 0;
+    cursor: pointer;
+    padding: 5px;
+}
+#search-input {
+    width: 150px;
+}
+#menubar {
+    padding: 5px;
+}
+#pagebar {
+    padding: 10px 0;
+    background: transparent url(/static/img/mash/bg_footer.gif) repeat-x center center;
+    background: transparent url(/static/img/mash/big-bg.png) repeat-x center center;
+}
+</style>
+<script type="text/javascript">
+$(function () {
+    //cssHoverColor(".innerTable tbody tr","#9AC3F5");
+    cssHoverColor(".innerTable tbody tr","#FFFFCC");
+});
+</script>
+<div id="menubar">
+    <div id="search">
+        <form method="get">
+         搜索
+            <input type="hidden" name="context" value="check" />
+            <input type="text" id="search-input" name="q" value="{{ q }}" />
+            <input type="submit" id="search-submit" value="" /> 
+        </form>
+    </div>
+</div>
+<table class="innerTable">
+    <thead>
+        <tr>
+            <th>序号</th>
+            <th>宿舍楼</th>
+            <th>寝室</th>
+            <th>寝室长</th>
+            <th>寝室电话</th>
+            <th>容纳人数</th>
+            <th>已住人数</th>
+            <th>住宿生</th>
+            <th>考核</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for k in bedchamber_list %}
+        <tr class="{% cycle "even" "odd" %}">
+            <td>{{ forloop.counter }}</td>
+            <td>{{ k.building.uuid }}</td>
+            <td>{{ k.uuid }}</td>
+            <td><a href="{{ k.master.get_absolute_url }}">{{ k.master.name }}</ak</td>
+            <td>{{ k.telephone }}</td>
+            <td>{{ k.capacity }}</td>
+            <td>{{ k.living_number }}</td>
+            <td><a href="{% url dorm_boarder_list %}?bedchamber_pk={{ k.uuid }}" title="{{ k }}">名单</a></td>
+            <td><a href="{% url dorm_check_list %}?bedchamber_pk={{ k.uuid }}">考核</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,71 @@
+#container {
+    /*width: 960px;*/
+    margin: 0px auto;
+    font-size: 14px;
+}
+#content {
+    background: transparent url({{ MEDIA_URL}}img/mash/big-bg.png) repeat-x;
+    background: transparent url({{ MEDIA_URL}}img/mash/bg-gray.jpg) repeat-x;
+    /*margin:0 5px;*/
+}
+#identity_group_name {
+    margin-left: 10px;
+}
+#sidebar {
+    float: left;
+    border-right: 1px solid #ccc;
+    text-align: right;
+}
+#main-content {
+    margin: 0px 0px 5px 170px;
+}
+#sidebar ul {
+    margin-right: 10px;
+}
+#sidebar ul li {
+    padding: 5px;
+
+}
+img.person-photo {
+    border: 0px solid #eee;
+}
+dl.hdl {
+    float: left;
+    width: 100%;
+}
+dl.hdl dt {
+    color: #555;
+    float: left;
+    clear: left;
+    width: 9em;
+    /*height: 1em;*/
+    display: block;
+    text-align: right;
+    padding-bottom: 5px;
+    line-height: 1.5em;
+}
+dl.hdl dd {
+    margin-left:9.5em;
+    display: block;
+    /*height: 1em;*/
+    padding-bottom: 5px;
+    min-height:1em;
+    line-height: 1.5em;
+}
+#info-title {
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 10px;
+}
+#toolbar_link  {
+    float: right;
+    color: #fff;
+    margin-right: 5px;
+}
+#toolbar_link a {
+    color: #fff;
+    padding-left: 10px;
+}
+/*img.person-photo {*/
+    /*width: 150px;*/
+    /*height: 185px;*/
+/*}*/

@@ -1,0 +1,29 @@
+{% extends "school/view_basic_profile.html" %}
+
+{% block title %} {{ person.name }} 处分信息 {% endblock %}
+
+{% block infoTitle %}
+<h4 id="info-title">{{ person.name }} {{ person.get_identity_display }} 处分信息 共 {{ punishment|length }} 个 </h4>
+{% endblock %}
+
+{% block infoType_student_punishment %}
+<li><strong>处分 </strong></li>
+{% endblock %}
+
+{% block infoItems %}
+<dl class="hdl">
+{% if punishment %}
+    {% for p in punishment %} 
+    <dt>处分名称</dt> <dd>{{ p.name }}</dd>
+    <dt>处分文号</dt> <dd>{{ p.file_no }}</dd>
+    <dt>处分日期</dt> <dd>{{ p.date|date:"Y年n月d日"}}</dd>
+    <dt>处分撤销日期</dt> <dd>{{ p.repeal_date|date:"Y年n月d日" }}</dd>
+    <dt>处分撤销文号</dt> <dd>{{ p.repeal_file_no }}</dd>
+    <dt>处分原因</dt> <dd>{{ p.causation }}</dd>
+    <hr/>
+    {% endfor %}
+{% else %}
+<h5>暂没有相关处分信息</h5>
+{% endif %}
+</div>
+{% endblock %}

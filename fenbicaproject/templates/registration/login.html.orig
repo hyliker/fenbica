@@ -1,0 +1,117 @@
+{% extends "index/base.html" %}
+{% block extra-head%}
+<style type="text/css">
+#wrapper {
+    margin: 0px auto;
+}
+.wrapper-content {
+    padding: 10px;
+    background: transparent url({{ MEDIA_URL}}img/mash/bg-gray.jpg) repeat-x;
+    height: 300px;
+}
+#login-wrapper {
+    float: left;
+    padding-right: 10px;
+    margin-right: 10px;
+    width: 250px;
+    height: 470px;
+    border-right: 1px solid #ddd;
+}
+form p {
+    margin-top: 10px;
+}
+form p label {
+    display: inline-block;
+    width: 35px;
+    vertical-align:top;
+    padding: 5px;
+}
+form p input {
+    width: 180px;
+}
+p.rememberme label {
+    width: auto;
+    margin-left: 40px;
+}
+#rememberme {
+    width: auto;
+}
+p.form-submit input{
+    clear: both;
+    margin-left: 50px;
+    padding: 5px 15px;
+}
+#eschool-info dl dt {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+#eschool-info dl dd {
+    font-size: 1.1em;
+}
+dl dt, dl dd {
+    padding: 5px;
+}
+#eschool-info {
+    width: 670px;
+}
+#eschool-info p {
+    font-size: 13px;
+    padding-top: 5px;
+    text-indent: 2em;
+    line-height: 2em;
+}
+#footer {
+    position: absolute;
+    bottom: 10px;
+    width: 90%;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="wrapper" class="clearfix">
+    <div class="wrapper-content">
+        <div id="login-wrapper">
+            <h2>登录</h2>
+            <form method="post" action="/login/">
+                {% csrf_token %}
+                {% if form.errors %}
+                <p class="error">请输入正确的用户名和密码。请注意两者都是大小写敏感的。</p>
+                {% endif %}
+                <p>
+                    <label for="username">帐号</label>
+                    {{ form.username }}
+                    {{ form.username.errors }}
+                </p>
+                <p>
+                    <label for="password">密码</label>
+                    {{ form.password }}
+                    {{ form.password.errors }}
+                </p>
+                <p class="rememberme">
+                    <label class="labelCheckbox" for="rememberme" title="为了确保您的信息安全，请不要在网吧或者公共机房勾选此项！">
+                    <input type="checkbox" tabindex="3" value="true" id="rememberme" name="remember_me">下次自动登录
+                </label>
+                </p>
+                <p class="form-submit">
+                    <input type="submit" class="submit-button" value="登录" />
+                    <!--<a href="/newpw" id="fgt">忘记密码？</a>-->
+                </p>
+                <input type="hidden" name="next" value="{{ next }}" />
+            </form>
+        </div><!--/login-wrapper-->
+        <script type="text/javascript">
+        document.getElementById('id_username').focus()
+        </script>
+        <!--<h4>温馨提醒</h4>-->
+        <div id="eschool-info" class="wrapper">
+            <img src="/static/img/school/school-banner.jpg" />
+            <p>校园网的开通是校园信息化建设的一个重要标志, 使得我校的教育管理信息化工作开始朝着标准化、规范化的健康方向发展, 提高我校现代化管理水平的一个重要举措。</p>
+            <p>校园网为每个师生绑定了一个实名的帐号， 帐号与其初始化的密码， 则由教务处负责提供与管理。 如果您忘记了密码或者用户名, 无法登录系统， 您可以到教务处找相关人员重新索取回来. <strong>特别要注意的是， 首次登录后请务必更改自己的初始化密码， 以防被别人轻易地猜出到您的帐号与密码， 避免自己的档案相关的信息外泄。</strong> 网站管理人员会根据需要， 来设置是否允许师生编辑自己的档案信息, 具体情况请留意学校相关部门的通知与安排。网站上的信息绑定了相关的权限， 只有具有相关权限的人员才能够看到，您如有疑问，请向教务处的相关人员了解具体情况。</p>
+        </div>
+    </div><!--/wrapper-conttent-->
+
+    <div class="wrapper-footer">
+    </div><!--/wrapper-footer-->
+</div>
+{% endblock %}

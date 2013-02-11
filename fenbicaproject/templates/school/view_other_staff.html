@@ -1,0 +1,61 @@
+{% extends "school/view_basic_profile.html" %}
+
+            {% block infoType %}
+             <li><strong>基本信息</strong></li>
+             <li><a href="ahah_2.html"><span>简历</span></a></li>
+             <li><a href="ahah_2.html"><span>来源</span></a></li>
+             <li><a href="ahah_2.html"><span>学籍异动</span></a></li>
+             <li><a href="ahah_2.html"><span>注册</span></a></li>
+             <li><a href="ahah_2.html"><span>军训</span></a></li>
+             <li><a href="ahah_3.html"><span>考试</span></a></li>
+             <li><a href="ahah_3.html"><span>学历学位</span></a></li>
+             <li><a href="ahah_3.html"><span>课程</span></a></li>
+             <li><a href="ahah_3.html"><span>家庭</span></a></li>
+             <li><a href="ahah_3.html"><span>奖励</span></a></li>
+             <li><a href="ahah_3.html"><span>处分</span></a></li>
+             <li><a href="ahah_3.html"><span>家庭</span></a></li>
+             <li><a href="ahah_3.html"><span>考勤</span></a></li>
+             {% endblock %}
+         </ul>
+    </div>
+    
+            {% block infoItems %}
+                <dt>姓名</dt> <dd>{{ p.name }}</dd>
+                <dt>姓名拼音</dt> <dd>{{ p.spell_name }}</dd>
+                <dt>曾用名</dt> <dd>{{ p.used_name }}</dd>
+                <dt>性别</dt> <dd>{{ p.gender.name }}</dd>
+                <dt>身份证号</dt> <dd>{{ p.id_no }}</dd>
+                <dt>出生日期</dt> <dd>{{ p.birthday|date:"Y年n月j日" }}</dd>
+                <dt>学校</dt> <dd>{{ p.student.school.name }}</dd>
+                <dt>职工编号</dt> <dd>{{ p.uuid  }}</dd>
+                <dt>编制类别</dt> <dd>{{ p.type }}</dd>
+                <dt>入校年月</dt> <dd>{{ p.dtenrollment }}</dd>
+                <dt>来校年月</dt> <dd>{{ p.dtcome }}</dd>
+                <dt>从教年月</dt> <dd>{{ p.dtteach }}</dd>
+                <dt>档案编号</dt> <dd>{{ p.profile_no }}</dd>
+                <dt>档案文本</dt> <dd>{{ p.profile_text }}</dd>
+                <dt>科室号</dt> <dd>{{ p.section_code }}</dd>
+                <dt>岗位职业</dt> <dd>{{ p.post_occupation_code }}</dd>
+                <dt>婚姻状况</dt> <dd>{{ p.marriage.name }}</dd>
+                <dt>血型</dt> <dd>{{ p.blood_type.name }}</dd>
+                <dt>文化程度</dt> <dd>{{ p.diploma.name }}</dd>
+                <dt>出生地</dt> <dd>{{ p.born_place.name }}</dd>
+                <dt>籍贯</dt> <dd>{{ p.native_place.name }}</dd>
+                <dt>民族</dt> <dd>{{ p.folk.name }}</dd>
+                <dt>宗教信仰</dt> <dd>{{ p.religion }}</dd>
+                <dt>港澳台侨</dt> <dd>{{ p.emigrant.name }}</dd>
+                <dt>健康状况</dt> <dd>{{ p.health.name }}</dd>
+                <dt>政治面貌</dt> <dd>{{ p.politics.name }}</dd>
+                <dt>现住址</dt> <dd>{{ p.residence_address }}</dd>
+                <dt>户口所在地</dt> <dd>{{ p.domicle_location }}</dd>
+                <dt>户口性质</dt> <dd>{{ p.domicle_type.name }}</dd>
+                <dt>流动人口状况</dt> <dd>{{ p.is_floating.name }}</dd>
+                <dt>国别</dt> <dd>{{ p.nationality.name }}</dd>
+                <dt>联系电话</dt> <dd>{{ p.telephone }}</dd>
+                <dt>通信地址</dt> <dd>{{ p.postal_address }}</dd>
+                <dt>邮政编码</dt> <dd>{{ p.postal_code }}</dd>
+                <dt>电子信箱</dt> <dd>{{ p.email }}</dd>
+                <dt>主页地址</dt> <dd>{{ p.homepage }}</dd>
+                <dt>照片</dt> <dd>{{ p.photo }}</dd>
+                <dt>特长</dt> <dd>{{ p.fortes }}</dd>
+            {% endblock %}

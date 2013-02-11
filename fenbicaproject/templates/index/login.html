@@ -1,0 +1,121 @@
+{% extends "index/base.html" %}
+{% block extra-head%}
+<style type="text/css">
+#wrapper {
+    margin: 0px auto;
+}
+.wrapper-header {
+    /*
+    background-color:#4272BA;
+    background-color:#1259C7;
+    background-color:#bbb;
+    padding: 8px;
+    height: 0;
+    */
+    color: #fff;
+}
+.wrapper-content {
+    padding: 10px;
+    background: transparent url({{ MEDIA_URL}}img/mash/bg-gray.jpg) repeat-x;
+    height: 300px;
+}
+#login-wrapper {
+    float: right;
+}
+form p {
+    margin-top: 10px;
+}
+form p label {
+    display: inline-block;
+    width: 35px;
+    vertical-align:top;
+    padding: 5px;
+}
+form p input {
+    width: 180px;
+}
+p.rememberme label {
+    width: auto;
+    margin-left: 40px;
+}
+#rememberme {
+    width: auto;
+}
+p.form-submit input{
+    clear: both;
+    margin-left: 50px;
+    padding: 5px 15px;
+}
+#eschool-info dl dt {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+#eschool-info dl dd {
+    font-size: 1.1em;
+}
+dl dt, dl dd {
+    padding: 5px;
+}
+#eschool-info {
+    margin-right: 50px;
+}
+#eschool-info p {
+    padding: 5px;
+    text-indent: 2em;
+    line-height: 2em;
+}
+#more {
+    margin-left: 5px;
+    margin-top: 10px;
+}
+#footer {
+    position: absolute;
+    bottom: 10px;
+    width: 90%;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="wrapper" class="clearfix">
+    <!--<h5 class="wrapper-header">系统登录</h5>-->
+    <div class="wrapper-content">
+        <div id="login-wrapper">
+            <form method="post" action="/login/">
+                {% csrf_token %}
+                {% if error %}
+                <p class="error">{{ error }}</p>
+                {% endif %}
+                <p>
+                    <label for="username">帐号</label>
+                    <input type="text" id="username" name="username" />
+                </p>
+                <p>
+                    <label for="password">密码</label>
+                    <input type="password" id="password" name="password" />
+                </p>
+                <p class="rememberme">
+                    <label class="labelCheckbox" for="rememberme" title="为了确保您的信息安全，请不要在网吧或者公共机房勾选此项！">
+                    <input type="checkbox" tabindex="3" value="true" id="rememberme" name="remember_me">下次自动登录
+                </label>
+                </p>
+                <p class="form-submit">
+                    <input type="submit" class="submit-button" value="登录" />
+                    <a href="/newpw" id="fgt">忘记密码？</a>
+                </p>
+            </form>
+        </div><!--/login-wrapper-->
+        <h1 style="text-indent:0em;">阳西县兴华中学</h1>
+        <div id="eschool-info" class="wrapper">
+            <p>该校位于阳西县城中心，创建于1985年7月，同年9月正式开学，定名为阳西县兴华中学。校园占地面积25000平方米，现有校舍建筑面积15081平方米。校园布局合理，四周有围墙，有东南校门2道，校舍整齐划一，主教学区与宿舍区、运动场适当分开。学校教学设备完善，图书馆、实验室、电脑室、多功能语音室、生物室等一应俱全，合乎现代化教学需要，校园环境优美，是县一级学校、省文明单位、小公民道德建设实验学校。</p>
+            <p>现有教学楼3幢，建筑面积4688平方米；学生宿舍楼一幢，建筑面积1890平方米；教师宿舍楼2幢，建筑面积5599平方米，其中单元住房50套；饭堂一间；200米环形跑道、100米直跑道运动场一个，水泥篮球场2个。</p>
+            <p>学校现有30个教学班，学生人数2100多人，每年新招学生人数达750人。教职员工共163人，其中任课教师121人，高级教师3人，一级教师70人；省优秀教师2人，阳江市青年骨干教师16人；学历达标率100%。</p>
+            <p>校训是“面向全体，发展个性特长”。1994年以来，学生获全国学科竞赛奖l35人次，省级奖35人次，市级奖64人次，其中赖宏针同学获第四届宋庆龄奖学金。冯春兰同学获2001年菲中国际儿童书画展二等奖，3位学生获全国首届“小公民”道德建设实践创新活动美术金奖，1学生获第六届全国青少年美术书法摄影大赛《金球杯》银奖。20名学生被评为市优秀班干部，34名学生被评为市优秀三好学生，26名学生被评为市优秀团干部。</p>
+            <p id="more"><a href="#">了解更多……</a></p>
+        </div>
+    </div><!--/wrapper-conttent-->
+
+    <div class="wrapper-footer">
+    </div><!--/wrapper-footer-->
+</div>
+{% endblock %}

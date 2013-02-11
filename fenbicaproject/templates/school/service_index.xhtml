@@ -1,0 +1,56 @@
+{% extends "base/base.html" %}
+{% block content %}
+<style type="text/css">
+#main-wrapper {
+    padding: 10px;
+    background: transparent url(/static/img/mash/bg-gray.jpg) repeat-x;
+    height: 500px;
+    clear: both;
+}
+.block {
+    float: left;
+    padding-right: 10px;
+    margin: 10px;
+}
+dt, dd {
+    float: left;
+    padding: 5px 0;
+}
+dt {
+    clear: left;
+    margin-right: 10px;
+}
+dd {
+    clear: right;
+}
+#footer {
+    width: 100%;
+    position: absolute;
+    bottom: 1px;
+}
+</style>
+<script type="text/javascript" src="/static/thirdparty/jquery.masonry.min.js"></script>
+<script type="text/javascript">
+$(function () {
+    $("#main-wrapper").masonry({
+        columnWidth: 10,
+        itemSelector: '.block'
+    });
+});
+</script>
+<div id="main-wrapper">
+    {% for c in phone_category %}
+        {% if c.phone_set.all %}
+    <div class="block">
+        <h5>{{ c.name }}</h5>
+        <dl>
+            {% for p in c.phone_set.all %}
+            <dt>{{ p.name }}</dt>
+            <dd>{{ p.phone }}</dd>	
+            {% endfor %}
+        </dl>
+    </div><!--/block-->
+        {% endif %}
+    {% endfor %}
+</div>
+{% endblock %}

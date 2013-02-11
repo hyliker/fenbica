@@ -1,0 +1,14 @@
+{% extends "base/base.html" %}
+{% block title %} 阳西县兴华中学-数字校园 {% endblock %}
+{% load navactive_tag %}
+{% block subnav %}
+{% url person_class_list user.pk as my_person_class_list %}
+<div id="subnav" class="clearfix">
+    <ul class="menu">
+        <li><a href="{% url dorm_check_list %}" class="{% reverse_navactive request "dorm_check_list" %}">日常考核记录</a></li>
+        <li><a href="{% url dorm_check_summary %}" class="{% navactive request "^/dorm/check/summary/" %}">考核评比汇总</a></li>
+        <li><a href="{% url dorm_latelog_list %}" class="{% reverse_navactive request "dorm_latelog_list" %}">住宿生晚归记录</a></li>
+        {% block extra-subnav %} {% endblock %}
+    </ul>
+</div><!--/subnav-->
+{% endblock subnav %}

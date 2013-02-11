@@ -1,0 +1,86 @@
+{% extends "classgrade/base.html" %}
+{% block subnav %}
+<div id="breadcrumbs">
+    <p><a href="{% url classgrade_index %}">首页</a> &rsaquo; <a href="{% url classgrade_check_index %}">考核评比</a> &rsaquo; {{ title }}　考核评比记录</p>
+</div>
+{% endblock %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="/static/css/table.css">
+<style type="text/css">
+#breadcrumbs {
+    padding: 5px;
+    color: #888;
+    font-size: 12px;
+    border-bottom: 1px solid #eee;
+    background-color: #f8f8f8;
+}
+table {
+    margin: 0 auto;
+}
+caption { 
+    font-size: 1.5em;
+    padding: 10px;
+    background: transparent url(/static/img/mash/bg-gray.jpg) repeat-x center center;
+}
+thead tr {
+    border-bottom: 2px solid #ddd;
+}
+select {
+    font-size: 1em;
+}
+</style>
+<script type="text/javascript">
+$(function () {
+    //cssHoverColor(".innerTable tbody tr","#9AC3F5");
+    cssHoverColor(".innerTable tbody tr","#FFFFCC");
+
+});
+</script>
+<table class="innerTable">
+    <caption>{{ title }} 考核评比记录</caption>
+    <thead>
+        <th>序号</th>
+        {% if not klass_pk %} <th>班级</th> {% endif %}
+        <th>日期</th>
+        <th>早晨考勤</th>
+        <th>上午考勤</th>
+        <th>下午考勤</th>
+        <th>晚上考勤</th>
+        <th>学生出勤</th>
+        <th>校服</th>
+        <th>教室秩序</th>
+        <th>发型服饰</th>
+        <th>吸烟喝酒</th>
+        <th>手机游戏</th>
+        <th>课堂纪律</th>
+        <th>家长联系</th>
+        <th>其他</th>
+        <th>总分</th>
+    </thead>
+    <tbody>
+    {% for m in check_list %}
+    <tr class="{% cycle "even" "odd" %}">
+        <td>{{ forloop.counter }}</td>
+        {% if not klass_pk %} <td>{{ m.klass.uuid }}</td> {% endif %}
+        <td>{{ m.dtchecked|date:"Y-m-d" }}</td>
+        <td>{{ m.early_morning_ranking }}</td>
+        <td>{{ m.morning_ranking }}</td>
+        <td>{{ m.afternoon_ranking }}</td>
+        <td>{{ m.evening_ranking }}</td>
+        <td>{{ m.student_attendance_ranking }}</td>
+        <td>{{ m.school_uniform_ranking }}</td>
+        <td>{{ m.classroom_order_ranking }}</td>
+        <td>{{ m.hairstyle_finery_ranking }}</td>
+        <td>{{ m.smoke_drink_ranking }}</td>
+        <td>{{ m.game_ranking }}</td>
+        <td>{{ m.classroom_discipline_ranking }}</td>
+        <td>{{ m.home_visiting_ranking }}</td>
+        <td>{{ m.other_ranking }}</td>
+        <td>{{ m.sum_ranking }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+
+{% endblock %}

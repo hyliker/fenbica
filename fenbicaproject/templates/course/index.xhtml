@@ -1,0 +1,102 @@
+{% extends "course/base.xhtml" %}
+{% block content %}
+<style type="text/css">
+caption {
+    font-size: 1.3em;
+    padding: 5px;
+    font-weight: bold;
+/*    background: transparent url(/static/img/mash/bg_footer.gif) repeat-x center center;*/
+}
+table tr.even {
+    background-color: #eee;
+    background-color: #ECF4FF;
+    background-color: #FAFAFA;
+    background-color: #F2F3F3;
+}
+table {
+    border-collapse: collapse;
+    margin-top: 0px;
+    background-color: #fff;
+    width: 100%;
+}
+td, th {
+    padding: 5px 10px;
+    text-align: center;
+}
+thead {
+    background-color: #7CBA0F;
+    background-color: #cc8f00;
+    background-color: #ddd;
+    color: #fff;
+    color: #000;
+    background: transparent url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+    border-bottom: 2px solid #ddd;
+    /*
+    background: #fff url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+    color: #000;
+    */
+}
+thead th {
+    padding: 10px;
+}
+tfoot {
+    background: transparent url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+}
+tfoot td {
+    height: 30px;
+    vertical-align: middle;
+    padding: 6px;
+}
+</style>
+<script type="text/javascript">
+$(function () {
+    //cssHoverColor(".innerTable tbody tr","#9AC3F5");
+    cssHoverColor(".innerTable tbody tr","#FFFFCC");
+
+});
+</script>
+<div id="main-content">
+    <table class="innerTable">
+        {% with latest_course as c %}
+        <caption> {{ c.teaching_year|slice:":4" }} - {{ c.teaching_year|slice:"4:8" }}年度 {{ c.semester }} 开设的课程</caption>
+        {% endwith %}
+        <thead>
+            <tr>
+                <th>课程编号</th>
+                <th>课程名称</th>
+                <th>授课年级</th>
+                <!--<th>学期</th>-->
+                <!--<th>开课学年</th>-->
+                <th>考试方式</th>
+                <th>授课方式</th>
+                <th>总学时</th>
+                <th>授课老师</th>
+                <th>课程人数限制</th>
+                <th>已选人数</th>
+                <th>教学地点</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in courses %}
+            <tr class="{% cycle "even" "odd" %}">
+                <td><a href="{{ c.get_absolute_url }}">{{ c.uuid }}</a></td>
+                <td>{{ c.name }}</td>
+                <td>{{ c.grade }}</td>
+                <!--<td>{{ c.semester }}</td>-->
+                <!--<td>{{ c.teaching_year}}</td>-->
+                <td>{{ c.exam_mode }}</td>
+                <td>{{ c.teaching_mode }}</td>
+                <td>{{ c.total_period }}</td>
+                <td><a href="{% url person c.teacher.pk %}">{{ c.teacher }}</a></td>
+                <td>{{ c.capacity }}</td>
+                <td>{{ c.selected_count }}</td>
+                <td>{{ c.place }}</td>
+                <td><a href="{{ c.get_absolute_url }}">选择</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+{% endblock %}

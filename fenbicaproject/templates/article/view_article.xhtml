@@ -1,0 +1,206 @@
+{% extends "article/base.html" %}
+{% load user_article_category %}
+{% block extra-head %}
+<style type="text/css">
+#main-wrapper {
+    padding: 10px;
+    background: transparent url(/static/img/mash/bg-gray.jpg) repeat-x;
+    clear: both;
+}
+.article {
+    width: 700px;
+    margin-left: 160px;
+    /*margin: 0 auto;*/
+}
+#article-content-wrapper table, 
+#article-content-wrapper td, 
+#article-content-wrapper th 
+{
+    border:1px solid #888;
+}
+.article h1 {
+    text-align: center;
+}
+.article-meta {
+    text-align: center;
+    padding: 5px;
+    margin-bottom: 10px;
+    color: #888;
+}
+.article .content p {
+    line-height: 1.8em;
+}
+.attachment_list li {
+    padding: 3px 0;
+    margin-left: 2em;
+    list-style-type: decimal;
+}
+#sidebar {
+    width: 150px;
+    float: left;
+}
+#user_article_category li {
+    padding: 5px 0;
+}
+#commentsWrapper {
+    margin-top: 10px;
+    border-top: 1px solid #ddd;
+}
+.comment-meta {
+    padding: 5px;
+    font-size: 12px;
+    background-color: #fcfcfc;
+    color: #888;
+}
+.comment {
+    margin-bottom: 10px;
+}
+.comment-content {
+    padding: 5px;
+    font-size: 1em;
+    line-height: 1.8em;
+    /*background: transparent url(/static/img/mash/bg-gray.jpg) repeat-x center center;*/
+}
+#comment-content-textarea {
+    width: 100%;
+    height: 4em;
+}
+form label {
+    clear: both;
+    display: block;
+    padding: 10px 0;
+}
+.comment-notice {
+    color: red;
+    color: #F75252;
+    background-color: #f8f8f8;
+    padding: 5px;
+}
+.comment-order {
+    display:block;
+    float: right;
+    font-size: 1.5em;
+    color: #ccc;
+    font-style: italic;
+}
+</style>
+
+<script type="text/javascript">
+$(function () {
+    //删除附件
+    $(".delete_attachment").click(function (event) {
+        event.preventDefault();
+        var content = $(this).prev().html();
+        if (confirm("确认删除 " + content + " 附件吗")) {
+            $.getJSON($(this).attr("href"), function (res) {
+                if (res.success) {
+                    $("#attachment_" + res.data.attachment_pk).remove();
+                    var attachment_count = parseInt($(".attachment_count").text());
+                    var attachment_count = attachment_count -1;
+                    if (attachment_count > 0) {
+                        $(".attachment_count").html(attachment_count);
+                    } else {
+                        $(".attachment").remove();
+                    }
+                }
+            });
+        }
+    });
+
+    $(".delete_article").click(function (event) {
+        event.preventDefault();
+        if (confirm("确认删除此篇日志吗?")) {
+            $.getJSON($(this).attr("href"), function (res) {
+                if (res.success) {
+                    location.href =  "/article/my";
+                } else {
+                    alert("删除失败");
+                }
+            });
+        }
+    });
+
+});
+</script>
+
+
+{% endblock %}
+
+{% block content %}
+<div id="main-wrapper">
+    <div id="sidebar">
+        <h5>日志分类</h5>
+        {% user_article_category article.author article.category %}
+    </div><!--/sidebar-->
+    <div class="article">
+        {% with article as a %}
+        <h1>{{ a.title }}</h1>
+        <p class="article-meta">
+        <a href="{% url person a.author.pk %}">{% if not a.author.person.name %} {{ a.author.name }} {% else %}  {{ a.author.person.name }} {% endif %}</a> 
+        {% url view_article_category_default a.author.pk as view_article_category_default %}
+
+        于 {{ a.dtcreated }} 发表在 <a href="{{ a.category.get_absolute_url|default:view_article_category_default }}">{{ a.category|default:"默认分类" }}</a> 投稿到 <a href="{{ a.public_category.get_absolute_url }}">{{ a.public_category }}</a>
+            浏览数: {{ a.read_count }} <a href="#comments">评论数: {{ a.comments.count|default:"0" }}</a>  {% if a.quote %} 引用: {{ a.quote }} {% endif %}
+            {% if a.author == request.user %}
+            操作: <a href="{% url edit_article a.pk %}">编辑</a> / <a href="{% url delete_article a.pk %}?next=/article/my/" class="delete_article">删除</a>
+            {% endif %}
+        </p>
+        <div class="content" id="article-content-wrapper">
+            {{ a.content|removetags:"script"|safe|linebreaks }}
+        </div>
+
+        {% if attachment_list %}
+        <div class="attachment">
+            <h6>共有 <span class="attachment_count">{{ attachment_list|length }}</span> 个相关附件下载</h6>
+            <ul class="attachment_list">
+            {% for a in attachment_list %}
+            <li id="attachment_{{ a.pk }}">
+                <a href="{{ a.file.url }}">{{ a.file_basename }}</a> 
+                {% if a.author == person %}<a href="{% url article_delete_attachment a.pk %}" class="remove_button delete_attachment">删除</a>{% endif %}</li>
+            {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        {% if comments %}
+        <div id="commentsWrapper">
+            <h6>{{ comments|length }} 条评论</h6>
+            <ul class="comments" id="comments">
+                {% for c in comments %}
+                <li class="comment">
+                <p class="comment-meta">
+                    {% if c.author %}
+                    <a href="{{ c.author.person.get_absolute_url }}">{{ c.author.person.name }}</a>
+                    {% else %} 
+                    匿名人
+                    {% endif %} 评论于 {{ c.dtcommented }} 
+                    <span class="comment-order">{{ forloop.counter }}</span> </p>
+                    <p class="comment-content">{{ c.content }}</p>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        {% if user.is_authenticated %}
+        <div id="submit-comment">
+            <form method="post" action="{% url commentit_add_comment %}">
+                {% csrf_token %}
+            <label>你的评论 (0/250 字)</label>
+            <input type="hidden" name="content_type_id" value="{{ content_type.pk }}" />
+            <input type="hidden" name="object_id" value="{{ article.pk }}" />
+            <textarea name="content" id="comment-content-textarea"></textarea>
+            <p><input type="submit" value="提交评论" class="submit-button" /></p>
+            </form>
+        </div>
+        {% else %}
+        <p class="comment-notice">提示：<a href="{% url login %}?next={% url view_article article.pk %}">登陆</a>后，可以发表评论</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}
+
+{% block extra-subnav %} 
+<li><a href="" class="active">{{ article.author.person.name }} 的日志</a></li>
+{% endblock %}

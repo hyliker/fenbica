@@ -1,0 +1,213 @@
+{% extends "base/base.html" %}
+{% block title %} 凭你-数字化校园SaaS解决方案 {% endblock %}
+{% block extra-head %}
+<style type="text/css">
+#main-wrapper{
+    background-color: #1259C7;
+    padding: 5px 5px 5px 5px;
+    margin: 5px 0;
+    font-size: 1em;
+    line-height: 1.5em;
+    font-size: 1.1em;
+    clear: both;
+    border-top: 10px solid #1259C7;
+    background: transparent url({{ MEDIA_URL}}img/mash/bg-gray.jpg) repeat-x;
+}
+#main-accordion {
+    float: left;
+    width: 130px;
+}
+#main-content {
+    margin-left: 200px;
+    margin-left: 140px;
+    margin-right: 5px;
+}
+#system-statistics {
+    float: left;
+}
+#system-log {
+    float: right;
+    width: 227px;
+}
+</style>
+<script type="text/javascript">
+$(function(){
+    $("#main-accordion").accordion({
+                autoHeight: false,
+                navigation: true,
+                active: 0
+    });
+
+    $("#main-accordion ul li a").click(function (event) {
+        event.preventDefault();
+        $("#main-content").load($(this).attr("href")).flash("slow");
+    });
+});
+</script>
+{% endblock %}
+{% block content %}
+
+<div id="main-wrapper" class="clearfix">
+    <div id="wrapper-header" class="wrapper">
+    </div>
+
+    {# 根据权限不同显示不同的管理栏目 #}
+    <div id="main-accordion">
+        <h3><a href="#">系统统计</a></h3>
+        <ul>
+            <li><a href="#">学生</a></li>
+        </ul>
+        <h3><a href="#">系统设置</a></h3>
+        <ul>
+            <li><a href="http://home">系统初始化</a></li>
+            <li><a href="http://home/profile/181">基础信息</a></li>
+            <li><a href="#">学期班级</a></li>
+            <li><a href="#">权限分配</a></li>
+            <li><a href="#">评语库维护</a></li>
+            <li><a href="#">综合导入</a></li>
+            <li><a href="#">系统日志</a></li>
+            <li><a href="#">权限汇总</a></li>
+            <li><a href="#"></a></li>
+            <li><a href="#"></a></li>
+        </ul>
+        <h3><a href="#">学生</a></h3>
+        <ul>
+            <li><a href="{% url manage_student %}">基本信息</a></li>
+            <li>学生简历</li>
+            <li>学生来源</li>
+            <li>学籍异动</li>
+            <li>结束学业</li>
+            <li>毕业</li>
+            <li>奖励</li>
+            <li>处分</li>
+            <li>入学考试</li>
+            <li>注册</li>
+            <li>在校考试</li>
+            <li>军训</li>
+            <li>家庭基本</li>
+            <li>家庭成员</li>
+            <!--<li>外地学生在本地联系人</li>-->
+        </ul>
+        <h3><a href="#">教职工</a></h3>
+        <ul>
+            <li><a href="{% url manage_staff %}">基本信息</a></li>
+            <li>学历学位</li>
+            <!--<li>行政、党派职务</li>-->
+            <!--<li>岗位证书</li>-->
+            <!--<li>专业技术职务</li>-->
+            <!--<li>工人技术等级及职务</li>-->
+            <!--<li>政治面貌</li>-->
+            <!--<li>组织考察(考核)</li>-->
+            <!--<li>语言能力</li>-->
+            <!--<li>管理工作</li>-->
+            <li>教学工作量</li>
+            <li>任课</li>
+            <!--<li>工资变动</li>-->
+            <!--<li>工资结构</li>-->
+            <!--<li>保险福利</li>-->
+            <!--<li>住房公积金</li>-->
+            <!--<li>国内专家</li>-->
+            <!--<li>来华定居工作专家、学者</li>-->
+            <!--<li>社会兼职职务[>(民主党派人民团体共青团工青妇群)信息类<]</li>-->
+            <!--<li>学术团体兼职</li>-->
+            <!--<li>奖励</li>-->
+            <!--<li>惩处</li>-->
+            <li>简历</li>
+            <!--<li>来源</li>-->
+            <!--<li>离校</li>-->
+            <!--<li>校内异动</li>-->
+            <!--<li>国内进修学习</li>-->
+            <!--<li>出国(境)学习工作</li>-->
+            <!--<li>教师业务考评</li>-->
+            <!--<li>干部工作考核</li>-->
+            <!--<li>工人考技考工</li>-->
+            <!--<li>住房</li>-->
+            <!--<li>离退休</li>-->
+            <!--<li>工作返聘</li>-->
+            <li>配偶情况</li>
+            <li>家庭其他成员</li>
+        </ul>
+        <h3><a href="#">体育卫生</a></h3>
+        <ul>
+            <li>体能与水平测试</li>
+            <li>体育锻炼</li>
+            <li>体育达标</li>
+            <li>体育竞赛</li>
+            <li>体检批次</li>
+            <li>自述项目</li>
+            <li>生活习惯与病史</li>
+            <li>家族病史</li>
+            <li>体检项目</li>
+            <li>疾病与治疗</li>
+            <li>因病学籍变动</li>   
+        </ul>
+        <h3><a href="#">体育卫生</a></h3>
+        <ul>
+            <li>体检批次</li>
+            <li>自述项目</li>
+            <li>生活习惯与病史</li>
+            <li>家族病史</li>
+            <li>体检项目</li>
+            <li>疾病与治疗</li>
+            <li>因病学籍变动</li>   
+        </ul>
+        <h3><a href="#">班级管理</a></h3>
+        <ul>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+        <h3><a href="#">教务管理</a></h3>
+        <div>Second content</div>
+        <h3><a href="#">考试管理</a></h3>
+        <div>Second content</div>
+        <h3><a href="#">校产管理</a></h3>
+        <div>Second content</div>
+        <h3><a href="#"> 房产与设施</a></h3>
+        <div>Second content</div>
+        <!--<h3><a href="#">仪器设备与实验室</a></h3>-->
+        <!--<div>Second content</div>-->
+        <h3><a href="#">图书管理</a></h3>
+        <div>Second content</div>
+    </div><!--/accordion-->
+
+    <div id="main-content"><!-- 系统统计汇总区-->
+        <div id="system-statistics">
+            <dl>
+                <dt>全校师生</dt>
+                <dd>6000人
+                    <dt>教职工</dt>
+                    <dd>200人</dd>
+                    <dt>学生</dt>
+                    <dd>5800人</dd>
+                </dd>
+            </dl>
+        </div><!--/system-statistics-->
+
+        <div id="system-log"><!-- 系统日記区-->
+            <h6 class="menubar-header">系统日志</h6>
+            <ul>
+                <li>{{ logger.user }} {{ logger.time }}  {{ logger.content }} </li>
+                <li><a href="#" class="logger_user">Logger</a><span class="logger_time">2010-3-2 10:30:50</span><span class="logger_content">操作内容</span></li>
+                <li><a href="#" class="logger_user">Logger</a><span class="logger_time">2010-3-2 10:30:50</span><span class="logger_content">操作内容</span></li>
+                <li><a href="#" class="logger_user">Logger</a><span class="logger_time">2010-3-2 10:30:50</span><span class="logger_content">操作内容</span></li>
+                <li><a href="#" class="logger_user">Logger</a><span class="logger_time">2010-3-2 10:30:50</span><span class="logger_content">操作内容</span></li>
+                <li><a href="#" class="logger_user">Logger</a><span class="logger_time">2010-3-2 10:30:50</span><span class="logger_content">操作内容</span></li>
+                <li><a href="#" class="logger_user">Logger</a><span class="logger_time">2010-3-2 10:30:50</span><span class="logger_content">操作内容</span></li>
+                <li><a href="#" class="logger_user">Logger</a><span class="logger_time">2010-3-2 10:30:50</span><span class="logger_content">操作内容</span></li>
+                <li><a href="#" class="logger_user">Logger</a><span class="logger_time">2010-3-2 10:30:50</span><span class="logger_content">操作内容</span></li>
+            </ul>
+        </div><!--/system-log-->
+
+    </div><!--/main-content-->
+</div><!--/main-wrapper-->
+
+{% endblock %}

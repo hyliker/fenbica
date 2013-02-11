@@ -1,0 +1,44 @@
+{% extends "school/view_basic_profile.html" %}
+
+{% block title %} {{ person.name }} 教职工配偶 {% endblock %}
+
+{% block infoTitle %}
+<h4 id="info-title">{{ person.name }} {{ person.get_identity_display }} 配偶 </h4>
+{% endblock %}
+
+{% block infoType_staff_spouse %}
+<li><strong>配偶</strong></li>
+{% endblock %}
+
+{% block infoItems %}
+<dl class="hdl">
+{% if spouse %}
+    {% with spouse as s %} 
+    <dt>姓名</dt> <dd>{{ s.name }}</dd>
+    <dt>性别</dt> <dd>{{ s.gender.name }}</dd>
+    <dt>出生日期</dt> <dd>{{ s.birthday|date:"Y年n月d日" }}</dd>
+    <dt>民族</dt> <dd>{{ s.folk.name }}</dd>
+    <dt>户口所在地</dt> <dd>{{ s.domicle_location }}</dd>
+    <dt>政治面貌</dt> <dd>{{ s.politics.name }}</dd>
+    <dt>学位</dt> <dd>{{ s.diploma.name }}</dd>
+    <dt>港澳台侨</dt> <dd>{{ s.emigrant.name }}</dd>
+    <dt>所在单位名称</dt> <dd>{{ s.enterprise }}</dd>
+    <dt>所在单位所在地区划</dt> <dd>{{ s.enterprise_location }}</dd>
+    <dt>参加工作日期</dt> <dd> {{ s.dtstart_job|date:"Y年n月d日" }}</dd> 
+    <dt>联系电话</dt> <dd>{{ s.telephone }}</dd>
+    <dt>邮政编码</dt> <dd>{{ s.postal_code }}</dd>
+    <dt>曾任技术职务</dt> <dd>{{ s.technical_post.name }} 年</dd>
+    <dt>职务级别</dt> <dd>{{ s.cadre_post_level }}</dd>
+    <dt>曾任党政职务</dt> <dd>{{ s.cadre_post.name  }}</dd>
+    <dt>社会兼职</dt> <dd>{{ s.social_job.name  }}</dd>
+    <dt>工资总额</dt> <dd>{{ s.salary_amount }} 元</dd>
+    <dt>家庭人口</dt> <dd>{{ s.family_members_number }}</dd>
+    <dt>子女人数</dt> <dd>{{ s.children_number }}</dd>
+    <dt>抚养人口数</dt> <dd>{{ s.foster_number }}</dd>
+    <hr/>
+    {% endwith %}
+{% else %}
+<h5>暂没有相关配偶信息</h5>
+{% endif %}
+</div>
+{% endblock %}

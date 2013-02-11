@@ -1,0 +1,27 @@
+{% extends "school/view_basic_profile.html" %}
+
+{% block title %} {{ person.name }} 军训信息 {% endblock %}
+
+{% block infoTitle %}
+<h4 id="info-title">{{ person.name }} {{ person.get_identity_display }} 军训信息 共 {{ drill|length }} 个 </h4>
+{% endblock %}
+
+{% block infoType_student_drill %}
+<li><strong>军训 </strong></li>
+{% endblock %}
+
+{% block infoItems %}
+<dl class="hdl">
+{% if drill %}
+    {% for d in drill %} 
+    <dt>军训起始时间</dt> <dd>{{ d.dtstart|date:"Y年n月d日" }}</dd>
+    <dt>军训结束时间</dt> <dd>{{ d.dtend|date:"Y年n月d日" }}</dd>
+    <dt>军训部队</dt> <dd>{{ d.troops }}</dd>
+    <dt>军训成绩</dt> <dd>{{ d.result }}</dd>
+    <hr/>
+    {% endfor %}
+{% else %}
+<h5>暂没有相关军训信息</h5>
+{% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "school/view_basic_profile.html" %}
+
+{% block title %} {{ person.name }} 考评信息{% endblock %}
+
+{% block infoTitle %}
+<h4 id="info-title">{{ person.name }} {{ person.get_identity_display }} 考评信息</h4>
+{% endblock %}
+
+{% block infoType_student_comment%}
+<li><strong>考评</strong></li>
+{% endblock %}
+
+{% block infoItems %}
+<dl class="hdl">
+{% if comment %}
+    {% for c in comment %} 
+    <dt>学段</dt> <dd>{{ c.learning_stage }}</dd>
+    <dt>学年</dt> <dd>{{ c.learning_year }}</dd>
+    <dt>学期</dt> <dd>{{ c.semester }}</dd>
+    <dt>年级</dt> <dd>{{ c.grade }}</dd>
+    <dt>考评日期</dt> <dd>{{ c.dtcomment }}</dd>
+    <dt>考评老师</dt> <dd>{{ c.teacher }}</dd>
+    <dt>学期评语</dt> <dd>{{ c.comment }}</dd>
+    <hr/>
+    {% endfor %}
+{% else %}
+<h5>暂没有相关考评信息</h5>
+{% endif %}
+</div>
+{% endblock %}

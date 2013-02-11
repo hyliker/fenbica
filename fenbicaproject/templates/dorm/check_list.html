@@ -1,0 +1,83 @@
+{% extends "classgrade/base.html" %}
+{% load pagination_tag %}
+{% block subnav %}
+<div id="breadcrumbs">
+    <p><a href="{% url dorm_index %}">首页</a> &rsaquo; <a href="{% url dorm_check_summary %}">考核评比汇总</a> &rsaquo; {{ title }}　考核评比记录</p>
+</div>
+{% endblock %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="/static/css/table.css">
+<style type="text/css">
+#breadcrumbs {
+    padding: 5px;
+    color: #888;
+    font-size: 12px;
+    border-bottom: 1px solid #eee;
+    background-color: #f8f8f8;
+}
+table {
+    margin: 0 auto;
+}
+caption { 
+    font-size: 1.5em;
+    padding: 10px;
+    background: transparent url(/static/img/mash/bg-gray.jpg) repeat-x center center;
+}
+thead tr {
+    border-bottom: 2px solid #ddd;
+}
+select {
+    font-size: 1em;
+}
+#pagebar {
+    padding: 10px 0;
+    background: transparent url(/static/img/mash/bg_footer.gif) repeat-x center center;
+    background: transparent url(/static/img/mash/big-bg.png) repeat-x center center;
+}
+</style>
+<script type="text/javascript">
+$(function () {
+    //cssHoverColor(".innerTable tbody tr","#9AC3F5");
+    cssHoverColor(".innerTable tbody tr","#FFFFCC");
+
+});
+</script>
+<table class="innerTable">
+    <caption>{{ title }} 考核评比记录</caption>
+    <thead>
+        <th>序号</th>
+        <th>日期</th>
+        {% if not bedchamber_pk  %} <th>寝室</th> {% endif %}
+        <th>物品摆放</th>
+        <th>床铺整理</th>
+        <th>卫生情况</th>
+        <th>设施破坏</th>
+        <th>缺寝情况</th>
+        <th>纪律情况</th>
+        <th>总分</th>
+    </thead>
+    <tbody>
+    {% for m in check_list %}
+    <tr class="{% cycle "even" "odd" %}">
+        <td>{{ forloop.counter }}</td>
+        <td>{{ m.dtchecked|date:"Y-m-d" }}</td>
+        {% if not bedchamber_pk %} <td>{{ m.bedchamber }}</td> {% endif %}
+        <td>{{ m.thing_ranking }}</td>
+        <td>{{ m.bed_ranking }}</td>
+        <td>{{ m.health_ranking }}</td>
+        <td>{{ m.infrastructure_ranking }}</td>
+        <td>{{ m.absence_ranking }}</td>
+        <td>{{ m.discipline_ranking }}</td>
+        <td>{{ m.sum_ranking }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% paginate pages.page_prefix_link  pages.object_list pages.cur_page.number 20 6 pages.object_list %}
+<div id="search-page">
+    {% include 'base/pagination.html' %}
+</div>
+
+
+{% endblock %}

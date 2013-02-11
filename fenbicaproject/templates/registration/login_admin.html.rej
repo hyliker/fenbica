@@ -1,0 +1,43 @@
+--- cdjangosite//templates/registration/login_admin.html	2010-12-10 01:29:21.886204004 +0800
++++ ddjangosite//templates/registration/login_admin.html	2010-12-10 01:10:49.436203999 +0800
+@@ -1,18 +1,18 @@
+ {% extends "index/base.html" %}
+ {% block extra-head%}
+-<style type="text/css">
++<style type="text/css"> 
+ #wrapper {
+     margin: 0px auto;
+ }
+ .wrapper-content {
+     padding: 10px;
+-    background: transparent url({{ MEDIA_URL}}img/mash/bg-gray.jpg) repeat-x;
++    background: transparent url(/static/img/mash/bg-gray.jpg) repeat-x;
+     height: 300px;
+ }
+ #login-wrapper {
+     float: left;
+     padding-right: 10px;
+-    margin-right: 20px;
++    margin-right: 10px;
+     width: 250px;
+     height: 470px;
+     border-right: 1px solid #ddd;
+@@ -52,8 +52,7 @@
+     padding: 5px;
+ }
+ #eschool-info {
+-    margin-right: 50px;
+-    width: 700px;
++    width: 670px;
+ }
+ #eschool-info p {
+     font-size: 13px;
+@@ -106,7 +106,7 @@
+ 
+         <!--<h4>温馨提醒</h4>-->
+         <div id="eschool-info" class="wrapper">
+-            <img src="/static/img/school/school-banner.png" />
++            <img src="/static/img/school/school-banner.jpg" />
+             <p>校园网的开通是校园信息化建设的一个重要标志, 使得我校的教育管理信息化工作开始朝着标准化、规范化的健康方向发展, 提高我校现代化管理水平的一个重要举措。</p>
+             <p>校园网为每个师生绑定了一个实名的帐号， 帐号与其初始化的密码， 则由教务处负责提供与管理。 如果您忘记了密码或者用户名, 无法登录系统， 您可以到教务处找相关人员重新索取回来. <strong>特别要注意的是， 首次登录后请务必更改自己的初始化密码， 以防被别人轻易地猜出到您的帐号与密码， 避免自己的档案相关的信息外泄。</strong> 网站管理人员会根据需要， 来设置是否允许师生编辑自己的档案信息, 具体情况请留意学校相关部门的通知与安排。网站上的信息绑定了相关的权限， 只有具有相关权限的人员才能够看到，您如有疑问，请向教务处的相关人员了解具体情况。</p>
+         </div>

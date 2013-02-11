@@ -1,0 +1,250 @@
+{% extends "index/base.html" %}
+{% load pagination_tag %}
+{% block extra-head %}
+<style type="text/css">
+#sidebar {
+    float: right;
+    width: 250px;
+    height: 300px;
+    background-color: #eee;
+}
+#message {
+    background-color: #1259C7;
+    color: #fff;
+}
+#message p {
+    padding: 5px;
+}
+#main-content {
+    background: transparent url({{ MEDIA_URL}}img/mash/bg-gray.jpg) repeat-x;
+    min-height: 500px;
+}
+.nav-section {
+    padding: 10px;
+    clear: both;
+}
+.nav-section a {
+    font-size: 1.2em;
+    padding: 10px;
+}
+ul.navs {
+    list-style-type: none;
+}
+ul.navs li {
+    float: left;
+    padding: 5px 0;
+}
+#edit_form {
+    padding: 10px;
+}
+caption {
+    font-size: 1.5em;
+    padding: 10px;
+    background: transparent url(/static/img/mash/bg_footer.gif) repeat-x center center;
+}
+form p label {
+    display: block;
+    float: left;
+    width: 100px;
+    text-align: right;
+    margin-right: 5px;
+}
+form p {
+    margin-bottom: 10px;
+}
+form p input {
+    width: 300px;
+}
+form textarea {
+    width: 300px;
+}
+form p.submit {
+    margin-left: 105px;
+}
+#main-content ul li {
+    margin-top: 10px;
+    float: left;
+}
+#main-content {
+    font-size: 1.1em;
+}
+#exams-wrapper, #exam-courses-wrapper, #exam-classes-wrapper {
+    padding: 10px;
+    float: left;
+    clear: both;
+}
+ul.hlist {
+    margin-left: 2em;
+}
+.hlist li {
+    clear: both;
+    margin-right: 20px;
+}
+
+h5,h6 {
+    clear: both;
+}
+h6 {
+    margin-left: 2em;
+}
+table tr.even {
+    background-color: #eee;
+    background-color: #ECF4FF;
+    background-color: #FAFAFA;
+    background-color: #F2F3F3;
+}
+table {
+    border-collapse: collapse;
+    margin-top: 0px;
+    background-color: #fff;
+    width: 100%;
+    clear: both;
+}
+td, th {
+    padding: 5px 10px;
+    text-align: center;
+}
+thead {
+    background-color: #7CBA0F;
+    color: #fff;
+    /*
+    background: #fff url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+    color: #000;
+    border-top: 5px solid #7CBA0F;
+    */
+}
+tfoot {
+    background: transparent url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+}
+tfoot td {
+    height: 30px;
+    vertical-align: middle;
+    padding: 6px;
+}
+#upload {
+    padding: 10px;
+}
+tr.import_error {
+    color:red;
+    background-color: #eee;
+    background-color: #ffeeee !important;
+    padding: 5px;
+    padding: 5px;
+    padding-left: 25px !important;
+}
+caption select {
+    font-size: 1em;
+    padding: 5px;
+}
+form.inner-search {
+    float: left;
+    padding: 5px;
+}
+.inner-toolbar {
+    float: right;
+    margin: 8px 10px 5px 5px;
+}
+.inner-toolbar a:hover {
+    text-decoration: none;
+}
+span.search-button {
+    display: block;
+    width: 24px;
+    height: 24px;
+    float: left;
+    background: transparent url(/static/img/mash/search_16x16.png) no-repeat 5px center;
+}
+</style>
+<script type="text/javascript">
+$(function () {
+    //cssHoverColor(".innerTable tbody tr","#9AC3F5");
+    cssHoverColor(".innerTable tbody tr","#FFFFCC");
+
+    $("#exam").change(function () {
+        location.href = "{% url analysis_class %}exam-" + $(this).val();
+    });
+    $(".delete_studentexam").click(function (event) {
+        $(this).closest("tr").css("background-color", "#ffccff");
+        if(confirm("警告，确认要删除此条记录吗,　所有与此条记录绑定的相关信息会一同删除,无法恢复?")) {
+        } else {
+            event.preventDefault();
+        }
+    });
+
+});
+</script>
+{% endblock %}
+
+{% block navigation %}
+<ul class="menu">
+    <li><a href="/desktop/">个人桌面</a> &gt;</li>
+    <li><a href="#">教职工</a>&gt;</li>
+    <li><strong>教职工管理</strong></li>
+</ul>
+{% endblock navigation %}
+{% block content %}
+<div id="message" class="clearfix">
+    <p></p>
+</div><!--/message-->
+<div id="main-content" class="clearfix">
+
+    <div id="inner-toolbar">
+        <form id="search_student" class="inner-search" action="" method="get">
+            <span class="search-button"></span>
+            <input type="text" name="q" title="输入姓名拼音、身份证号、编号" id="sub-search" value="{{ q }}" />
+            <input type="submit" class="submit-button" value="搜索"/>
+        </form>
+        <div class="inner-toolbar">
+            <!--<a href="#" class="view_doc_button">查看</a>-->
+            <!--<a href="#" class="upload_button" title="批量导入学生基本信息数据">上传</a>-->
+            <!--<a href="#" class="down_button" title="批量下载学生基本信息数据">下载</a>-->
+            <!--<a href="#" class="reflesh_button">刷新</a>-->
+            <a href="{% url add_staff %}" class="add_button">增加</a>
+            <a href="#" class="remove_button">删除</a>
+            <a href="#" class="view_doc_button">查看</a>
+            <a href="#" class="edit_button">修改</a>
+            <!--<a href="#" class="add_button">增加考试科目</a>-->
+            <!--<a href="#" class="chart_button">统计</a>-->
+            <!--<a href="#" class="print_button">打印</a>-->
+            <!--<a href="#" class="settings_button">设置</a>-->
+        </div>
+    </div><!--/inner-toolbar-->
+    <table class="innerTable cssHoverColor" id="checkbox-table">
+        <thead>
+            <tr>
+                <th><input type="checkbox" id="checkbox-all" /></th>
+                <th>姓名</th>
+                <th>性别</th>
+                <th>编号</th>
+                <th>身份证</th>
+                <th>联系电话</th>
+                <th colspan="3">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for s in staffs %}
+        <tr class="{% cycle "even" "odd" %}">
+            <td><input type="checkbox" value="{{ e.pk }}" /></td>
+            <td><a href="{% url view_profile s.pk %}">{{ s.name }}</a></td>
+            <td>{{ s.gender }}</td>
+            <td>{{ s.uuid }}</td>
+            <td>{{ s.id_no }}</td>
+            <td>{{ s.telephone }}</td>
+            <td><a href="{% url view_profile s.pk %}" class="view_doc_button">查看</a></td>
+            <td><a href="{% url delete_staff s.pk %}" class="remove_button delete_studentexam">删除</a></td>
+            <td><a href="{% url edit_staff s.pk %}" class="edit_button">修改</a></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="10">
+                    {% paginate pages.page_prefix_link  pages.object_list pages.cur_page.number 20 6 pages.object_list %}
+                        {% include 'base/pagination.html' %}
+                </td>
+            </td>
+        </tfoot>
+    </table>
+
+</div>
+{% endblock %}

@@ -1,0 +1,146 @@
+{% extends "index/base.html" %}
+{% load generic_object_details %}
+{% block extra-head %}
+<style type="text/css">
+#intro {
+    background-color: #1259C7;
+    color: #fff;
+    padding: 15px 5px 15px 30px;
+    margin: 5px 0;
+    font-size: 1em;
+    line-height: 1.5em;
+    clear: both;
+}
+#intro a {
+    color: #fff;
+}
+#intro h4 {
+    font-size: 1.5em;
+}
+
+#learning_more {
+    margin-top: -2em;
+}
+#intro p {
+    font-size: 1.2em;
+    margin-top: 10px;
+}
+
+#school-info {
+    width: 400px;
+    padding: 5px;
+    margin-top: 5px;
+}
+#school-info dl dd {
+    margin-left: 2em;
+}
+#search {
+    padding: 5px;
+    background-color: #eee;
+    margin: 10px 0;
+    font-size: 1.1em;
+}
+#search-input {
+    width: 250px;
+}
+#search-slug {
+    float: left;
+    line-height: 2em;
+}
+#sidebar {
+    float: right;
+    width: 250px;
+    height: 300px;
+    background-color: #eee;
+}
+#message {
+    background-color: #1259C7;
+}
+#main-content {
+    background: transparent url({{ MEDIA_URL}}img/mash/bg-gray.jpg) repeat-x;
+    height: 500px;
+}
+.nav-section {
+    padding: 10px;
+    clear: both;
+}
+.nav-section a {
+    font-size: 1.2em;
+    padding: 10px;
+}
+ul.navs {
+    list-style-type: none;
+}
+ul.navs li {
+    float: left;
+    padding: 5px 0;
+}
+
+</style>
+
+{% endblock %}
+{% block content %}
+
+<div id="message" class="clearfix">
+</div><!--/message-->
+
+<div id="main-content">
+
+    <div class="nav-section">
+        <h4>学生学籍</h4>
+        <ul class="navs">
+            <li><a href="{% url person user.pk %}">查看我的基本信息</a></li>
+            <li><a href="{% url edit_person user.pk%}">编辑我的基本信息</a></li>
+            <li><a href="{% url add_profile %}">添加新的基本信息</a></li>
+            <li><a href="#">我的学生简历</a></li>
+            <li><a href="#">学生来源</a></li>
+            <li><a href="#">学籍异动</a></li>
+            <li><a href="#">结束学业</a></li>
+            <li><a href="#">毕业</a></li>
+            <li><a href="#">奖励</a></li>
+            <li><a href="#">处分</a></li>
+            <li><a href="#">入学考试</a></li>
+            <li><a href="#">注册</a></li>
+            <li><a href="#">在校考试</a></li>
+            <li><a href="#">军训</a></li>
+            <li><a href="#">家庭基本</a></li>
+            <li><a href="#">家庭成员</a></li>
+            <li><a href="{% url admin_student %}">管理学生信息</a></li>
+        </ul>
+    </div>
+
+    <div class="nav-section">
+        <h4>教职工档案</h4>
+        <ul class="navs">
+            <li><a href="{% url person user.pk %}">查看我的基本信息</a></li>
+            <li><a href="{% url edit_person user.pk %}">编辑我的基本信息</a></li>
+            <li><a href="{% url add_staff %}">添加新的基本信息</a></li>
+            <li><a href="{% url admin_staff %}">管理教职工信息</a></li>
+        </ul>
+    </div>
+
+    <div class="nav-section">
+        <h4>学生考试成绩</h4>
+        <ul class="navs">
+            <li><a href="#">个人成绩查询</a></li>
+            <li><a href="{% url view_studentexamresult user.pk %}">我的考试成绩(学生)</a></li>
+            <li><a href="{% url add_studentexamresult_by_class_step1 %}">成绩批量录入</a></li>
+            <li><a href="{% url import_studentexamresult_by_school %}">成绩批量导入</a></li>
+            <li><a href="{% url analysis_class %}">班级成绩查询</a></li>
+            <li><a href="{% url analysis_class_course %}">班级科目成绩分析</a></li>
+            <li><a href="{% url analysis_course %}">考试科目成绩汇总</a></li>
+            <li><a href="{% url analysis_grade_course %}">年级科目总体成绩分析</a></li>
+            <!--<li><a href="#">成绩报告单</a></li>-->
+            <!--<li><a href="#">综合报告单</a></li>-->
+            <!--<li><a href="#">成绩汇总</a></li>-->
+            <!--<li><a href="#">成绩上报</a></li>-->
+            <li><a href="{% url add_studentexam_by_school %}">学校增加学生在校考试信息</a></li>
+            <li><a href="{% url add_studentexamcourse %}">学校增加学生在校考试科目信息</a></li>
+            <li><a href="{% url manage_studentexam %}">考试信息管理</a></li>
+        </ul>
+    </div>
+
+
+</div>
+
+{% endblock %}

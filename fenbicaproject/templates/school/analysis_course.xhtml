@@ -1,0 +1,242 @@
+{% extends "index/base.html" %}
+{% load pagination_tag %}
+{% block extra-head %}
+<style type="text/css">
+#sidebar {
+    float: right;
+    width: 250px;
+    height: 300px;
+    background-color: #eee;
+}
+#message {
+    background-color: #ddd;
+    color: #fff;
+    color: #000;
+    background: transparent url({{ MEDIA_URL}}img/mash/bg-gray.jpg) repeat-x;
+}
+#message p {
+    padding: 5px;
+}
+#main-content {
+    background: transparent url({{ MEDIA_URL}}img/mash/bg-gray.jpg) repeat-x;
+    min-height: 500px;
+}
+.nav-section {
+    padding: 10px;
+    clear: both;
+}
+.nav-section a {
+    font-size: 1.2em;
+    padding: 10px;
+}
+ul.navs {
+    list-style-type: none;
+}
+ul.navs li {
+    float: left;
+    padding: 5px 0;
+}
+#edit_form {
+    padding: 10px;
+}
+caption {
+    font-size: 1.5em;
+    padding: 10px;
+    background: transparent url(/static/img/mash/bg_footer.gif) repeat-x center center;
+}
+form p label {
+    display: block;
+    float: left;
+    width: 100px;
+    text-align: right;
+    margin-right: 5px;
+}
+form p {
+    margin-bottom: 10px;
+}
+form p input {
+    width: 300px;
+}
+form textarea {
+    width: 300px;
+}
+form p.submit {
+    margin-left: 105px;
+}
+#main-content ul li {
+    margin-top: 10px;
+    float: left;
+}
+#main-content {
+    font-size: 1.1em;
+}
+#exams-wrapper, #exam-courses-wrapper, #exam-classes-wrapper {
+    padding: 10px;
+    float: left;
+    clear: both;
+}
+ul.hlist {
+    margin-left: 2em;
+}
+.hlist li {
+    clear: both;
+    margin-right: 20px;
+}
+
+h5,h6 {
+    clear: both;
+}
+h6 {
+    margin-left: 2em;
+}
+table tr.even {
+    background-color: #eee;
+    background-color: #ECF4FF;
+    background-color: #FAFAFA;
+    background-color: #F2F3F3;
+}
+table {
+    border-collapse: collapse;
+    margin-top: 0px;
+    background-color: #fff;
+    width: 100%;
+}
+td, th {
+    padding: 5px 10px;
+    text-align: center;
+    vertical-align: middle;
+    border:1px solid #ddd;
+}
+thead {
+    background-color: #7CBA0F;
+    background-color: #cc8f00;
+    background-color: #ddd;
+    color: #fff;
+    color: #000;
+    background: transparent url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+    border-bottom: 2px solid #ddd;
+    /*
+    background: #fff url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+    color: #000;
+    border-top: 5px solid #7CBA0F;
+    */
+}
+tfoot {
+    background: transparent url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+}
+tfoot td {
+    height: 30px;
+    vertical-align: middle;
+    padding: 6px;
+}
+#upload {
+    padding: 10px;
+}
+tr.import_error {
+    color:red;
+    background-color: #eee;
+    background-color: #ffeeee !important;
+    padding: 5px;
+    padding: 5px;
+    padding-left: 25px !important;
+}
+tr.grade_stat {
+    background-color:#eee;
+}
+caption select {
+    font-size: 1em;
+    padding: 5px;
+}
+</style>
+<script type="text/javascript">
+$(function () {
+    //cssHoverColor(".innerTable tbody tr","#9AC3F5");
+    cssHoverColor(".innerTable tbody tr","#FFFFCC");
+
+    $("#exam").change(function () {
+        location.href = "{% url analysis_course %}" + $(this).val();
+    });
+
+});
+</script>
+{% endblock %}
+
+{% block subnav %}
+{% include "school/include/exam_subnav.xhtml" %}
+{% endblock subnav %}
+
+{% block content %}
+<div id="message" class="clearfix">
+</div><!--/message-->
+<div id="main-content" class="clearfix">
+
+    <table class="innerTable cssHoverColor" id="checkbox-table">
+        <caption> 
+            <select name="exam" id="exam">
+                {% for e in exams %}
+                    {% if e.pk == current_exam.pk %}
+                <option value="{{ e.pk }}" selected> {{ e }} </option>
+                    {% else %}
+                <option value="{{ e.pk }}"> {{ e }} </option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </caption>
+        <thead>
+            <tr>
+                <th>科目</th>
+                <th>年级</th>
+                <th>班别</th>
+                <th>优秀率(%)</th>
+                <th>良好率(%)</th>
+                <th>合格率(%)</th>
+                <th>不合格率(%)</th>
+                <th>最高分</th>
+                <th>最低分</th>
+                <th>平均分</th>
+                <th>标准偏差</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for m in courses %}
+            {% for n in m.grade %}
+                {% for p in n %}
+                    <tr class="{% if p.grade_stat %}grade_stat{% endif %}">
+                        {% if forloop.parentloop.first %}
+                            {% if forloop.first %}
+                        <td rowspan="{{ m.class_list|length }}">{{ m.course }} </td>
+                            {%endif %}
+                        {% endif %}
+
+                        {% ifchanged p.grade %}
+                        <td rowspan="{{ n|length }}"><a href="{% url analysis_grade_student current_exam.pk p.grade.pk %}">{{ p.grade }}</a></td>
+                        {% endifchanged %}
+
+                        {% if p.grade_stat %}
+                        <td>级平均</td>
+                        {% else %}
+                        <td><a href="{% url analysis_class_student current_exam.pk p.pk %}">{{ p.class_no }}</a>{{ p.grade__stat }}</td>
+                        {% endif %}
+
+                        <td>{{ p.excellent_rate|floatformat:2 }}</td>
+                        <td>{{ p.fine_rate|floatformat:2 }}</td>
+                        <td>{{ p.pass_rate|floatformat:2 }}</td>
+                        <td>{{ p.unpass_rate|floatformat:2 }}</td>
+                        <td>{{ p.stat.score__max|floatformat:2 }}</td>
+                        <td>{{ p.stat.score__min|floatformat:2 }}</td>
+                        <td>{{ p.stat.score__avg|floatformat:2 }}</td>
+                        <td>{{ p.stat.score__stddev|floatformat:2 }}</td>
+                    </tr>
+                {% endfor %}
+            {% endfor %}
+        {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="11">备注:排名按平均分高低排序{% now "Y-m-d g:i A" %}</td>
+            </td>
+        </tfoot>
+    </table>
+
+</div>
+{% endblock %}

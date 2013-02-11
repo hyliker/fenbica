@@ -1,0 +1,192 @@
+{% extends "index/base.html" %}
+{% load pagination_tag %}
+{% block extra-head %}
+<style type="text/css">
+#sidebar {
+    float: right;
+    width: 250px;
+    height: 300px;
+    background-color: #eee;
+}
+#message {
+    background-color: #ddd;
+    color: #000;
+}
+#message p {
+    padding: 5px;
+}
+#main-content {
+    background: transparent url({{ MEDIA_URL}}img/mash/bg-gray.jpg) repeat-x;
+    min-height: 500px;
+}
+.nav-section {
+    padding: 10px;
+    clear: both;
+}
+.nav-section a {
+    font-size: 1.2em;
+    padding: 10px;
+}
+ul.navs {
+    list-style-type: none;
+}
+ul.navs li {
+    float: left;
+    padding: 5px 0;
+}
+#edit_form {
+    padding: 10px;
+}
+caption {
+    font-size: 1.5em;
+    padding: 10px;
+    background: transparent url(/static/img/mash/bg_footer.gif) repeat-x center center;
+}
+form p label {
+    display: block;
+    float: left;
+    width: 100px;
+    text-align: right;
+    margin-right: 5px;
+}
+form p {
+    margin-bottom: 10px;
+}
+form p input {
+    width: 300px;
+}
+form textarea {
+    width: 300px;
+}
+form p.submit {
+    margin-left: 105px;
+}
+#main-content ul li {
+    margin-top: 10px;
+    float: left;
+}
+#main-content {
+    font-size: 1.1em;
+}
+#exams-wrapper, #exam-courses-wrapper, #exam-classes-wrapper {
+    padding: 10px;
+    float: left;
+    clear: both;
+}
+ul.hlist {
+    margin-left: 2em;
+}
+.hlist li {
+    clear: both;
+    margin-right: 20px;
+}
+
+h5,h6 {
+    clear: both;
+}
+h6 {
+    margin-left: 2em;
+}
+table tr.even {
+    background-color: #eee;
+    background-color: #ECF4FF;
+    background-color: #FAFAFA;
+    background-color: #F2F3F3;
+}
+table {
+    border-collapse: collapse;
+    margin-top: 0px;
+    background-color: #fff;
+    width: 100%;
+}
+td, th {
+    padding: 5px 10px;
+    text-align: center;
+}
+thead {
+    background-color: #7CBA0F;
+    color: #fff;
+    /*
+    background: #fff url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+    color: #000;
+    border-top: 5px solid #7CBA0F;
+    */
+}
+tfoot {
+    background: transparent url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+}
+tfoot td {
+    height: 30px;
+    vertical-align: middle;
+    padding: 6px;
+}
+#upload {
+    padding: 10px;
+}
+tr.import_error {
+    color:red;
+    background-color: #eee;
+    background-color: #ffeeee !important;
+    padding: 5px;
+    padding: 5px;
+    padding-left: 25px !important;
+}
+</style>
+<script type="text/javascript">
+$(function () {
+    //cssHoverColor(".innerTable tbody tr","#9AC3F5");
+    cssHoverColor(".innerTable tbody tr","#FFFFCC");
+});
+</script>
+{% endblock %}
+
+{% block subnav %}
+{% include "school/include/exam_subnav.xhtml" %}
+{% endblock subnav %}
+
+{% block content %}
+<div id="message" class="clearfix">
+    <p>提示：导入前，请务必确保你的EXCEL文件按照约定的格式录入，否则无法正确的导入到系统</p>
+</div><!--/message-->
+<div id="main-content" class="clearfix">
+    <form method="post" enctype="multipart/form-data" id="upload" >
+        <input type="file" name="file" id="file" />
+        {% csrf_token %}
+        <input type="submit" class="submit-button" value="上传,并显示导入的結果" />
+        {% if action == "import" %}
+        <span><strong>共有 {{ success_import_count }} 条数据成功导入，{{ failure_import_count }} 条数据无法导入,无法导入的数据以<span class="error">红色</span>作标识。</strong></span>
+        {% endif %}
+    </form>
+    {% if action == "import" %}
+        <table class="innerTable cssHoverColor" id="checkbox-table">
+            <caption> {{ title }}</caption>
+            <thead>
+                <tr>
+                    <th> 班别</th>
+                    <th> 学号</th>
+                    <th> 姓名</th>
+                    <th> 分数成绩</th>
+                    <th> 备注</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for m in import_result %}
+            <tr class="{% cycle "even" "odd" %}{% if not m.is_imported %} import_error {% endif %}">
+                    <td>{{ m.class }}</td>
+                    <td>{{ m.uuid  }}</td>
+                    <td>{{ m.name  }}</td>
+                    <td>{{ m.score }}</td>
+                    <td></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="5"></td>
+                </td>
+            </tfoot>
+        </table>
+    {% endif %}
+
+</div>
+{% endblock %}

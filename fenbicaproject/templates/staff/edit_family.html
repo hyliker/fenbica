@@ -1,0 +1,91 @@
+{% extends "index/base.html" %}
+{% block extra-head %}
+<style type="text/css">
+#sidebar {
+    float: right;
+    width: 250px;
+    height: 300px;
+    background-color: #eee;
+}
+#message {
+    background-color: #1259C7;
+    color: #fff;
+}
+#message p {
+    padding: 5px;
+}
+#main-content {
+    background: transparent url({{ MEDIA_URL}}img/mash/bg-gray.jpg) repeat-x;
+    min-height: 500px;
+}
+.nav-section {
+    padding: 10px;
+    clear: both;
+}
+.nav-section a {
+    font-size: 1.2em;
+    padding: 10px;
+}
+ul.navs {
+    list-style-type: none;
+}
+ul.navs li {
+    float: left;
+    padding: 5px 0;
+}
+#edit_form {
+    padding: 10px;
+}
+form p label {
+    display: block;
+    float: left;
+    width: 130px;
+    text-align: right;
+    margin-right: 5px;
+    line-height: 2em;
+}
+form p {
+    margin-bottom: 10px;
+}
+form p input {
+    width: 300px;
+}
+form textarea {
+    width: 300px;
+}
+form p.submit {
+    margin-left: 105px;
+}
+
+ul.errorlist {
+    color: red;
+    margin-left: 105px;
+    padding: 5px;
+}
+form textarea {
+    width: 700px;
+}
+
+h5.title {
+    padding: 10px 10px;
+    background: transparent url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+    border-bottom: 1px solid #ddd;
+}
+
+</style>
+
+{% endblock %}
+
+{% block content %}
+<div id="main-content" class="clearfix">
+    <h5 class="title">编辑 {{ user.name }} 其他家人信息</h5>
+    <form id="edit_form" method="post">
+    {% csrf_token %}
+    {{ form.as_p}}
+    <p class="submit">
+        <input type="submit" value="保存" class="submit-button" style="padding: 5px 20px" />
+        <input type="button" value="取消" onclick="javaScript:history.back();" class="button" style="padding: 5px 20px" />
+    </p>
+    </form>
+</div>
+{% endblock %}

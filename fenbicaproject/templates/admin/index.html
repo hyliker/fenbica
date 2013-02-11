@@ -1,0 +1,162 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+{% load person_statistics %}
+{% load config_systemsettings %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% load adminmedia %}{% admin_media_prefix %}css/dashboard.css" />{% endblock %}
+
+{% block coltype %}colMS{% endblock %}
+
+{% block bodyclass %}dashboard{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+<style type="text/css">
+#container{
+    background: transparent url(/static/img/mash/bg-gray.jpg) repeat-x 0px 60px;
+    min-height: 500px;
+}
+.module {
+    border: 0px solid #ddd;
+    margin-bottom: 10px;
+}
+#content-main, #content-related {
+    margin-top: 10px;
+}
+#container #content {
+    width: 960px;
+}
+
+#content-main {
+    width: 450px;
+}
+#content-related {
+    width: 500px;
+    margin-right: 0px;
+}
+</style>
+<script type="text/javascript" src="{{ MEDIA_URL }}thirdparty/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL}}js/base.base.js"></script>    
+<script type="text/javascript">
+$(function () {
+    cssHoverColor(".module tbody tr","#FFFFCC");
+});
+</script>
+<div id="content-main">
+
+{% if app_list %}
+    {% for app in app_list %}
+        <div class="module">
+        <table summary="{% blocktrans with app.name as name %}Models available in the {{ name }} application.{% endblocktrans %}">
+        <caption><a href="{{ app.app_url }}" class="section">{% blocktrans with app.name as name %}{{ name }}{% endblocktrans %}</a></caption>
+        {% for model in app.models %}
+            <tr>
+            {% if model.perms.change %}
+                <th scope="row"><a href="{{ model.admin_url }}">{{ model.name }}</a></th>
+            {% else %}
+                <th scope="row">{{ model.name }}</th>
+            {% endif %}
+
+            {% if model.perms.add %}
+                <td><a href="{{ model.admin_url }}add/" class="addlink">{% trans 'Add' %}</a></td>
+            {% else %}
+                <td>&nbsp;</td>
+            {% endif %}
+
+            {% if model.perms.change %}
+                <td><a href="{{ model.admin_url }}" class="changelink">{% trans 'Change' %}</a></td>
+            {% else %}
+                <td>&nbsp;</td>
+            {% endif %}
+            </tr>
+        {% endfor %}
+        </table>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>{% trans "You don't have permission to edit anything." %}</p>
+{% endif %}
+</div>
+{% endblock %}
+
+{% block sidebar %}
+<div id="content-related">
+    <div id="statistics" class="module">
+        <h2>统计汇总</h2>
+        {% get_person_statistics %} 
+        <dl class="statistics">
+            <dt>在校学生人数</dt>
+            <dd>总共 <strong>{{ person_statistics.student.count }}</strong> 其中 男 <strong>{{ person_statistics.student.male_count }}</strong> 女 <strong>{{ person_statistics.student.female_count }}</strong></dd>
+            <dt>在校教职工人数</dt>
+            <dd>总共 <strong>{{ person_statistics.staff.count }}</strong> 其中 男 <strong>{{ person_statistics.staff.male_count }}</strong> 女 <strong>{{ person_statistics.staff.female_count }}</strong></dd>
+        </dl>
+    </div>
+    <div id="system-settings" class="module">
+        <h2>系统设置</h2>
+        {% get_system_setting "ALLOW_STUDENT_EDIT_PROFILE" as ss_student_edit_profile %} 
+        {% get_system_setting "ALLOW_STAFF_EDIT_PROFILE" as ss_staff_edit_profile %} 
+        <p><label><input type="checkbox" name="ALLOW_STUDENT_EDIT_PROFILE" {% if ss_student_edit_profile %} checked {% endif %} />允许学生编辑自己的档案 </label></p>
+        <p><label><input type="checkbox" name="ALLOW_STAFF_EDIT_PROFILE" {% if ss_staff_edit_profile %} checked {% endif %}  />允许教职工编辑自己的档案{{ ss_staff_edit_profile.value }} </label></p>
+    </div>
+    <script type="text/javascript">
+    $(function () {
+        //系统设置更新
+        $("#system-settings input").change(function () {
+            var self = $(this);
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "/config/systemsetting/edit/",
+                data: {"key": $(this).attr("name"), "value": $(this).is(":checked")},
+                success: function (res) {
+                    if (!res.success) {
+                        if (self.is(":checked")) {
+                            self.attr("checked", false) 
+                        } else {
+                            self.attr("checked", true);
+                        }
+                        alert("系统设置后台出错， 暂无法提交, 请联系support@fenbica.com反映问题");
+                    }
+                },
+                error: function () {
+                    if (self.is(":checked")) {
+                        self.attr("checked", false) 
+                    } else {
+                        self.attr("checked", true);
+                    }
+                    alert("系统设置后台出错， 暂无法提交, 请联系support@fenbica.com反映问题");
+                }
+            });
+        });
+    });
+    </script>
+    <div class="module" id="recent-actions-module">
+        <h2>{% trans 'Recent Actions' %}</h2>
+        <h3>{% trans 'My Actions' %}</h3>
+            {% load log %}
+            {% get_admin_log 10 as admin_log for_user user %}
+            {% if not admin_log %}
+            <p>{% trans 'None available' %}</p>
+            {% else %}
+            <ul class="actionlist">
+            {% for entry in admin_log %}
+            <li class="{% if entry.is_addition %}addlink{% endif %}{% if entry.is_change %}changelink{% endif %}{% if entry.is_deletion %}deletelink{% endif %}">
+                {% if entry.is_deletion %}
+                    {{ entry.object_repr }}
+                {% else %}
+                    <a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a>
+                {% endif %}
+                <br/>
+                {% if entry.content_type %}
+                    <span class="mini quiet">{% filter capfirst %}{% trans entry.content_type.name %}{% endfilter %}</span>
+                {% else %}
+                    <span class="mini quiet">{% trans 'Unknown content' %}</span>
+                {% endif %}
+            </li>
+            {% endfor %}
+            </ul>
+            {% endif %}
+    </div>
+</div>
+{% endblock %}

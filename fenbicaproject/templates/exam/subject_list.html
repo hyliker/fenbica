@@ -1,0 +1,87 @@
+{% extends "exam/base.html" %}
+{% load pagination_tag %}
+
+{% block extra-head %}
+<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/table.css">
+<style type="text/css">
+#pagebar {
+    background: transparent url(/static/img/mash/bg-gray.jpg) repeat-x center center;
+    padding: 5px;
+}
+#content {
+    padding: 5px 10px;
+}
+th, td {
+    border:1px solid #eee;
+}
+#filterBar {
+    padding: 5px;
+}
+#search-submit {
+    height: 24px;
+    width: 24px;
+    background: transparent url(/static/img/mash/search24x24.png) no-repeat right center;
+    border-width: 0;
+    cursor: pointer;
+    padding: 5px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<script type="text/javascript"> 
+$(function () {
+    cssHoverColor(".innerTable tbody tr","#FFFFCC");
+});
+</script> 
+<div id="filterBar">
+    <form method="get">
+        搜索
+        <input type="text" name="q" value="{{ q }}" title="班级代码" />
+        <input type="submit" id="search-submit" value="" />
+    </form>
+
+</div>
+<table class="innerTable">
+    <thead>
+        <tr>
+            <th>序号</th>
+            <th>学年</th>
+            <th>学期</th>
+            <th>考试分类</th>
+            <th>年级</th>
+            <th>科目</th>
+            <th>考试开始时间</th>
+            <!--<th>考试结束时间</th>-->
+            <th>试卷</th>
+            <th colspan="4">数据统计</th>
+            <th colspan="2">图表分析</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for c in subject_list %}
+        <tr class="{% cycle "even" "odd" %}">
+            <td>{{ pages.cur_page.start_index|add:forloop.counter0 }}</td>
+            <td>{{ c.exam.learning_year|slice:"4" }} - {{ c.exam.learning_year|slice:"4:8" }}</td>
+            <td>{{ c.exam.semester.name }}</td>
+            <td>{{ c.exam.category }}</td>
+            <td>{{ c.grade }}</td>
+            <td><a href="{% url exam_subject c.pk %}" title="查看 [{{ c }}] 考试科目的安排详情">{{ c.category.name }}</a></td>
+            <td>{{ c.dtstart }}</td>
+            <!--<td>{{ c.dtend }}</td>-->
+            <td>{% if c.file %}<a href="{{ c.file.url }}">下载</a>{% endif %}</td>
+            <td><a href="{%url exam_analyse_subject %}?exam_pk={{ c.exam_id }}">科目</a></td>
+            <td><a href="{%url exam_analyse_class %}?exam_pk={{ c.exam_id }}">班级</a></td>
+            <td><a href="{%url exam_analyse_grade %}?exam_pk={{ c.exam_id }}">年级</a></td>
+            <td><a href="{%url exam_analyse_student %}?exam_pk={{ c.exam_id }}&grade_pk={{ c.grade_id }}">名次</a></td>
+            <td><a href="{%url exam_chart_subject_analyse c.pk %}">单科</a></td>
+            <td><a href="{%url exam_chart_exam_analyse c.exam_id %}?grade_pk={{ c.grade_id }}">各科</a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+    {% paginate pages.page_prefix_link  pages.object_list pages.cur_page.number 10 5 pages.object_list %}
+    <div id="pagebar">
+        {% include 'base/pagination.html' %}
+    </div>
+{% endblock %}

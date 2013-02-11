@@ -1,0 +1,200 @@
+{% extends "index/base.html" %}
+{% load pagination_tag %}
+{% block extra-head %}
+<link rel="stylesheet" media="screen" type="text/css" href="{{ MEDIA_URL }}base/pagination.css" />
+<style type="text/css">
+#search-header {
+    /*background-color: #1259C7;*/
+    color: #fff;
+    padding: 5px 5px 5px 30px;
+    padding: 5px;
+    margin: 0px 0;
+    font-size: 1em;
+    line-height: 1.5em;
+    font-size: 1.1em;
+    clear: both;
+    background-color: #888;
+    background-color: #97BB3F;
+    background-color: #7CBA0F;
+    /*background: #888 url(/static/img/mash/search20x20.png) no-repeat 5px 5px;*/
+}
+#content {
+    background: transparent url({{ MEDIA_URL}}img/mash/bg-gray.jpg) repeat-x;
+}
+#search-input {
+    width: 250px;
+}
+#search-slug {
+    float: left;
+    line-height: 2em;
+}
+#search-filter{
+    float: left;
+    margin-right: 1em;
+    min-width: 110px;
+}
+#search-filter li {
+    border-bottom: 1px solid #ddd;
+    padding: 5px;
+}
+#search-result {
+    float: left;
+    border-left: 1px solid #C2DBEF;
+    border-left: 1px solid #ddd;
+    padding-left: 1em;
+}
+#search-result li {
+    border-bottom: 1px solid #ddd;
+    width: 700px;
+    padding: 5px;
+}
+#search-result li:hover {
+    background-color: #efefef;
+    background-color: #eee;
+}
+#search-filter li.here {
+    background-color: #1259C7;
+}
+#search-filter li.here a {
+    color: #fff;
+}
+#search-filter li:hover {
+    background-color: #1259C7;
+    background-color: #C2DBEF;
+}
+#search-filter li:hover a {
+    color: #000;
+}
+#search-filter li a {
+    display: inline-block;
+    width: 100%;
+}
+span.sr-title {
+    font-size: 1.1em;
+    font-weight: normal;
+    display: inline-block;
+}
+span.sr-tag {
+    margin-left: 5px;
+}
+#search-page {
+    clear: left;
+    margin-left:110px;
+    padding-left: 2em;
+    padding-top: 1em;
+}
+.wrapper {
+    background: transparent url({{ MEDIA_URL}}img/mash/bg-gray.jpg) repeat-x;
+}
+table tr.even {
+    background-color: #eee;
+    background-color: #ECF4FF;
+    background-color: #FAFAFA;
+    background-color: #F2F3F3;
+}
+table {
+    border-collapse: collapse;
+    margin-top: 0px;
+    background-color: #fff;
+}
+td, th {
+    padding: 5px 10px;
+    text-align: center;
+    text-align: left;
+}
+thead {
+    background-color: #7CBA0F;
+    color: #fff;
+    /*
+    background: #fff url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+    color: #000;
+    border-top: 5px solid #7CBA0F;
+    */
+}
+tfoot {
+    background: transparent url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+}
+tfoot td {
+    height: 30px;
+    vertical-align: middle;
+    padding: 6px;
+}
+
+</style>
+
+{% endblock %}
+
+{% block subnav %}
+<div id="subnav" class="clearfix">
+<span>搜索<strong> {{ p }} </strong>获得约 <strong> {{ pages.count }} </strong> 条结果，以下是第 {{ pages.cur_page.start_index }}-{{ pages.cur_page.end_index }} 条。（用时 {{ qtime|floatformat:2 }} 秒） </span>
+</div>
+{% endblock subnav %}
+
+{% block content %}
+
+
+<div class="wrapper">
+    <div id="search-filter">
+        <ul>
+            <li><a href="#">教职工</a></li>
+            <li><a href="#">学生</a></li>
+            <li><a href="#">男</a></li>
+            <li><a href="#">女</a></li>
+        </ul>
+    </div><!--/search-filter-->
+
+    <!--<table>-->
+        <!--<thead>-->
+            <!--<th>姓名</th>-->
+            <!--<th>性别</th>-->
+            <!--<th>编号</th>-->
+            <!--<th>身份</th>-->
+            <!--<th>联系电话</th>-->
+            <!--<th>电子邮箱</th>-->
+            <!--<th>个人主页</th>-->
+        <!--</thead>-->
+        <!--<tbody>-->
+        <!--{% for p in search_result %}-->
+        <!--<tr class="{% cycle "even" "odd" %}">-->
+            <!--<td><a href="{% url view_profile p.pk %}" target="blank">{{ p.name }}</a></td>-->
+            <!--<td>{{ p.gender }}</td>-->
+            <!--<td>{{ p.id_no }}</td>-->
+            <!--<td>{{ p.get_identity_display }}</td>-->
+            <!--<td>{{ p.telephone }}</td>-->
+            <!--<td>{{ p.user.email }}</td>-->
+            <!--<td><a href="#">http://qzone.qq.com/1838885</a></td>-->
+        <!--</tr>-->
+        <!--{% endfor %}-->
+        <!--</tbody>-->
+    <!--</table>-->
+
+    <ul id="search-result">
+    {% for r in search_result %}
+    <li>
+        <p>
+        <span class="sr-title"><a href="{% url view_profile r.pk %}" target="blank">{{ r.name|default:r.user.username }}</a></span>
+            <span class="sr-tag">{{ r.gender }}</span>
+            <span class="sr-tag">{{ r.get_identity_display }}</span>
+            <span class="sr-tag">编号: {{ r.telephone }}</span>
+            <span class="sr-tag">联系电话: {{ r.telephone }}</span>
+            <span class="sr-tag">电子邮箱: {{ r.user.email }}</span>
+        </p>
+        <!--<p> {{ r.domicle_location }}</p>-->
+        <!--<p>-->
+        <!--<span class="sr-title"><a href="{% url view_profile r.pk %}" target="blank"> {{ r.title }}</a></span>-->
+            <!--{% for t in r.tags %}-->
+            <!--<span class="sr-tag">{{ t }}</span>-->
+            <!--{% endfor %}-->
+        <!--</p>-->
+        <!--<p> {{ r.summary }}</p>-->
+    </li>
+    {% endfor %}
+    </ul>
+
+{% paginate pages.page_prefix_link  pages.object_list pages.cur_page.number 20 6 pages.object_list %}
+<div id="search-page">
+    {% include 'base/pagination.html' %}
+</div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+<ul id="user_article_category">
+    {% if active_category == None %}
+    <li class="active">默认分类 ({{ default_category_count }})</li>
+    {% else %}
+    <li><a href="{% url view_article_category_default  user.pk %}">默认分类 ({{ default_category_count }})</a></li>
+    {% endif %}
+
+    {% for c in category_list %}
+    {% if c.pk == active_category %}
+    <li class="active">{{ c.name }} ({{ c.article_count|default_if_none:0 }})</li>
+    {% else %}
+    <li><a href="{% url view_article_category c.pk %}">{{ c.name }} ({{ c.article_count|default_if_none:0 }})</a></li>
+    {% endif %}
+    {% empty %}
+    <li>暂无日志分类</li>
+    {% endfor %}
+</ul>

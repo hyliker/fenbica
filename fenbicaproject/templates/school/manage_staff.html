@@ -1,0 +1,219 @@
+{% load pagination_tag %}
+<style type="text/css">
+#inner-wrapper {
+    padding: 0px;
+    border: 1px solid #ddd;
+}
+#inner-wrapper img.portrait2 {
+    float: left;
+    padding: 5px;
+}
+#inner-wrapper .section  {
+    margin-left: 10px;
+    float: left;
+    clear: none;
+    margin-top:0;
+}
+#inner-toolbar {
+    background: #fff url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+    height: 33px;
+}
+#innerTable {
+
+}
+.innerTable tr.even {
+    background-color: #eee;
+    background-color: #FAFAFA;
+    background-color: #ECF4FF;
+    background-color: #F2F3F3;
+}
+table {
+    border-collapse: collapse;
+    margin-top: 0px;
+    background-color: #fff;
+    width: 100%;
+    float: left;
+}
+td, th {
+    padding: 3px;
+    text-align: center;
+}
+thead {
+    background-color: #7CBA0F;
+    color: #fff;
+    /*
+    background: #fff url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+    color: #000;
+    border-top: 5px solid #7CBA0F;
+    */
+}
+tfoot {
+    background: transparent url("/static/img/mash/bg_footer.gif") repeat-x scroll 0 0;
+}
+tfoot td {
+    height: 30px;
+    vertical-align: middle;
+    padding: 6px;
+}
+#inner-content {
+    margin: 0;
+}
+#inner-title-wrapper {
+    float: left;
+    margin:0;
+}
+.inner-title {
+    background-color: #7cba0f; 
+    color: #fff;
+    font-weight: bold;
+    float: left;
+    line-height: 23px;
+    padding: 5px 5px 5px 10px;
+}
+.inner-title-corner {
+    background: transparent url("/static/img/mash/bg_head_corner.png") no-repeat scroll right bottom;
+    height: 33px;
+    width: 33px;
+    display: block;
+    float: left;
+}
+form.inner-search {
+    float: left;
+    margin-top: 5px;
+}
+.inner-toolbar {
+    float: right;
+    margin: 8px 10px 5px 5px;
+}
+.inner-toolbar a:hover {
+    text-decoration: none;
+}
+</style>
+<script type="text/javascript">
+$(function() {
+    cssHoverColor(".innerTable tbody tr","#9AC3F5");
+
+    $("#search_staff").submit(function(event) {
+        event.preventDefault();
+        var p = $("#search_staff_p").val();
+        $.get($(this).attr("action"), {p: p}, function (res) {
+            $("#inner-wrapper").replaceWith(res);
+            $("#inner-wrapper").flash("slow");
+        });
+    });
+
+    $("#search-page a").click(function (event) {
+        event.preventDefault();
+        $.get($(this).attr("href"), function (res) {
+            $("#inner-wrapper").replaceWith(res);
+            $("#inner-wrapper").flash("slow");
+        });
+    });
+
+    $(".view_doc_button").click(function () {
+        $("#dialog-message").dialog({
+			modal: true,
+			buttons: {
+				Ok: function() {
+					$(this).dialog('close');
+				}
+			}
+		});
+    });
+
+});
+
+</script>
+
+<div id="dialog-message" title="查看档案" class="hidden">
+	<p>
+		<span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
+		Your files have downloaded successfully into the My Downloads folder.
+	</p>
+	<p>
+		Currently using <b>36% of your storage space</b>.
+	</p>
+</div>
+
+<div id="inner-wrapper" class="clearfix">
+
+    <div id="inner-toolbar">
+    <div id="inner-title-wrapper">
+        <span class="inner-title">教职工基本信息</span>
+        <span class="inner-title-corner"></span>
+    </div>
+        <form id="search_staff" class="inner-search" action="{% url manage_staff %}" method="get">
+            <span class="icon_search"></span>
+            <input type="text" name="p" title="输入姓名、学号、身份证号" id="search_staff_p" value="{{ p }}">
+            <input type="submit" class="submit-button" value="搜索"/>
+        </form>
+        <div class="inner-toolbar">
+            <a href="#" class="view_doc_button">查看</a>
+            <a href="#" class="upload_button" title="批量导入教职工基本信息数据">上传</a>
+            <a href="#" class="down_button" title="批量下载教职工基本信息数据">下载</a>
+            <!--<a href="#" class="reflesh_button">刷新</a>-->
+            <a href="#" class="add_button">添加</a>
+            <a href="#" class="remove_button">删除</a>
+            <a href="#" class="chart_button">统计</a>
+            <!--<a href="#" class="print_button">打印</a>-->
+            <a href="#" class="settings_button">设置</a>
+        </div>
+    </div><!--/inner-toolbar-->
+    <div id="inner-content">
+        <table class="innerTable cssHoverColor" id="checkbox-table">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="checkbox-all" /></th>
+                    <th class="th-name">姓名</th>
+                    <th>编号</th>
+                    <th>身份证号</th>
+                    <th>性别</th>
+                    <th>出生地</th>
+                    <th>民族</th>
+                    <th>政治面貌</th>
+                    <th>现住址</th>
+                    <th>有效</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% if not persons %}
+            <tr>
+                <td colspan="11">
+                    <br/>
+                    <p> 没有相关记录</p>
+                    <br/>
+                </td>
+            </tr>
+            {% endif %}
+            {% for p in persons %}
+            <tr class="{% cycle "odd" "even" %}">
+                <td><input type="checkbox" /></td>
+                <td><a href="{% url view_profile p.user.pk %}" target="_blank">{{ p.name }}</a></td>
+                <td>{{ p.uuid }}</td>
+                <td>{{ p.id_no }}</td>
+                <td>{{ p.gender.name }}</td>
+                <td>{{ p.born_place }}</td>
+                <td>{{ p.folk }}</td>
+                <td>{{ p.politics.name  }}</td>
+                <td>{{ p.domicle_location }}</td>
+                <td>
+                    {% if p.is_valid %}
+                    <span class="icon_success" title="有效"></span>
+                    {% else %}
+                    <span class="icon_error" title="有效"></span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            <tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="11" id="search-page">
+                        {% paginate pages.page_prefix_link  pages.object_list pages.cur_page.number 20 6 pages.object_list %}
+                            {% include 'base/pagination.html' %}
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div><!--/inner-content-->
+</div>

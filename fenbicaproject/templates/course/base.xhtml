@@ -1,0 +1,20 @@
+{% extends "base/base.html" %}
+{% block title %} 阳西县兴华中学-数字校园 {% endblock %}
+
+{% load navactive_tag %}
+{% block subnav %}
+<div id="subnav" class="clearfix">
+    <ul class="menu">
+        <li><a href="{% url course.views.index %}" class="{% reverse_navactive request "course.views.index" "active" %}">选课中心</a></li>
+        {% url course_person_course user.pk as course_person_course_link %}
+        <li><a href="{% url course_person_course user.pk %}" class="{% navactive request course_person_course_link "active" %}">我的课程</a></li>
+        {% if user.identity == user.IDENTITY_STAFF %}
+        {% comment %}
+        <li><a href="{% url course.views.add_course %}" class="{% reverse_navactive request "course.views.add_course" "active" %}">＋ 开设新课程</a></li>
+        <li><a href="{% url course_timetable %}" class="{% reverse_navactive request "course_timetable" "active" %}">我的课程表</a></li>
+        {% endcomment %}
+        {% endif %}
+        {% block extra-subnav %} {% endblock %}
+    </ul>
+</div><!--/subnav-->
+{% endblock subnav %}

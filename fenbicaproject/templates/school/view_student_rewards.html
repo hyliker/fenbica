@@ -1,0 +1,30 @@
+{% extends "school/view_basic_profile.html" %}
+
+{% block title %} {{ person.name }} 奖励信息 {% endblock %}
+
+{% block infoTitle %}
+<h4 id="info-title">{{ person.name }} {{ person.get_identity_display }} 奖励信息 共 {{ rewards|length }} 个 </h4>
+{% endblock %}
+
+{% block infoType_student_rewards %}
+<li><strong>奖励 </strong></li>
+{% endblock %}
+
+{% block infoItems %}
+<dl class="hdl">
+{% if rewards %}
+    {% for r in rewards %} 
+    <dt>奖励名称</dt> <dd>{{ r.name }}</dd>
+    <dt>奖励级别</dt> <dd>{{ r.level }}</dd>
+    <dt>奖励类别</dt> <dd>{{ r.type }}</dd>
+    <dt>奖励金额</dt> <dd>{{ r.money }} (元)</dd>
+    <dt>奖励文号</dt> <dd>{{ r.file_no }}</dd>
+    <dt>奖励年月</dt> <dd>{{ r.date|date:"Y年n月d日"}}</dd>
+    <dt>奖励原因</dt> <dd>{{ r.causation }}</dd>
+    <hr/>
+    {% endfor %}
+{% else %}
+<h5>暂没有相关奖励信息</h5>
+{% endif %}
+</div>
+{% endblock %}

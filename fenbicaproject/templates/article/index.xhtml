@@ -1,0 +1,90 @@
+{% extends "article/base.html" %}
+
+{% block content %}
+<style type="text/css">
+#main-wrapper {
+    padding: 10px;
+    min-height: 400px;
+    clear: both;
+    width: 960px;
+}
+#latest_artitles, #hottest_artitles {
+    float: left;
+    width: 45%;
+}
+#hottest_authors {
+    float: left;
+    width: 10%;
+}
+.articles li {
+    padding: 5px;
+}
+.author {
+    color: #aaa;
+}
+#search-submit {
+    height: 24px;
+    width: 24px;
+    background: transparent url(/static/img/mash/search24x24.png) no-repeat right center;
+    border-width: 0;
+    cursor: pointer;
+    padding: 5px;
+}
+#search-input {
+    width: 150px;
+}
+.more {
+    text-align: left;
+}
+.more-button {
+    background: transparent url(/static/img/mash/more_right.png) no-repeat left center;
+    display: inline-block;
+    padding-left: 35px;
+    line-height: 32px;
+}
+.more-button:hover {
+    text-decoration: none;
+}
+</style>
+
+<div id="main-wrapper">
+    <div id="search">
+        <form action="{% url search %}" method="get">
+         日志搜索
+            <input type="hidden" name="context" value="article" />
+            <input type="text" id="search-input" name="q" />
+            <input type="submit" id="search-submit" value="" /> 
+        </form>
+    </div>
+
+    <div id="latest_artitles">
+        <h5>最新的日志</h5>
+        <ul class="articles">
+            {% for a in latest_artitles %}
+            <li><a href="{{ a.get_absolute_url }}" title="于{{ a.dtcreated }} 发表在 {{ a.category }}">{{ a.title }}</a> <span class="author">{{ a.author }}</span></li>
+            {% endfor %}
+            <li class="more"><a href="/article/latest/" class="more-button">更多</a></li>
+        </ul>
+    </div><!--/latest_artitles-->
+
+    <div id="hottest_artitles">
+        <h5>最热门的日志</h5>
+        <ul class="articles">
+            {% for a in hottest_artitles %}
+            <!--<li>[<a href="{{ a.category.get_absolute_url }}">{{ a.category }}</a>] <a href="{{ a.get_absolute_url }}">{{ a.title }}</a> <span class="author">{{ a.author }}</span></li>-->
+            <li><a href="{{ a.get_absolute_url }}">{{ a.title }}</a> <span class="author">{{ a.author }}</span></li>
+            {% endfor %}
+            <li class="more"><a href="/article/hottest/" class="more-button">更多</a></li>
+        </ul>
+    </div><!--/hottest_artitles-->
+
+    <div id="hottest_authors">
+        <h5>作者排行榜</h5>
+        <ul class="articles">
+            {% for a in hottest_authors %}
+            <li><a href="{{ a.author.get_absolute_url }}" title="{{ a.get_identity_display }}">{{ a.author.name }}</a> ({{ a.article_count }})</li>
+            {% endfor %}
+        </ul>
+    </div><!--/hottest_authors-->
+</div>
+{% endblock content %}

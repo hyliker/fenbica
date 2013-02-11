@@ -1,0 +1,29 @@
+{% extends "school/view_basic_profile.html" %}
+
+{% block title %} {{ person.name }} 教职工任课 {% endblock %}
+
+{% block infoTitle %}
+<h4 id="info-title">{{ person.name }} {{ person.get_identity_display }} 任课 </h4>
+{% endblock %}
+
+{% block infoType_staff_teaching %}
+<li><strong>任课</strong></li>
+{% endblock %}
+
+{% block infoItems %}
+<dl class="hdl">
+{% if teaching %}
+    {% for t in teaching %}
+    <dt>任课学段</dt> <dd>{{ t.learning_stage.name }}</dd>
+    <dt>任课总学时</dt> <dd>{{ t.period }} 学时</dd>
+    <dt>任课起始时间</dt> <dd>{{ t.dtstart|date:"Y年n月d日" }}</dd>
+    <dt>任课结束时间</dt> <dd>{{ t.dtend|date:"Y年n月d日" }}</dd>
+    <dt>任课班级</dt> <dd>{{ t.classes }}</dd>
+    <dt>授课人数</dt> <dd>{{ t.teached_number }}</dd>
+    <hr/>
+    {% endfor %}
+{% else %}
+<h5>暂没有相关任课信息</h5>
+{% endif %}
+</div>
+{% endblock %}
